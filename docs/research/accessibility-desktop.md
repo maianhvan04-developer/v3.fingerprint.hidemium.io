@@ -1,0 +1,416 @@
+- generic [active] [ref=e1] [box=0,0,1440,8931]:
+  - banner [ref=e2] [box=0,0,1440,72]:
+    - generic [ref=e3] [box=36,22,195,28]:
+      - generic [ref=e4] [box=36,22,28,28]: ⚡
+      - generic [ref=e5] [box=74,22,157,28]: Fingerprint Checked
+    - navigation [ref=e6] [box=555,23,316,26]:
+      - link "Proxy" [ref=e7] [cursor=pointer] [box=555,23,43,26]:
+        - /url: https://hideproxy.io/
+      - link "Antidetect Browser" [ref=e8] [cursor=pointer] [box=626,23,147,26]:
+        - /url: https://hidemium.io/
+      - link "Contacts" [ref=e9] [cursor=pointer] [box=801,23,69,26]:
+        - /url: https://t.me/hideproxyio
+    - generic [ref=e10] [box=1195,16,209,40]:
+      - button "EN ▾" [ref=e11] [cursor=pointer] [box=1195,23,44,26]
+      - link "Log in" [ref=e12] [cursor=pointer] [box=1253,24,44,24]:
+        - /url: https://t.me/hidemium
+      - link "Sign up" [ref=e13] [cursor=pointer] [box=1311,16,93,40]:
+        - /url: https://t.me/hidemium
+  - main [ref=e14] [box=170,102,1100,8708]:
+    - generic [ref=e15] [box=194,102,1052,237]:
+      - button "📡 Know your IP" [ref=e16] [cursor=pointer] [box=638,102,163,36]
+      - 'heading "🌐 My IP: 42.114.116.215 📋 Copy IP" [level=1] [ref=e320] [box=194,158,1052,54]':
+        - generic [ref=e18] [box=487,168,22,36]: 🌐
+        - generic [ref=e19] [box=523,158,88,54]: "My IP:"
+        - generic [ref=e20] [box=625,158,221,54]: 42.114.116.215
+        - button "📋 Copy IP" [ref=e22] [cursor=pointer] [box=860,167,93,37]
+      - generic [ref=e23] [box=194,219,1052,36]:
+        - generic [ref=e24] [box=515,219,210,36]:
+          - generic [ref=e25] [box=528,225,45,23]: IPv4
+          - generic [ref=e26] [box=581,225,131,24]: 42.114.116.215
+        - generic [ref=e28] [box=734,219,191,36]:
+          - generic [ref=e29] [box=747,225,45,23]: IPv6
+          - generic [ref=e30] [box=800,225,112,24]: not detected
+      - paragraph [ref=e32] [box=194,259,1052,26]: Hanoi, Hanoi, VN
+      - generic [ref=e34] [box=194,302,1052,36]:
+        - generic [ref=e35] [box=441,302,159,36]: "Browser score: 26"
+        - generic "IP 42.114.116.215 (IPv4) · medium" [ref=e321] [box=617,302,280,36]:
+          - generic [ref=e39] [box=632,309,88,22]: "IP risk score:"
+          - generic [ref=e40] [box=730,309,60,22]: 52 / 100
+        - link "View details" [ref=e43] [cursor=pointer] [box=915,309,84,23]:
+          - /url: "#diag"
+    - generic [ref=e44] [box=194,369,1052,908]:
+      - generic [ref=e45] [box=225,398,990,174]:
+        - generic [ref=e46] [box=225,398,280,78]:
+          - generic [ref=e47] [box=225,398,36,36]: 🌐
+          - generic [ref=e48] [box=273,398,232,78]
+        - generic [ref=e51] [box=535,398,680,174]:
+          - generic [ref=e52] [box=535,398,322,26]: 📡 Provider:FPT Telecom Company
+          - generic [ref=e55] [box=893,398,322,26]: 🌐 WebRTC IPv4:42.114.116.215
+          - generic [ref=e58] [box=535,438,322,26]
+          - generic [ref=e61] [box=893,438,322,26]: 🛰 Fake ISP:No
+          - generic [ref=e64] [box=535,478,322,26]: 🕵 Anonymizer:No
+          - generic [ref=e67] [box=893,478,322,26]: ☁ Cloud Provider:No
+          - generic [ref=e70] [box=535,519,322,53]: 🪟 TCP/IP Fingerprint OS:Linux (TTL≈64, MSS 1398)
+          - generic [ref=e73] [box=893,519,322,53]: 💻 Browser OS:Linux
+      - separator [ref=e76] [box=225,596,990,1]
+      - generic [ref=e77] [box=209,607,1022,314]:
+        - generic [ref=e78] [box=225,621,280,160]:
+          - generic [ref=e79] [box=225,621,36,36]: 🧭
+          - generic [ref=e80] [box=273,621,232,160]
+        - generic [ref=e83] [box=535,621,680,286]:
+          - generic [ref=e84] [box=535,621,680,72]
+          - generic [ref=e87] [box=535,707,322,53]: 🌐 Browser:HeadlessChrome 151.0.7922.10
+          - generic [ref=e90] [box=893,707,322,53]: ⚙ Engine:Blink
+          - generic [ref=e93] [box=535,774,322,53]: 🏷 Release Channel:⚠️ headless (not a consumer release channel) ⚠
+          - generic [ref=e96] [box=893,774,322,53]: 💻 Operating System:Linux
+          - generic [ref=e99] [box=535,840,322,26]: 🔖 OS Version:Linux
+          - generic [ref=e102] [box=893,840,322,26]: 📱 Device Type:Desktop
+          - generic [ref=e105] [box=535,881,322,26]: 🏗 Architecture:64-bit (x64)
+          - generic [ref=e108] [box=893,881,322,26]: 🧩 Platform:Linux
+      - separator [ref=e111] [box=225,931,990,1]
+      - generic [ref=e112] [box=225,956,990,188]:
+        - generic [ref=e113] [box=225,956,280,78]:
+          - generic [ref=e114] [box=225,956,36,36]: 📍
+          - generic [ref=e115] [box=273,956,232,78]
+        - generic [ref=e118] [box=535,956,680,188]:
+          - generic [ref=e119] [box=535,956,322,26]: 🌍 Country:VN
+          - generic [ref=e122] [box=893,956,322,26]: 🗺 Region:Hanoi
+          - generic [ref=e125] [box=535,996,322,26]: 🏙 City:Hanoi
+          - generic [ref=e128] [box=893,996,322,26]: 📮 ZIP:10000
+          - generic [ref=e131] [box=535,1037,322,26]: 🖥 Host:(no reverse DNS)
+          - generic [ref=e134] [box=893,1037,322,26]: 📍 Lat / Lon:21.0245, 105.84117
+          - generic [ref=e137] [box=535,1077,322,26]: 🏢 Organization:FPT Telecom Company
+          - generic [ref=e140] [box=893,1077,322,26]: 🏛 AS Organization:18403
+          - generic [ref=e143] [box=535,1117,322,26]: 📡 ISP:FPT Telecom Company
+          - generic [ref=e146] [box=893,1117,322,26]: 🔢 AS Number:18403
+      - separator [ref=e149] [box=225,1168,990,1]
+      - generic [ref=e150] [box=225,1193,990,55]:
+        - generic [ref=e151] [box=225,1193,280,55]:
+          - generic [ref=e152] [box=225,1193,36,36]: 🕐
+          - generic [ref=e153] [box=273,1193,225,55]
+        - generic [ref=e156] [box=535,1193,680,26]:
+          - generic [ref=e157] [box=535,1193,322,26]: 🕐 Local time:8/1/2026, 3:38:12 PM
+          - generic [ref=e160] [box=893,1193,322,26]: 🌐 Time zone:Asia/Bangkok
+    - generic [ref=e163] [box=194,1337,1052,939]:
+      - button "📋 Detailed Summary" [ref=e164] [cursor=pointer] [box=617,1337,205,36]
+      - heading "Detailed proxy & system diagnostics" [level=2] [ref=e165] [box=194,1393,1052,45]
+      - paragraph [ref=e166] [box=194,1444,1052,51]: "Analyze your current connection and browser environment: detected WebRTC IP address, JavaScript status. Verify anonymity and detect potential leaks."
+      - generic [ref=e167] [box=194,1523,1052,752]:
+        - article [ref=e168] [box=194,1523,340,186]:
+          - generic [ref=e169] [box=213,1542,30,30]: </>
+          - heading "audio" [level=4] [ref=e170] [box=213,1582,302,26]
+          - paragraph [ref=e171] [box=213,1618,302,22]: ✓ No issues detected
+          - text: ✓ Verified
+        - article [ref=e173] [box=550,1523,340,189]:
+          - generic [ref=e174] [box=569,1542,30,30]: </>
+          - heading "automation" [level=4] [ref=e175] [box=569,1582,302,26]
+          - paragraph [ref=e176] [box=569,1618,302,22]: ● 3 high issues
+          - button "View troubles" [ref=e329] [cursor=pointer] [box=569,1650,302,43]
+        - article [ref=e178] [box=906,1523,340,342]:
+          - generic [ref=e179] [box=925,1542,30,30]: </>
+          - heading "canvas" [level=4] [ref=e180] [box=925,1582,302,26]
+          - paragraph [ref=e181] [box=925,1618,302,22]: ✓ No issues detected
+          - table [ref=e331] [box=925,1667,302,128]
+          - text: ✓ Verified
+        - article [ref=e183] [box=194,1881,340,186]:
+          - generic [ref=e184] [box=213,1900,30,30]: </>
+          - heading "cpu" [level=4] [ref=e185] [box=213,1940,302,26]
+          - paragraph [ref=e186] [box=213,1975,302,22]: ✓ No issues detected
+          - text: ✓ Verified
+        - article [ref=e188] [box=550,1881,340,186]:
+          - generic [ref=e189] [box=569,1900,30,30]: </>
+          - heading "device" [level=4] [ref=e190] [box=569,1940,302,26]
+          - paragraph [ref=e191] [box=569,1975,302,22]: ✓ No issues detected
+          - text: ✓ Verified
+        - article [ref=e193] [box=906,1881,340,189]:
+          - generic [ref=e194] [box=925,1900,30,30]: </>
+          - heading "gpu" [level=4] [ref=e195] [box=925,1940,302,26]
+          - paragraph [ref=e196] [box=925,1975,302,22]: ● 2 high issues
+          - button "View troubles" [ref=e339] [cursor=pointer] [box=925,2008,302,43]
+        - article [ref=e198] [box=194,2086,340,186]:
+          - generic [ref=e199] [box=213,2105,30,30]: </>
+          - heading "network" [level=4] [ref=e200] [box=213,2145,302,26]
+          - paragraph [ref=e201] [box=213,2181,302,22]: ✓ No issues detected
+          - text: ✓ Verified
+        - article [ref=e203] [box=550,2086,340,189]:
+          - generic [ref=e204] [box=569,2105,30,30]: </>
+          - heading "other" [level=4] [ref=e205] [box=569,2145,302,26]
+          - paragraph [ref=e206] [box=569,2181,302,22]: ● 1 high issue
+          - button "View troubles" [ref=e340] [cursor=pointer] [box=569,2213,302,43]
+        - article [ref=e208] [box=906,2086,340,186]:
+          - generic [ref=e209] [box=925,2105,30,30]: </>
+          - heading "font" [level=4] [ref=e210] [box=925,2145,302,26]
+          - paragraph [ref=e211] [box=925,2181,302,22]: ✓ No issues detected
+          - text: ✓ Verified
+    - generic [ref=e213] [box=194,2325,1052,2176]:
+      - button "🧬 CDI v2.0 · Coherence Contract" [ref=e214] [cursor=pointer] [box=198,2325,312,36]
+      - heading "Coherent Device Identity Validator" [level=2] [ref=e215] [box=198,2376,1044,42]
+      - paragraph [ref=e216] [box=198,2428,1044,51]: Checks the current browser profile against cdi-core@2.0, invariants C-001…C-052. One failing fatal means the profile does not qualify for state:active. Rules that cannot be evaluated from a page are marked SKIP and are never counted as passes.
+      - generic [ref=e217] [box=198,2507,1044,129]:
+        - generic [ref=e218] [box=219,2524,254,95]:
+          - generic [ref=e219] [box=219,2524,254,18]: RESULT
+          - generic [ref=e220] [box=219,2544,254,36]: FAIL — 1 fatal
+          - generic [ref=e341] [box=219,2581,254,38]: not eligible for state:active — 1 fatal invariant failing
+        - generic [ref=e222] [box=495,2541,358,61]:
+          - generic [ref=e223] [box=495,2541,62,61]
+          - generic [ref=e226] [box=567,2541,62,61]
+          - generic [ref=e229] [box=639,2541,66,61]
+          - generic [ref=e232] [box=715,2541,66,61]
+          - generic [ref=e235] [box=791,2541,62,61]
+        - generic [ref=e238] [box=875,2554,346,35]:
+          - button "All" [ref=e239] [cursor=pointer] [box=875,2554,44,35]
+          - button "Fail only" [ref=e240] [cursor=pointer] [box=925,2554,80,35]
+          - button "Fatal only" [ref=e241] [cursor=pointer] [box=1011,2554,89,35]
+          - button "Not evaluable" [ref=e242] [cursor=pointer] [box=1106,2554,115,35]
+      - generic [ref=e243] [box=198,2654,1044,1847]:
+        - generic [ref=e342] [box=198,2654,1044,72]:
+          - generic [ref=e343] [box=217,2667,24,23]: ✓
+          - generic [ref=e344] [box=253,2667,62,22]: C-001
+          - generic [ref=e345] [box=327,2667,792,46]
+          - generic [ref=e348] [box=1131,2667,94,24]
+        - generic [ref=e351] [box=198,2734,1044,72]:
+          - generic [ref=e352] [box=217,2747,24,23]: ✓
+          - generic [ref=e353] [box=253,2747,62,22]: C-002
+          - generic [ref=e354] [box=327,2747,792,46]
+          - generic [ref=e357] [box=1131,2747,94,24]
+        - generic [ref=e360] [box=198,2814,1044,72]:
+          - generic [ref=e361] [box=217,2827,24,23]: ✓
+          - generic [ref=e362] [box=253,2827,62,22]: C-003
+          - generic [ref=e363] [box=327,2827,792,46]
+          - generic [ref=e366] [box=1131,2827,94,24]
+        - generic [ref=e369] [box=198,2893,1044,92]:
+          - generic [ref=e370] [box=217,2906,24,23]: –
+          - generic [ref=e371] [box=253,2906,62,22]: C-010
+          - generic [ref=e372] [box=327,2906,796,66]
+          - generic [ref=e375] [box=1135,2906,90,24]
+        - generic [ref=e378] [box=198,2993,1044,72]:
+          - generic [ref=e379] [box=217,3006,24,23]: ✓
+          - generic [ref=e380] [box=253,3006,62,22]: C-011
+          - generic [ref=e381] [box=327,3006,792,46]
+          - generic [ref=e384] [box=1131,3006,94,24]
+        - generic [ref=e387] [box=198,3073,1044,72]:
+          - generic [ref=e388] [box=217,3086,24,23]: –
+          - generic [ref=e389] [box=253,3086,62,22]: C-012
+          - generic [ref=e390] [box=327,3086,796,46]
+          - generic [ref=e393] [box=1135,3086,90,24]
+        - generic [ref=e396] [box=198,3153,1044,72]:
+          - generic [ref=e397] [box=217,3166,24,23]: ✓
+          - generic [ref=e398] [box=253,3166,62,22]: C-014
+          - generic [ref=e399] [box=327,3166,792,46]
+          - generic [ref=e402] [box=1131,3166,94,24]
+        - generic [ref=e405] [box=198,3232,1044,72]:
+          - generic [ref=e406] [box=217,3245,24,23]: –
+          - generic [ref=e407] [box=253,3245,62,22]: C-015
+          - generic [ref=e408] [box=327,3245,796,46]
+          - generic [ref=e411] [box=1135,3245,90,24]
+        - generic [ref=e414] [box=198,3312,1044,72]:
+          - generic [ref=e415] [box=217,3325,24,23]: ✓
+          - generic [ref=e416] [box=253,3325,62,22]: C-016
+          - generic [ref=e417] [box=327,3325,792,46]
+          - generic [ref=e420] [box=1131,3325,94,24]
+        - generic [ref=e423] [box=198,3392,1044,72]:
+          - generic [ref=e424] [box=217,3405,24,23]: ✓
+          - generic [ref=e425] [box=253,3405,62,22]: C-020
+          - generic [ref=e426] [box=327,3405,792,46]
+          - generic [ref=e429] [box=1131,3405,94,24]
+        - generic [ref=e432] [box=198,3472,1044,72]:
+          - generic [ref=e433] [box=217,3485,24,23]: ✓
+          - generic [ref=e434] [box=253,3485,62,22]: C-021
+          - generic [ref=e435] [box=327,3485,792,46]
+          - generic [ref=e438] [box=1131,3485,94,24]
+        - generic [ref=e441] [box=198,3551,1044,72]:
+          - generic [ref=e442] [box=217,3564,24,23]: ✓
+          - generic [ref=e443] [box=253,3564,62,22]: C-022
+          - generic [ref=e444] [box=327,3564,792,46]
+          - generic [ref=e447] [box=1131,3564,94,24]
+        - generic [ref=e450] [box=198,3631,1044,72]:
+          - generic [ref=e451] [box=217,3644,24,23]: ✓
+          - generic [ref=e452] [box=253,3644,62,22]: C-023
+          - generic [ref=e453] [box=327,3644,792,46]
+          - generic [ref=e456] [box=1131,3644,94,24]
+        - generic [ref=e459] [box=198,3711,1044,72]:
+          - generic [ref=e460] [box=217,3724,24,23]: –
+          - generic [ref=e461] [box=253,3724,62,22]: C-024
+          - generic [ref=e462] [box=327,3724,796,46]
+          - generic [ref=e465] [box=1135,3724,90,24]
+        - generic [ref=e468] [box=198,3790,1044,72]:
+          - generic [ref=e469] [box=217,3803,24,23]: –
+          - generic [ref=e470] [box=253,3803,62,22]: C-025
+          - generic [ref=e471] [box=327,3803,796,46]
+          - generic [ref=e474] [box=1135,3803,90,24]
+        - generic [ref=e477] [box=198,3870,1044,92]:
+          - generic [ref=e478] [box=217,3883,24,23]: –
+          - generic [ref=e479] [box=253,3883,62,22]: C-030
+          - generic [ref=e480] [box=327,3883,796,66]
+          - generic [ref=e483] [box=1135,3883,90,24]
+        - generic [ref=e486] [box=198,3970,1044,112]:
+          - generic [ref=e487] [box=217,3983,24,23]: "!"
+          - generic [ref=e488] [box=253,3983,62,22]: C-031
+          - generic [ref=e489] [box=327,3983,787,86]
+          - generic [ref=e492] [box=1126,3983,99,24]
+        - generic [ref=e495] [box=198,4090,1044,92]:
+          - generic [ref=e496] [box=217,4103,24,23]: ✓
+          - generic [ref=e497] [box=253,4103,62,22]: C-040
+          - generic [ref=e498] [box=327,4103,792,66]
+          - generic [ref=e501] [box=1131,4103,94,24]
+        - generic [ref=e504] [box=198,4190,1044,72]:
+          - generic [ref=e505] [box=217,4203,24,23]: ✓
+          - generic [ref=e506] [box=253,4203,62,22]: C-041
+          - generic [ref=e507] [box=327,4203,792,46]
+          - generic [ref=e510] [box=1131,4203,94,24]
+        - generic [ref=e513] [box=198,4270,1044,72]:
+          - generic [ref=e514] [box=217,4283,24,23]: ✕
+          - generic [ref=e515] [box=253,4283,62,22]: C-050
+          - generic [ref=e516] [box=327,4283,798,46]
+          - generic [ref=e519] [box=1137,4283,88,24]
+        - generic [ref=e522] [box=198,4350,1044,72]:
+          - generic [ref=e523] [box=217,4363,24,23]: ✓
+          - generic [ref=e524] [box=253,4363,62,22]: C-051
+          - generic [ref=e525] [box=327,4363,792,46]
+          - generic [ref=e528] [box=1131,4363,94,24]
+        - generic [ref=e531] [box=198,4429,1044,72]:
+          - generic [ref=e532] [box=217,4442,24,23]: ✓
+          - generic [ref=e533] [box=253,4442,62,22]: C-052
+          - generic [ref=e534] [box=327,4442,792,46]
+          - generic [ref=e537] [box=1131,4442,94,24]
+    - generic [ref=e245] [box=194,4551,1052,196]:
+      - generic [ref=e246] [box=198,4551,1044,33]:
+        - heading "🛰 TCP/IP Fingerprint (p0f)" [level=3] [ref=e247] [box=198,4551,237,33]
+        - generic [ref=e248] [box=1142,4551,100,32]: OS match
+      - generic [ref=e250] [box=198,4594,1044,153]:
+        - generic [ref=e251] [box=198,4594,512,153]:
+          - generic [ref=e252] [box=198,4594,512,26]
+          - generic [ref=e255] [box=198,4619,512,26]: "Network OS: Linux"
+          - generic [ref=e258] [box=198,4645,512,26]: "Browser OS: Linux"
+          - generic [ref=e261] [box=198,4670,512,26]: "Match: ✓ yes"
+        - generic [ref=e264] [box=730,4594,512,153]:
+          - generic [ref=e265] [box=730,4594,512,26]: "SYN signals: ttl≈64, has timestamps · Linux opts pattern"
+          - generic [ref=e268] [box=730,4619,512,26]
+          - generic [ref=e271] [box=730,4645,512,26]
+          - generic [ref=e274] [box=730,4670,512,26]
+          - generic [ref=e277] [box=730,4696,512,26]
+          - generic [ref=e280] [box=730,4721,512,26]
+    - generic [ref=e283] [box=194,4797,1052,347]:
+      - generic [ref=e284] [box=198,4797,1044,37]:
+        - heading "WebRTC Check" [level=3] [ref=e285] [box=198,4799,142,33]
+        - button "Restart check" [ref=e286] [cursor=pointer] [box=1118,4797,124,37]
+      - paragraph [ref=e287] [box=198,4851,1044,26]: "Status: success ✓ no leak"
+      - generic [ref=e290] [box=198,4894,1044,77]:
+        - generic [ref=e291] [box=198,4894,512,77]:
+          - generic [ref=e292] [box=198,4894,512,26]
+          - generic [ref=e294] [box=198,4920,512,26]
+          - generic [ref=e296] [box=198,4945,512,26]
+        - generic [ref=e299] [box=730,4894,512,77]:
+          - generic [ref=e300] [box=730,4894,512,26]: WebRTC IPs (server-observed)
+          - generic [ref=e540] [box=730,4920,512,26]
+      - generic [ref=e542] [box=198,4985,1044,110]:
+        - generic [ref=e543] [box=217,5000,21,25]: ✓
+        - generic [ref=e544] [box=250,5000,973,80]:
+          - heading "No WebRTC leak" [level=4] [ref=e545] [box=250,5000,973,26]
+          - paragraph [ref=e546] [box=250,5030,973,50]
+      - group [ref=e303] [box=198,5109,1044,35]:
+        - generic "ICE candidates (browser-side)" [ref=e304] [cursor=pointer] [box=198,5109,1044,35]
+    - generic [ref=e305] [box=194,5204,1052,3431]:
+      - heading "🧬 CreepJS Fingerprint Modules" [level=2] [ref=e306] [box=194,5204,1052,42]
+      - paragraph [ref=e307] [box=194,5252,1052,26]: 25 modules — each module shows JSON result + SHA-256 hash.
+      - generic [ref=e308] [box=194,5305,1052,2651]:
+        - generic [ref=e549] [cursor=pointer] [box=195,5306,1050,75]:
+          - generic [ref=e550] [box=213,5320,488,47]
+          - generic [ref=e556] [box=993,5330,234,28]
+        - generic [ref=e560] [box=194,5393,1052,77]:
+          - generic [ref=e561] [cursor=pointer] [box=195,5394,1050,75]
+          - text: ▶ ▶ ▶ ▶
+        - generic [ref=e575] [box=194,5480,1052,99]:
+          - generic [ref=e576] [cursor=pointer] [box=195,5481,1050,97]
+          - text: ▶
+        - generic [ref=e591] [cursor=pointer] [box=195,5590,1050,75]:
+          - generic [ref=e592] [box=213,5604,415,47]
+          - generic [ref=e598] [box=993,5614,234,28]
+        - generic [ref=e602] [box=194,5676,1052,77]:
+          - generic [ref=e603] [cursor=pointer] [box=195,5677,1050,75]
+          - text: ▶ ▶ ▶
+        - generic [ref=e618] [cursor=pointer] [box=195,5764,1050,75]:
+          - generic [ref=e619] [box=213,5778,319,47]
+          - generic [ref=e625] [box=993,5788,234,28]
+        - generic [ref=e630] [cursor=pointer] [box=195,5852,1050,75]:
+          - generic [ref=e631] [box=213,5866,398,47]
+          - generic [ref=e637] [box=993,5875,234,28]
+        - generic [ref=e642] [cursor=pointer] [box=195,5939,1050,75]:
+          - generic [ref=e643] [box=213,5953,281,47]
+          - generic [ref=e649] [box=993,5963,234,28]
+        - generic [ref=e654] [cursor=pointer] [box=195,6026,1050,75]:
+          - generic [ref=e655] [box=213,6040,257,47]
+          - generic [ref=e661] [box=993,6050,234,28]
+        - generic [ref=e666] [cursor=pointer] [box=195,6113,1050,75]:
+          - generic [ref=e667] [box=213,6127,329,47]
+          - generic [ref=e673] [box=993,6137,234,28]
+        - generic [ref=e678] [cursor=pointer] [box=195,6201,1050,75]:
+          - generic [ref=e679] [box=213,6215,341,47]
+          - generic [ref=e685] [box=993,6224,234,28]
+        - generic [ref=e690] [cursor=pointer] [box=195,6288,1050,75]:
+          - generic [ref=e691] [box=213,6302,269,47]
+          - generic [ref=e697] [box=993,6312,234,28]
+        - generic [ref=e702] [cursor=pointer] [box=195,6375,1050,75]:
+          - generic [ref=e703] [box=213,6389,509,47]
+          - generic [ref=e709] [box=993,6399,234,28]
+        - generic [ref=e713] [box=194,6461,1052,77]:
+          - generic [ref=e714] [cursor=pointer] [box=195,6462,1050,75]
+          - text: ▶
+        - generic [ref=e729] [cursor=pointer] [box=195,6550,1050,75]:
+          - generic [ref=e730] [box=213,6564,398,47]
+          - generic [ref=e736] [box=993,6573,234,28]
+        - generic [ref=e741] [cursor=pointer] [box=195,6637,1050,75]:
+          - generic [ref=e742] [box=213,6651,297,47]
+          - generic [ref=e748] [box=993,6661,234,28]
+        - generic [ref=e753] [cursor=pointer] [box=195,6724,1050,75]:
+          - generic [ref=e754] [box=213,6738,322,47]
+          - generic [ref=e760] [box=993,6748,234,28]
+        - generic [ref=e765] [cursor=pointer] [box=195,6811,1050,75]:
+          - generic [ref=e766] [box=213,6825,325,47]
+          - generic [ref=e772] [box=993,6835,234,28]
+        - generic [ref=e777] [cursor=pointer] [box=195,6899,1050,75]:
+          - generic [ref=e778] [box=213,6913,316,47]
+          - generic [ref=e784] [box=993,6922,234,28]
+        - generic [ref=e789] [cursor=pointer] [box=195,6986,1050,75]:
+          - generic [ref=e790] [box=213,7000,351,47]
+          - generic [ref=e796] [box=993,7010,234,28]
+        - generic [ref=e801] [cursor=pointer] [box=195,7073,1050,75]:
+          - generic [ref=e802] [box=213,7087,298,47]
+          - generic [ref=e808] [box=993,7097,234,28]
+        - generic [ref=e813] [cursor=pointer] [box=195,7160,1050,75]:
+          - generic [ref=e814] [box=213,7174,368,47]
+          - generic [ref=e820] [box=993,7184,234,28]
+        - generic [ref=e825] [cursor=pointer] [box=195,7248,1050,75]:
+          - generic [ref=e826] [box=213,7262,350,47]
+          - generic [ref=e832] [box=993,7271,234,28]
+        - generic [ref=e836] [box=194,7334,1052,77]:
+          - generic [ref=e837] [cursor=pointer] [box=195,7335,1050,75]
+          - text: ▶
+        - generic [ref=e852] [cursor=pointer] [box=195,7422,1050,75]:
+          - generic [ref=e853] [box=213,7436,295,47]
+          - generic [ref=e859] [box=993,7446,234,28]
+        - generic [ref=e864] [cursor=pointer] [box=195,7509,1050,75]:
+          - generic [ref=e865] [box=213,7523,566,47]
+          - generic [ref=e871] [box=889,7533,338,28]
+        - generic [ref=e879] [cursor=pointer] [box=195,7597,1050,75]:
+          - generic [ref=e880] [box=213,7611,510,47]
+          - generic [ref=e886] [box=993,7620,234,28]
+        - generic [ref=e891] [cursor=pointer] [box=195,7684,1050,75]:
+          - generic [ref=e892] [box=213,7698,443,47]
+          - generic [ref=e898] [box=993,7708,234,28]
+        - generic [ref=e903] [cursor=pointer] [box=195,7771,1050,75]:
+          - generic [ref=e904] [box=213,7785,461,47]
+          - generic [ref=e910] [box=993,7795,234,28]
+        - generic [ref=e915] [cursor=pointer] [box=195,7858,1050,97]:
+          - generic [ref=e916] [box=213,7872,790,69]
+          - generic [ref=e922] [box=1003,7884,224,46]
+      - generic [ref=e310] [box=194,7986,1052,649]:
+        - heading "📋 Full Fingerprint JSON" [level=3] [ref=e311] [box=194,7992,216,33]
+        - button "📋 Copy JSON" [ref=e312] [cursor=pointer] [box=428,7992,126,37]
+        - button "⬇ Download" [ref=e313] [cursor=pointer] [box=567,7992,113,37]
+        - generic [ref=e314] [box=194,8035,1052,600]: "{ \"_meta\": { \"generatedAt\": \"2026-08-01T08:38:25.020Z\", \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36\", \"ipInfo\": { \"ip\": \"42.114.116.215\", \"country_name\": \"VN\", \"country\": null, \"region\": \"Hanoi\", \"city\": \"Hanoi\", \"zip\": \"10000\", \"hostname\": null, \"org\": \"FPT Telecom Company\", \"isp\": null, \"asn\": 18403, \"timezone\": \"Asia/Bangkok\", \"lat\": \"21.0245\", \"lon\": \"105.84117\", \"language\": [ \"vi\" ], \"isCloudProvider\": false, \"raw\": { \"ip\": \"42.114.116.215\", \"asn\": 18403, \"org\": \"FPT Telecom Company\", \"isEu\": false, \"country\": \"VN\", \"countryName\": \"Vietnam\", \"city\": \"Hanoi\", \"continent\": \"AS\", \"latitude\": \"21.0245\", \"longitude\": \"105.84117\", \"zipCode\": \"10000\", \"airport\": \"HKG\", \"region\": \"Hanoi\", \"regionCode\": \"44\", \"timezone\": { \"name\": \"Asia/Bangkok\" }, \"languages\": \"vi\" } }, \"p0f\": { \"browser_os\": \"Linux\", \"ip\": \"42.114.116.215\", \"match\": true, \"network_os\": \"Linux\", \"syn\": { \"df\": true, \"initial_ttl\": 64, \"ip_id\": 4849, \"mss\": 1398, \"options\": \"mss,sack,ts,nop,ws\", \"os\": \"Linux\", \"sack_ok\": true, \"signals\": [ \"ttl≈64, has timestamps\", \"Linux opts pattern\" ], \"timestamps\": true, \"ttl\": 48, \"window\": 64240, \"window_scale\": 10 }, \"raw\": { \"browser_os\": \"Linux\", \"ip\": \"42.114.116.215\", \"match\": true, \"network_os\": \"Linux\", \"syn\": { \"df\": true, \"initial_ttl\": 64, \"ip_id\": 4849, \"mss\": 1398, \"options\": \"mss,sack,ts,nop,ws\", \"os\": \"Linux\", \"sack_ok\": true, \"signals\": [ \"ttl≈64, has timestamps\", \"Linux opts pattern\" ], \"timestamps\": true, \"ttl\": 48, \"window\": 64240, \"window_scale\": 10 } } }, \"webrtc\": { \"status\": \"success\", \"session\": \"3a865fff-9314-48f3-9850-a7810dac68b5\", \"ipv4\": [ \"42.114.116.215\" ], \"ipv6\": [], \"candidates\": [ \"candidate:2788557967 1 udp 2113937151 e723c7b5-ea32-43f6-9e99-d6d4d4f3ef59.local 48190 typ host generation 0 ufrag nvpH network-cost 999\", \"candidate:2788557967 1 udp 2113937151 e723c7b5-ea32-43f6-9e99-d6d4d4f3ef59.local 56557 typ host generation 0 ufrag nvpH network-cost 999\", \"candidate:2788557967 1 udp 2113937151 e723c7b5-ea32-43f6-9e99-d6d4d4f3ef59.local 52028 typ host generation 0 ufrag nvpH network-cost 999\", \"candidate:736053780 1 udp 1677729535 42.114.116.215 35357 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag nvpH network-cost 999\", \"candidate:736053780 1 udp 1677729535 42.114.116.215 35309 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag nvpH network-cost 999\", \"candidate:736053780 1 udp 1677729535 42.114.116.215 35316 typ srflx raddr 0.0.0.0 rport 0 generation 0 ufrag nvpH network-cost 999\" ], \"proxyshard\": { \"session_id\": \"681f2aed-7b17-4952-9724-a0d82ca72dee\", \"server_address\": \"85.234.94.132:54178\", \"tcp_ip\": \"42.114.116.215\", \"webrtc_ips\": [ \"42.114.116.215\" ], \"status\": \"success\", \"error\": null } } }, \"workerScope\": { \"lied\": 0, \"lies\": { \"proto\": false }, \"locale\": \"en\", \"timezoneOffset\": -420, \"timezoneLocation\": \"Asia/Bangkok\", \"deviceMemory\": 8, \"hardwareConcurrency\": 8, \"language\": \"en-US\", \"languages\": \"en-US,en\", \"platform\": \"Linux x86_64\", \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36\", \"userAgentData\": { \"architecture\": null, \"bitness\": null, \"brands\": [ { \"brand\": \"Chromium\", \"version\": \"151\" }, { \"brand\": \"Not=A?Brand\", \"version\": \"99\" } ], \"mobile\": false, \"platform\": \"Linux\" }, \"system\": \"Linux\", \"device\": \"Linux x86_64\", \"userAgentEngine\": \"V8\", \"$hash\": \"9f3f9a5405825f4cb564f0ac563f2e9059d8c9063741e080b9ba6fb5f3b7430d\" }, \"navigator\": { \"platform\": \"Linux x86_64\", \"userAgent\": \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36\", \"appVersion\": \"5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.0.0 Safari/537.36\", \"deviceMemory\": 8, \"doNotTrack\": null, \"hardwareConcurrency\": 8, \"language\": \"en-US\", \"languages\": [ \"en-US\", \"en\" ], \"maxTouchPoints\": 0, \"vendor\": \"Google Inc.\", \"cookieEnabled\": true, \"onLine\": true, \"pdfViewerEnabled\": true, \"webdriver\": false, \"mimeTypes\": [ \"application/pdf\", \"text/pdf\" ], \"plugins\": [ { \"name\": \"PDF Viewer\", \"description\": \"Portable Document Format\", \"filename\": \"internal-pdf-viewer\" }, { \"name\": \"Chrome PDF Viewer\", \"description\": \"Portable Document Format\", \"filename\": \"internal-pdf-viewer\" }, { \"name\": \"Chromium PDF Viewer\", \"description\": \"Portable Document Format\", \"filename\": \"internal-pdf-viewer\" }, { \"name\": \"Microsoft Edge PDF Viewer\", \"description\": \"Portable Document Format\", \"filename\": \"internal-pdf-viewer\" }, { \"name\": \"WebKit built-in PDF\", \"description\": \"Portable Document Format\", \"filename\": \"internal-pdf-viewer\" } ], \"permissions\": { \"granted\": [ \"accelerometer\", \"background-fetch\", \"background-sync\", \"gyroscope\", \"magnetometer\", \"screen-wake-lock\" ], \"denied\": [], \"prompt\": [ \"camera\", \"microphone\", \"geolocation\", \"notifications\", \"midi\", \"persistent-storage\", \"clipboard-read\", \"display-capture\" ], \"unknown\": [ \"push\" ] }, \"webgpu\": null, \"properties\": [ \"vendorSub\", \"productSub\", \"vendor\", \"maxTouchPoints\", \"scheduling\", \"userActivation\", \"geolocation\", \"doNotTrack\", \"webkitTemporaryStorage\", \"webkitPersistentStorage\", \"windowControlsOverlay\", \"hardwareConcurrency\", \"cookieEnabled\", \"appCodeName\", \"appName\", \"appVersion\", \"platform\", \"product\", \"userAgent\", \"language\", \"languages\", \"onLine\", \"webdriver\", \"plugins\", \"mimeTypes\", \"pdfViewerEnabled\", \"connection\", \"getGamepads\", \"javaEnabled\", \"sendBeacon\", \"vibrate\", \"deprecatedRunAdAuctionEnforcesKAnonymity\", \"protectedAudience\", \"clipboard\", \"credentials\", \"keyboard\", \"managed\", \"mediaDevices\", \"serviceWorker\", \"virtualKeyboard\", \"wakeLock\", \"deviceMemory\", \"userAgentData\", \"locks\", \"storage\", \"gpu\", \"login\", \"ink\", \"mediaCapabilities\", \"permissions\" ], \"lied\": false, \"$hash\": \"ea83dfd5b6693c8ed475d63d5bf879d895c8a65795a235d2b5e8d5781e994e87\" }, \"browserVersion\": { \"brand\": \"HeadlessChrome\", \"brandVersion\": \"151.0.7922.10\", \"brandVersionIsEngineBase\": false, \"ownReleaseTrain\": false, \"forkDetection\": { \"opera\": { \"uaToken\": false, \"jsSurface\": false, \"chBrand\": false, \"confirmed\": false }, \"operaGx\": { \"uaToken\": false, \"jsSurface\": false, \"chBrand\": false, \"confirmed\": false }, \"brave\": { \"uaToken\": false, \"jsSurface\": false, \"chBrand\": false, \"confirmed\": false }, \"vivaldi\": { \"uaToken\": false, \"jsSurface\": false, \"chBrand\": false, \"confirmed\": false } }, \"braveTrains\": null, \"isBrave\": false, \"engineFamily\": \"Chromium\", \"engineVersion\": \"151.0.7922.10\", \"engineMajor\": 151, \"engineSource\": \"UA-CH fullVersionList (UA is version-reduced to 151.0.0.0)\", \"uaReportedEngineVersion\": \"151.0.0.0\", \"uaReportedBrandVersion\": \"151.0.0.0\", \"uaVersionReduced\": true, \"channel\": \"headless\", \"channelConfidence\": \"high\", \"channelSource\": \"release-calendar drift\", \"exactBuild\": null, \"firefoxChannels\": null, \"edgeTrains\": null, \"engineBaseCheck\": null, \"appleOsLatest\": null, \"isOperaGx\": false, \"verdict\": \"headless (not a consumer release channel)\", \"isStable\": false, \"expectedStableMajor\": 151, \"driftMajors\": 0, \"forkBaseLagAllowance\": 0, \"apiSurfaceBracket\": { \"atLeast\": 119, \"below\": null, \"monotonic\": true }, \"platform\": { \"os\": \"Linux\", \"label\": \"Linux\", \"version\": \"\", \"major\": null, \"source\": \"UA-CH platformVersion\", \"confidence\": \"high\", \"uaOsVersion\": null, \"uaTokenFrozen\": false, \"contractMajor\": null, \"architecture\": \"x86\", \"bitness\": \"64\", \"model\": \"\", \"wow64\": false, \"oscpu\": null, \"latestReleased\": null }, \"clientHints\": { \"available\": true, \"brands\": [ \"Chromium 151\", \"Not=A?Brand 99\" ], \"fullVersionList\": [ \"Chromium 151.0.7922.10\" ], \"fullVersion\": \"151.0.7922.10\", \"brandFullVersion\": null }, \"evidence\": [ \"HeadlessChrome does not publish a Google Chrome build number, so the exact build cannot be verified against Chrome's release list\", \"architecture x86/64-bit\", \"platform: Linux (via UA-CH platformVersion, high confidence)\" ], \"warnings\": [ { \"level\": \"danger\", \"kind\": \"channel\", \"msg\": \"Browser is HeadlessChrome — not a stable consumer release channel\" } ], \"calendarAnchor\": \"Chromium 151 @ 2026-07-15, every 4w\", \"lies\": [ \"Browser is HeadlessChrome — not a stable consumer release channel\" ], \"lied\": true, \"$hash\": \"61c9855da52cbc424dfb983479f488301d4324316cc5f1f03fc70d17202dd2ce\" }, \"windowFeatures\": { \"keys\": [ \"Object\", \"Function\", \"Array\", \"Number\", \"parseFloat\", \"parseInt\", \"Infinity\", \"NaN\", \"undefined\", \"Boolean\", \"String\", \"Symbol\", \"Date\", \"Promise\", \"RegExp\", \"Error\", \"AggregateError\", \"EvalError\", \"RangeError\", \"ReferenceError\", \"SyntaxError\", \"TypeError\", \"URIError\", \"globalThis\", \"JSON\", \"Math\", \"Intl\", \"ArrayBuffer\", \"Atomics\", \"Uint8Array\", \"Int8Array\", \"Uint16Array\", \"Int16Array\", \"Uint32Array\", \"Int32Array\", \"BigUint64Array\", \"BigInt64Array\", \"Uint8ClampedArray\", \"Float32Array\", \"Float64Array\", \"DataView\", \"Map\", \"BigInt\", \"Set\", \"Iterator\", \"WeakMap\", \"WeakSet\", \"Proxy\", \"Reflect\", \"FinalizationRegistry\", \"WeakRef\", \"decodeURI\", \"decodeURIComponent\", \"encodeURI\", \"encodeURIComponent\", \"escape\", \"unescape\", \"eval\", \"isFinite\", \"isNaN\", \"console\", \"Option\", \"Image\", \"Audio\", \"webkitURL\", \"webkitRTCPeerConnection\", \"webkitMediaStream\", \"WebKitMutationObserver\", \"WebKitCSSMatrix\", \"XPathResult\", \"XPathExpression\", \"XPathEvaluator\", \"XMLSerializer\", \"XMLHttpRequestUpload\", \"XMLHttpRequestEventTarget\", \"XMLHttpRequest\", \"XMLDocument\", \"WritableStreamDefaultWriter\", \"WritableStreamDefaultController\", \"WritableStream\", \"Worker\", \"WindowControlsOverlayGeometryChangeEvent\", \"WindowControlsOverlay\", \"Window\", \"WheelEvent\", \"WebSocket\", \"WebGLVertexArrayObject\", \"WebGLUniformLocation\", \"WebGLTransformFeedback\", \"WebGLTexture\", \"WebGLSync\", \"WebGLShaderPrecisionFormat\", \"WebGLShader\", \"WebGLSampler\", \"WebGLRenderingContext\", \"WebGLRenderbuffer\", \"WebGLQuery\", \"WebGLProgram\", \"WebGLObject\", \"WebGLFramebuffer\", \"WebGLContextEvent\", \"WebGLBuffer\", \"WebGLActiveInfo\", \"WebGL2RenderingContext\", \"WaveShaperNode\", \"VisualViewport\", \"VisibilityStateEntry\", \"VirtualKeyboardGeometryChangeEvent\", \"ViewTransitionTypeSet\", \"ViewTransition\", \"ViewTimeline\", \"VideoPlaybackQuality\", \"VideoFrame\", \"VideoColorSpace\", \"ValidityState\", \"VTTCue\", \"UserActivation\", \"URLSearchParams\", \"URLPattern\", \"URL\", \"UIEvent\", \"TrustedTypePolicyFactory\", \"TrustedTypePolicy\", \"TrustedScriptURL\", \"TrustedScript\", \"TrustedHTML\", \"TreeWalker\", \"TransitionEvent\", \"TransformStreamDefaultController\", \"TransformStream\", \"TrackEvent\", \"TouchList\", \"TouchEvent\", \"Touch\", \"ToggleEvent\", \"TimeRanges\", \"TextUpdateEvent\", \"TextTrackList\", \"TextTrackCueList\", \"TextTrackCue\", \"TextTrack\", \"TextMetrics\", \"TextFormatUpdateEvent\", \"TextFormat\", \"TextEvent\", \"TextEncoderStream\", \"TextEncoder\", \"TextDecoderStream\", \"TextDecoder\", \"Text\", \"TaskSignal\", \"TaskPriorityChangeEvent\", \"TaskController\", \"TaskAttributionTiming\", \"SyncManager\", \"Subscriber\", \"SubmitEvent\", \"StyleSheetList\", \"StyleSheet\", \"StylePropertyMapReadOnly\", \"StylePropertyMap\", \"StorageEvent\", \"Storage\", \"StereoPannerNode\", \"StaticRange\", \"SourceBufferList\", \"SourceBuffer\", \"ShadowRoot\", \"Selection\", \"SecurityPolicyViolationEvent\", \"ScrollTimeline\", \"ScriptProcessorNode\", \"ScreenOrientation\", \"Screen\", \"Scheduling\", \"Scheduler\", \"SVGViewElement\", \"SVGUseElement\", \"SVGUnitTypes\", \"SVGTransformList\", \"SVGTransform\", \"SVGTitleElement\", \"SVGTextPositioningElement\", \"SVGTextPathElement\", \"SVGTextElement\", \"SVGTextContentElement\", \"SVGTSpanElement\", \"SVGSymbolElement\", \"SVGSwitchElement\", \"SVGStyleElement\", \"SVGStringList\", \"SVGStopElement\", \"SVGSetElement\", \"SVGScriptElement\", \"SVGSVGElement\", \"SVGRectElement\", \"SVGRect\", \"SVGRadialGradientElement\", \"SVGPreserveAspectRatio\", \"SVGPolylineElement\" ], \"keysCount\": 1337, \"apple\": 14, \"moz\": 0, \"webkit\": 14, \"$hash\": \"6d9db7c8575c98a70a7e809affbc8071bf1cc94ea9b8856beb83bf2600749fb7\" }, \"headless\": { \"chromium\": true, \"chromiumEngine\": true, \"engine\": \"chromium\", \"likeHeadless\": { \"noChrome\": false, \"uaDataIsBlank\": false, \"pdfIsDisabled\": false, \"noContentIndex\": true, \"noContactsManager\": true, \"noDownlinkMax\": true, \"hasPermissionsBug\": false, \"noPlugins\": false, \"noMimeTypes\": false, \"notificationIsDenied\": false, \"hasKnownBgColor\": false, \"prefersLightColor\": true, \"noTaskbar\": true, \"hasVvpScreenRes\": false, \"hasSwiftShader\": false, \"noWebShare\": true }, \"likeHeadlessGroups\": { \"universal\": { \"flags\": { \"hasPermissionsBug\": false, \"noPlugins\": false, \"noMimeTypes\": false, \"notificationIsDenied\": false, \"hasKnownBgColor\": false, \"prefersLightColor\": true, \"noTaskbar\": true, \"hasVvpScreenRes\": false, \"hasSwiftShader\": false, \"noWebShare\": true }, \"count\": 3 }, \"chromiumOnly\": { \"flags\": { \"noChrome\": false, \"uaDataIsBlank\": false, \"pdfIsDisabled\": false, \"noContentIndex\": true, \"noContactsManager\": true, \"noDownlinkMax\": true }, \"count\": 3, \"applicable\": true } }, \"headless\": { \"webDriverIsOn\": false, \"hasHeadlessUA\": true, \"hasHeadlessWorkerUA\": false }, \"stealth\": { \"hasIframeProxy\": false, \"hasHighChromeIndex\": false, \"hasBadChromeRuntime\": false, \"hasToStringProxy\": false, \"hasBadWebGL\": false }, \"likeHeadlessRating\": 6, \"headlessRating\": 1, \"stealthRating\": 0, \"systemFonts\": \"12px caption\", \"$hash\": \"27809260d3cfa6146f66ec238e0334fed555339442ab36a8a8bb8c3be6cc2f4d\" }, \"htmlElementVersion\": { \"keys\": [ \"title\", \"lang\", \"translate\", \"dir\", \"hidden\", \"inert\", \"accessKey\", \"draggable\", \"spellcheck\", \"autocapitalize\", \"editContext\", \"contentEditable\", \"enterKeyHint\", \"isContentEditable\", \"inputMode\", \"virtualKeyboardPolicy\", \"offsetParent\", \"offsetTop\", \"offsetLeft\", \"offsetWidth\", \"offsetHeight\", \"popover\", \"innerText\", \"outerText\", \"writingSuggestions\", \"onabort\", \"onbeforeinput\", \"onbeforematch\", \"onbeforetoggle\", \"onblur\", \"oncancel\", \"oncanplay\", \"oncanplaythrough\", \"onchange\", \"onclick\", \"onclose\", \"oncommand\", \"oncontentvisibilityautostatechange\", \"oncontextlost\", \"oncontextmenu\", \"oncontextrestored\", \"oncuechange\", \"ondblclick\", \"ondrag\", \"ondragend\", \"ondragenter\", \"ondragleave\", \"ondragover\", \"ondragstart\", \"ondrop\", \"ondurationchange\", \"onemptied\", \"onended\", \"onerror\", \"onfocus\", \"onformdata\", \"oninput\", \"oninvalid\", \"onkeydown\", \"onkeypress\", \"onkeyup\", \"onload\", \"onloadeddata\", \"onloadedmetadata\", \"onloadstart\", \"onmousedown\", \"onmouseenter\", \"onmouseleave\", \"onmousemove\", \"onmouseout\", \"onmouseover\", \"onmouseup\", \"onmousewheel\", \"onpause\", \"onplay\", \"onplaying\", \"onprogress\", \"onratechange\", \"onreset\", \"onresize\", \"onscroll\", \"onscrollend\", \"onsecuritypolicyviolation\", \"onseeked\", \"onseeking\", \"onselect\", \"onslotchange\", \"onstalled\", \"onsubmit\", \"onsuspend\", \"ontimeupdate\", \"ontoggle\", \"onvolumechange\", \"onwaiting\", \"onwebkitanimationend\", \"onwebkitanimationiteration\", \"onwebkitanimationstart\", \"onwebkittransitionend\", \"onwheel\", \"onauxclick\", \"ongotpointercapture\", \"onlostpointercapture\", \"onpointerdown\", \"onpointermove\", \"onpointerup\", \"onpointercancel\", \"onpointerover\", \"onpointerout\", \"onpointerenter\", \"onpointerleave\", \"onselectstart\", \"onselectionchange\", \"onanimationcancel\", \"onanimationend\", \"onanimationiteration\", \"onanimationstart\", \"ontransitionrun\", \"ontransitionstart\", \"ontransitionend\", \"ontransitioncancel\", \"onbeforexrselect\", \"oncopy\", \"oncut\", \"onpaste\", \"dataset\", \"nonce\", \"autofocus\", \"tabIndex\", \"style\", \"attributeStyleMap\", \"attachInternals\", \"blur\", \"click\", \"focus\", \"hidePopover\", \"showPopover\", \"togglePopover\", \"onscrollsnapchange\", \"onscrollsnapchanging\", \"focusGroup\", \"focusGroupStart\", \"constructor\", \"onpointerrawupdate\", \"namespaceURI\", \"prefix\", \"localName\", \"tagName\", \"id\", \"className\", \"classList\", \"slot\", \"attributes\", \"shadowRoot\", \"part\", \"assignedSlot\", \"innerHTML\", \"outerHTML\", \"scrollTop\", \"scrollLeft\", \"scrollWidth\", \"scrollHeight\", \"clientTop\", \"clientLeft\", \"clientWidth\", \"clientHeight\", \"onbeforecopy\", \"onbeforecut\", \"onbeforepaste\", \"onsearch\", \"elementTiming\", \"onfullscreenchange\", \"onfullscreenerror\", \"onwebkitfullscreenchange\", \"onwebkitfullscreenerror\", \"activeViewTransition\", \"role\", \"ariaAtomic\", \"ariaAutoComplete\", \"ariaBusy\", \"ariaBrailleLabel\", \"ariaBrailleRoleDescription\", \"ariaChecked\", \"ariaColCount\", \"ariaColIndex\", \"ariaColSpan\", \"ariaCurrent\", \"ariaDescription\", \"ariaDisabled\", \"ariaExpanded\", \"ariaHasPopup\", \"ariaHidden\", \"ariaInvalid\", \"ariaKeyShortcuts\", \"ariaLabel\", \"ariaLevel\", \"ariaLive\", \"ariaModal\", \"ariaMultiLine\", \"ariaMultiSelectable\", \"ariaOrientation\" ], \"keysCount\": 349, \"$hash\": \"94568b3893110db6208e949f91e1dd0f314c9494067808e1b7a299b7a6d566bd\" }, \"cssMedia\": { \"mediaCSS\": { \"prefers-reduced-motion\": \"no-preference\", \"prefers-color-scheme\": \"light\", \"monochrome\": \"non-monochrome\", \"forced-colors\": \"none\", \"any-hover\": \"hover\", \"hover\": \"hover\", \"any-pointer\": \"fine\", \"pointer\": \"fine\", \"device-aspect-ratio\": \"1440/1100\", \"device-screen\": \"1440 x 1100\", \"display-mode\": \"browser\", \"color-gamut\": \"srgb\", \"orientation\": \"landscape\" }, \"matchMediaCSS\": { \"prefers-reduced-motion\": \"no-preference\", \"prefers-color-scheme\": \"light\", \"monochrome\": \"non-monochrome\", \"forced-colors\": \"none\", \"any-hover\": \"hover\", \"hover\": \"hover\", \"any-pointer\": \"fine\", \"pointer\": \"fine\", \"device-aspect-ratio\": \"1440/1100\", \"device-screen\": \"1440 x 1100\", \"display-mode\": \"browser\", \"color-gamut\": \"srgb\", \"orientation\": \"landscape\" }, \"screenQuery\": { \"width\": 1440, \"height\": 1100 }, \"$hash\": \"10c14493dcfe6d4ba33abbd29f41a8e9cf102053590ee98daade01a293842838\" }, \"css\": { \"computedStyle\": { \"keys\": [ \"accent-color\", \"align-content\", \"align-items\", \"align-self\", \"alignment-baseline\", \"anchor-name\", \"anchor-scope\", \"animation-composition\", \"animation-delay\", \"animation-direction\", \"animation-duration\", \"animation-fill-mode\", \"animation-iteration-count\", \"animation-name\", \"animation-play-state\", \"animation-range-end\", \"animation-range-start\", \"animation-timeline\", \"animation-timing-function\", \"animation-trigger\", \"app-region\", \"appearance\", \"aspect-ratio\", \"backdrop-filter\", \"backface-visibility\", \"background-attachment\", \"background-blend-mode\", \"background-clip\", \"background-color\", \"background-image\", \"background-origin\", \"background-position\", \"background-repeat\", \"background-size\", \"baseline-shift\", \"baseline-source\", \"block-size\", \"border-block-end-color\", \"border-block-end-style\", \"border-block-end-width\", \"border-block-start-color\", \"border-block-start-style\", \"border-block-start-width\", \"border-bottom-color\", \"border-bottom-left-radius\", \"border-bottom-right-radius\", \"border-bottom-style\", \"border-bottom-width\", \"border-collapse\", \"border-end-end-radius\", \"border-end-start-radius\", \"border-image-outset\", \"border-image-repeat\", \"border-image-slice\", \"border-image-source\", \"border-image-width\", \"border-inline-end-color\", \"border-inline-end-style\", \"border-inline-end-width\", \"border-inline-start-color\", \"border-inline-start-style\", \"border-inline-start-width\", \"border-left-color\", \"border-left-style\", \"border-left-width\", \"border-right-color\", \"border-right-style\", \"border-right-width\", \"border-shape\", \"border-start-end-radius\", \"border-start-start-radius\", \"border-top-color\", \"border-top-left-radius\", \"border-top-right-radius\", \"border-top-style\", \"border-top-width\", \"bottom\", \"box-decoration-break\", \"box-shadow\", \"box-sizing\" ], \"count\": 493 }, \"system\": { \"fonts\": [ { \"caption\": \"12px caption\" }, { \"icon\": \"12px icon\" }, { \"menu\": \"12px menu\" }, { \"message-box\": \"12px message-box\" }, { \"small-caption\": \"12px small-caption\" }, { \"status-bar\": \"12px status-bar\" } ] }, \"$hash\": \"14152fceb476c5a9299a21976c53c89f0a8219983cd100071f531b34d3c470b2\" }, \"screen\": { \"width\": 1440, \"height\": 1100, \"availWidth\": 1440, \"availHeight\": 1100, \"colorDepth\": 24, \"pixelDepth\": 24, \"devicePixelRatio\": 1, \"touch\": false, \"lied\": false, \"$hash\": \"f0f06e6d26a0bcaf30b6844ff5f91e0bf6b26047ffa1d311c19ad62c30306ff4\" }, \"voices\": { \"local\": [], \"remote\": [], \"languages\": [], \"defaultVoiceName\": null, \"defaultVoiceLang\": null, \"lied\": false, \"$hash\": \"f880bd3857e50bc357560d6e2e501b361ef599143f37fa0bf2e9bb2d2a640b05\" }, \"media\": { \"mimeTypes\": [ { \"mimeType\": \"audio/aac\", \"audioPlayType\": \"probably\", \"videoPlayType\": \"probably\", \"mediaSource\": true, \"mediaRecorder\": false }, { \"mimeType\": \"audio/mpeg\", \"audioPlayType\": \"probably\", \"videoPlayType\": \"probably\", \"mediaSource\": true, \"mediaRecorder\": false }, { \"mimeType\": \"audio/mpegurl\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": false }, { \"mimeType\": \"audio/ogg; codecs=\\\"vorbis\\\"\", \"audioPlayType\": \"probably\", \"videoPlayType\": \"probably\", \"mediaSource\": false, \"mediaRecorder\": false }, { \"mimeType\": \"audio/wav\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": false }, { \"mimeType\": \"audio/webm\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": true }, { \"mimeType\": \"video/mp4\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": true }, { \"mimeType\": \"video/webm\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": true }, { \"mimeType\": \"video/ogg\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": false }, { \"mimeType\": \"application/x-mpegURL\", \"audioPlayType\": \"maybe\", \"videoPlayType\": \"maybe\", \"mediaSource\": false, \"mediaRecorder\": false } ], \"$hash\": \"8b317d1ffe64ae0a3c5f6cc94247a01f8e97a235a4b491980dfca13dfaaec9bc\" }, \"canvas2d\": { \"signature\": \"4DB008E362D9DB1A9E84AF6D84325754\", \"uniqueness\": \"99.96% (120 of 341643 user agents have the same signature)\", \"uniquenessPercent\": 99.96, \"count\": 120, \"total\": 341643, \"topBrowser\": \"Chrome\", \"topOS\": \"GNU/Linux\", \"lookup\": { \"count\": 120, \"total\": 341643, \"uniquenessPercent\": 99.96, \"uniqueness\": \"99.96% (120 of 341643 user agents have the same signature)\", \"browser\": [ [ \"Chrome\", 80 ], [ \"Instagram\", 14 ], [ \"Chrome Mobile\", 9 ], [ \"Facebook\", 3 ], [ \"Mobile Safari\", 3 ], [ \"Firefox\", 2 ], [ \"Headless Chrome\", 2 ], [ \"Microsoft Edge\", 2 ] ], \"os\": [ [ \"GNU/Linux\", 84 ], [ \"iOS\", 17 ], [ \"Android\", 9 ], [ \"Windows\", 8 ], [ \"Mac\", 2 ] ], \"os_ver\": [ [ \"GNU/Linux\", 84 ], [ \"Android 10\", 8 ], [ \"Windows 10\", 8 ], [ \"iOS 26.3\", 3 ], [ \"iOS 18.6\", 3 ], [ \"iOS 26.4\", 2 ], [ \"iOS 26.2\", 2 ], [ \"iOS 18.5\", 2 ] ], \"browser_ver\": [ [ \"Chrome 140\", 20 ], [ \"Chrome 139\", 18 ], [ \"Chrome 143\", 8 ], [ \"Chrome 142\", 6 ], [ \"Chrome 144\", 5 ], [ \"Chrome 141\", 5 ], [ \"Chrome 147\", 4 ], [ \"Chrome 145\", 4 ] ], \"device\": [ [ \"Desktop\", 91 ], [ \"Smartphone\", 7 ], [ \"Apple iPhone\", 4 ], [ \"Apple\", 2 ], [ \"Apple iPhone 14 Pro\", 2 ], [ \"Apple iPhone 16 Pro\", 2 ], [ \"Apple iPhone 17 Pro\", 2 ], [ \"Apple iPhone 17 Pro Max\", 2 ] ], \"engine\": [ [ \"Other\", 44 ], [ \"Blink 140\", 13 ], [ \"Blink 139\", 11 ], [ \"Blink 145\", 7 ], [ \"Blink 143\", 6 ], [ \"Blink 142\", 6 ], [ \"Blink 146\", 5 ], [ \"Blink 144\", 5 ] ], \"platform\": [ [ \"Windows\", 72 ], [ \"iPhone\", 20 ], [ \"Linux x86_64\", 16 ], [ \"Linux armv8l\", 11 ], [ \"Win32\", 1 ] ] }, \"pngLength\": 6029, \"dataURI\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAAAeCAYAAABHenA+AAAQAElEQVR4AexZB1xUx9b/z+7Si4AaQc...\", \"dataURILength\": 8062, \"mods\": null, \"lied\": false, \"error\": null, \"$hash\": \"4db008e362d9db1a9e84af6d84325754\" }, \"cpuScaling\": { \"claimed\": 8, \"estimatedCores\": 8, \"parallelism\": { \"1\": 1, \"2\": 2, \"4\": 3.2, \"8\": 4.76, \"16\": 8.12, \"32\": 6.51 }, \"times\": { \"1\": 170, \"2\": 119.8, \"4\": 212.4, \"8\": 285.5, \"16\": 334.8, \"32\": 836.2 }, \"spoofedLow\": false, \"note\": \"hardwareConcurrency is consistent with measured parallelism\", \"$hash\": \"df4698a93ec0e00e647df2e3cd64d0837c26d79089fdeee5db4c717f20936ec4\" }, \"canvasWebgl\": { \"parameters\": { \"VENDOR\": \"WebKit\", \"RENDERER\": \"WebKit WebGL\", \"VERSION\": \"WebGL 2.0 (OpenGL ES 3.0 Chromium)\", \"SHADING_LANGUAGE_VERSION\": \"WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)\", \"MAX_TEXTURE_SIZE\": 8192, \"MAX_CUBE_MAP_TEXTURE_SIZE\": 16384, \"MAX_RENDERBUFFER_SIZE\": 8192, \"MAX_VERTEX_ATTRIBS\": 16, \"MAX_VARYING_VECTORS\": 31, \"MAX_VERTEX_UNIFORM_VECTORS\": 4096, \"MAX_FRAGMENT_UNIFORM_VECTORS\": 4096, \"MAX_COMBINED_TEXTURE_IMAGE_UNITS\": 64, \"MAX_TEXTURE_IMAGE_UNITS\": 32, \"MAX_VERTEX_TEXTURE_IMAGE_UNITS\": 32, \"STENCIL_BITS\": 0, \"DEPTH_BITS\": 24, \"RED_BITS\": 8, \"GREEN_BITS\": 8, \"BLUE_BITS\": 8, \"ALPHA_BITS\": 8, \"SUBPIXEL_BITS\": 4, \"MAX_VIEWPORT_DIMS\": [ 8192, 8192 ], \"ALIASED_LINE_WIDTH_RANGE\": [ 1, 1 ], \"ALIASED_POINT_SIZE_RANGE\": [ 1, 1023 ], \"UNMASKED_VENDOR\": \"Google Inc. (Google)\", \"UNMASKED_RENDERER\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\" }, \"extensions\": [ \"EXT_clip_control\", \"EXT_color_buffer_float\", \"EXT_color_buffer_half_float\", \"EXT_conservative_depth\", \"EXT_depth_clamp\", \"EXT_float_blend\", \"EXT_polygon_offset_clamp\", \"EXT_texture_compression_bptc\", \"EXT_texture_compression_rgtc\", \"EXT_texture_filter_anisotropic\", \"EXT_texture_mirror_clamp_to_edge\", \"NV_shader_noperspective_interpolation\", \"OES_draw_buffers_indexed\", \"OES_sample_variables\", \"OES_shader_multisample_interpolation\", \"OES_texture_float_linear\", \"OVR_multiview2\", \"WEBGL_clip_cull_distance\", \"WEBGL_compressed_texture_astc\", \"WEBGL_compressed_texture_etc\", \"WEBGL_compressed_texture_etc1\", \"WEBGL_compressed_texture_s3tc\", \"WEBGL_compressed_texture_s3tc_srgb\", \"WEBGL_debug_renderer_info\", \"WEBGL_debug_shaders\", \"WEBGL_lose_context\", \"WEBGL_multi_draw\", \"WEBGL_polygon_mode\", \"WEBGL_stencil_texturing\" ], \"contextAttributes\": { \"alpha\": true, \"antialias\": true, \"depth\": true, \"desynchronized\": false, \"failIfMajorPerformanceCaveat\": false, \"powerPreference\": \"default\", \"premultipliedAlpha\": true, \"preserveDrawingBuffer\": false, \"stencil\": false, \"xrCompatible\": false }, \"shaderPrecisionFormat\": { \"VERTEX_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"VERTEX_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 }, \"FRAGMENT_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"FRAGMENT_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 } }, \"renderHash\": \"2846b6022f79e86a110f2c8023cac85b2634d61686b51048fa756f4f6d86f9f6\", \"webgl1\": { \"params\": { \"VENDOR\": \"WebKit\", \"RENDERER\": \"WebKit WebGL\", \"VERSION\": \"WebGL 1.0 (OpenGL ES 2.0 Chromium)\", \"SHADING_LANGUAGE_VERSION\": \"WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)\", \"MAX_TEXTURE_SIZE\": 8192, \"MAX_CUBE_MAP_TEXTURE_SIZE\": 16384, \"MAX_RENDERBUFFER_SIZE\": 8192, \"MAX_VERTEX_ATTRIBS\": 16, \"MAX_VARYING_VECTORS\": 31, \"MAX_VERTEX_UNIFORM_VECTORS\": 4096, \"MAX_FRAGMENT_UNIFORM_VECTORS\": 4096, \"MAX_COMBINED_TEXTURE_IMAGE_UNITS\": 64, \"MAX_TEXTURE_IMAGE_UNITS\": 32, \"MAX_VERTEX_TEXTURE_IMAGE_UNITS\": 32, \"STENCIL_BITS\": 0, \"DEPTH_BITS\": 24, \"RED_BITS\": 8, \"GREEN_BITS\": 8, \"BLUE_BITS\": 8, \"ALPHA_BITS\": 8, \"SUBPIXEL_BITS\": 4, \"MAX_VIEWPORT_DIMS\": [ 8192, 8192 ], \"ALIASED_LINE_WIDTH_RANGE\": [ 1, 1 ], \"ALIASED_POINT_SIZE_RANGE\": [ 1, 1023 ], \"UNMASKED_VENDOR\": \"Google Inc. (Google)\", \"UNMASKED_RENDERER\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\" }, \"extensions\": [ \"ANGLE_instanced_arrays\", \"EXT_blend_minmax\", \"EXT_clip_control\", \"EXT_color_buffer_half_float\", \"EXT_depth_clamp\", \"EXT_float_blend\", \"EXT_frag_depth\", \"EXT_polygon_offset_clamp\", \"EXT_sRGB\", \"EXT_shader_texture_lod\", \"EXT_texture_compression_bptc\", \"EXT_texture_compression_rgtc\", \"EXT_texture_filter_anisotropic\", \"EXT_texture_mirror_clamp_to_edge\", \"OES_element_index_uint\", \"OES_fbo_render_mipmap\", \"OES_standard_derivatives\", \"OES_texture_float\", \"OES_texture_float_linear\", \"OES_texture_half_float\", \"OES_texture_half_float_linear\", \"OES_vertex_array_object\", \"WEBGL_color_buffer_float\", \"WEBGL_compressed_texture_astc\", \"WEBGL_compressed_texture_etc\", \"WEBGL_compressed_texture_etc1\", \"WEBGL_compressed_texture_s3tc\", \"WEBGL_compressed_texture_s3tc_srgb\", \"WEBGL_debug_renderer_info\", \"WEBGL_debug_shaders\", \"WEBGL_depth_texture\", \"WEBGL_draw_buffers\", \"WEBGL_lose_context\", \"WEBGL_multi_draw\", \"WEBGL_polygon_mode\" ], \"contextAttributes\": { \"alpha\": true, \"antialias\": true, \"depth\": true, \"desynchronized\": false, \"failIfMajorPerformanceCaveat\": false, \"powerPreference\": \"default\", \"premultipliedAlpha\": true, \"preserveDrawingBuffer\": false, \"stencil\": false, \"xrCompatible\": false }, \"shaderPrecisionFormat\": { \"VERTEX_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"VERTEX_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 }, \"FRAGMENT_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"FRAGMENT_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 } }, \"tamperEvidence\": { \"VENDOR_proto\": \"WebKit\", \"RENDERER_proto\": \"WebKit WebGL\", \"UNMASKED_VENDOR_proto\": \"Google Inc. (Google)\", \"UNMASKED_RENDERER_proto\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\" }, \"renderHash\": \"2846b6022f79e86a110f2c8023cac85b2634d61686b51048fa756f4f6d86f9f6\" }, \"webgl2\": { \"params\": { \"VENDOR\": \"WebKit\", \"RENDERER\": \"WebKit WebGL\", \"VERSION\": \"WebGL 2.0 (OpenGL ES 3.0 Chromium)\", \"SHADING_LANGUAGE_VERSION\": \"WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)\", \"MAX_TEXTURE_SIZE\": 8192, \"MAX_CUBE_MAP_TEXTURE_SIZE\": 16384, \"MAX_RENDERBUFFER_SIZE\": 8192, \"MAX_VERTEX_ATTRIBS\": 16, \"MAX_VARYING_VECTORS\": 31, \"MAX_VERTEX_UNIFORM_VECTORS\": 4096, \"MAX_FRAGMENT_UNIFORM_VECTORS\": 4096, \"MAX_COMBINED_TEXTURE_IMAGE_UNITS\": 64, \"MAX_TEXTURE_IMAGE_UNITS\": 32, \"MAX_VERTEX_TEXTURE_IMAGE_UNITS\": 32, \"STENCIL_BITS\": 0, \"DEPTH_BITS\": 24, \"RED_BITS\": 8, \"GREEN_BITS\": 8, \"BLUE_BITS\": 8, \"ALPHA_BITS\": 8, \"SUBPIXEL_BITS\": 4, \"MAX_VIEWPORT_DIMS\": [ 8192, 8192 ], \"ALIASED_LINE_WIDTH_RANGE\": [ 1, 1 ], \"ALIASED_POINT_SIZE_RANGE\": [ 1, 1023 ], \"UNMASKED_VENDOR\": \"Google Inc. (Google)\", \"UNMASKED_RENDERER\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\" }, \"extensions\": [ \"EXT_clip_control\", \"EXT_color_buffer_float\", \"EXT_color_buffer_half_float\", \"EXT_conservative_depth\", \"EXT_depth_clamp\", \"EXT_float_blend\", \"EXT_polygon_offset_clamp\", \"EXT_texture_compression_bptc\", \"EXT_texture_compression_rgtc\", \"EXT_texture_filter_anisotropic\", \"EXT_texture_mirror_clamp_to_edge\", \"NV_shader_noperspective_interpolation\", \"OES_draw_buffers_indexed\", \"OES_sample_variables\", \"OES_shader_multisample_interpolation\", \"OES_texture_float_linear\", \"OVR_multiview2\", \"WEBGL_clip_cull_distance\", \"WEBGL_compressed_texture_astc\", \"WEBGL_compressed_texture_etc\", \"WEBGL_compressed_texture_etc1\", \"WEBGL_compressed_texture_s3tc\", \"WEBGL_compressed_texture_s3tc_srgb\", \"WEBGL_debug_renderer_info\", \"WEBGL_debug_shaders\", \"WEBGL_lose_context\", \"WEBGL_multi_draw\", \"WEBGL_polygon_mode\", \"WEBGL_stencil_texturing\" ], \"contextAttributes\": { \"alpha\": true, \"antialias\": true, \"depth\": true, \"desynchronized\": false, \"failIfMajorPerformanceCaveat\": false, \"powerPreference\": \"default\", \"premultipliedAlpha\": true, \"preserveDrawingBuffer\": false, \"stencil\": false, \"xrCompatible\": false }, \"shaderPrecisionFormat\": { \"VERTEX_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"VERTEX_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"VERTEX_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"VERTEX_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 }, \"FRAGMENT_SHADER.LOW_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.MEDIUM_FLOAT\": { \"rangeMin\": 15, \"rangeMax\": 15, \"precision\": 10 }, \"FRAGMENT_SHADER.HIGH_FLOAT\": { \"rangeMin\": 127, \"rangeMax\": 127, \"precision\": 23 }, \"FRAGMENT_SHADER.LOW_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.MEDIUM_INT\": { \"rangeMin\": 15, \"rangeMax\": 14, \"precision\": 0 }, \"FRAGMENT_SHADER.HIGH_INT\": { \"rangeMin\": 31, \"rangeMax\": 30, \"precision\": 0 } }, \"tamperEvidence\": { \"VENDOR_proto\": \"WebKit\", \"RENDERER_proto\": \"WebKit WebGL\", \"UNMASKED_VENDOR_proto\": \"Google Inc. (Google)\", \"UNMASKED_RENDERER_proto\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\" }, \"renderHash\": \"2846b6022f79e86a110f2c8023cac85b2634d61686b51048fa756f4f6d86f9f6\" }, \"lies\": [], \"lied\": false, \"$hash\": \"8d10f3a7a10b90c6f68254f03ebe51f3f597f22c2019b59b5f0a56c689eeeee0\" }, \"maths\": { \"data\": { \"acos(0.123)\": { \"result\": 1.4474840516030247 }, \"acos(Math.SQRT1_2)\": { \"result\": 0.7853981633974483 }, \"acosh(1e308)\": { \"result\": 709.889355822726 }, \"acosh(Math.PI)\": { \"result\": 1.811526272460853 }, \"acosh(Math.SQRT2)\": { \"result\": 0.881373587019543 }, \"asin(0.123)\": { \"result\": 0.12331227519187199 }, \"asinh(1e308)\": { \"result\": 709.889355822726 }, \"asinh(Math.PI)\": { \"result\": 1.8622957433108482 }, \"atan(0.123)\": { \"result\": 0.12238528147180266 }, \"atanh(0.5)\": { \"result\": 0.5493061443340549 }, \"atan2(0.123, 2)\": { \"result\": 0.061422639357633736 }, \"cbrt(100)\": { \"result\": 4.641588833612779 }, \"cos(1)\": { \"result\": 0.5403023058681398 }, \"cosh(1)\": { \"result\": 1.5430806348152437 }, \"exp(1)\": { \"result\": 2.718281828459045 }, \"expm1(1)\": { \"result\": 1.7182818284590453 }, \"log(0.123)\": { \"result\": -2.0955709236097197 }, \"log10(0.123)\": { \"result\": -0.9100948885606021 }, \"log1p(Math.PI)\": { \"result\": 1.4210804127942926 }, \"log2(0.123)\": { \"result\": -3.023269779322847 }, \"sin(1)\": { \"result\": 0.8414709848078965 }, \"sinh(1)\": { \"result\": 1.1752011936438014 }, \"tan(-1e308)\": { \"result\": 0.5086861259107568 }, \"tanh(0.123)\": { \"result\": 0.12238344189440875 }, \"pow(0.1, -1.05)\": { \"result\": 11.220184543019634 } }, \"lied\": false, \"$hash\": \"b42c6351f138b9a451821cea06e4753ba3571e088de45297def259a0abe08cb0\" }, \"consoleErrors\": { \"errors\": [ \"Unexpected end of input\", \"Missing initializer in const declaration\", \"Cannot read properties of null (reading 'bar')\", \"abc is not defined\", \"toString() radix argument must be between 2 and 36\", \"undefined is not iterable\", \"Invalid array length\", \"Identifier 'a' has already been declared\" ], \"$hash\": \"a4c98e82c75b240c6066161928c7c0c9b272395ba6f708533dbbc07cf2ec54f8\" }, \"timezone\": { \"zone\": \"Indochina Time\", \"location\": \"Asia/Bangkok\", \"locationMeasured\": \"Asia/Bangkok\", \"locationEpoch\": 0, \"offset\": -420, \"offsetComputed\": -420, \"lied\": false, \"$hash\": \"5f66d7b6239434a2d645ce963a3edfb6cc9a7622569d22f2b1140784d5155e49\" }, \"clientRects\": { \"elementClientRects\": [ { \"bottom\": -9977.3125, \"height\": 21.6875, \"left\": -9999, \"right\": -9773.390625, \"width\": 225.609375, \"top\": -9999, \"x\": -9999, \"y\": -9999 } ], \"emojiSet\": [ \"😀\", \"👨‍👩‍👧‍👦\", \"©\", \"™\", \"◼\" ], \"domrectSystemSum\": 0.0225609375, \"lied\": false, \"$hash\": \"0389cc4f116f510c5f1d47ea2d51e357a7e78f8c0985ba81579b7ea081541340\" }, \"offlineAudioContext\": { \"totalUniqueSamples\": 4736, \"compressorGainReduction\": -20.65032196044922, \"sampleSum\": 3.861334452034953, \"binsSample\": [ -0.30157992243766785 ], \"values\": { \"OscillatorNode.frequency.defaultValue\": 440, \"OscillatorNode.frequency.maxValue\": 22050, \"OscillatorNode.frequency.minValue\": -22050 }, \"noise\": 0, \"lied\": false, \"$hash\": \"e391e395d39ad4bb40997fa81069779b2b84d8bf8eba66ad8e22ff3dda2b71fc\" }, \"fonts\": { \"fonts\": [ \"DejaVu Sans\", \"DejaVu Sans Mono\", \"DejaVu Serif\", \"Ubuntu\", \"Ubuntu Mono\" ], \"fontsCount\": 5, \"platform\": \"Linux\", \"engine\": \"blink\", \"osFontScores\": { \"Apple\": 0, \"Windows\": 0, \"Android\": 0, \"Linux\": 5 }, \"expectedForPlatform\": [ \"Cantarell\", \"DejaVu Sans\", \"DejaVu Sans Mono\", \"DejaVu Serif\", \"Liberation Mono\", \"Liberation Sans\", \"Liberation Serif\", \"Nimbus Mono L\", \"Nimbus Roman No9 L\", \"Nimbus Sans L\", \"Ubuntu\", \"Ubuntu Mono\", \"URW Bookman L\", \"URW Gothic L\" ], \"forbiddenForPlatform\": [ \"American Typewriter\", \"Apple Chancery\", \"Avenir\", \"Avenir Next\", \"Charter\", \"Cochin\", \"Geneva\", \"Hiragino Sans\", \"Hiragino Mincho ProN\", \"Hoefler Text\", \"Lucida Grande\", \"Marker Felt\", \"Menlo\", \"Noteworthy\", \"Optima\", \"Papyrus\", \"PingFang SC\", \"PingFang TC\", \"Savoye LET\", \"Skia\", \"Snell Roundhand\", \"Zapfino\", \"Cambria Math\", \"Calibri Light\", \"Ebrima\", \"Gabriola\", \"HELV\", \"Javanese Text\", \"Leelawadee UI\", \"Marlett\", \"MS Gothic\", \"MS PGothic\", \"MS UI Gothic\", \"MS Mincho\", \"Microsoft JhengHei\", \"Microsoft YaHei\", \"Microsoft Sans Serif\", \"Microsoft Tai Le\", \"Microsoft Yi Baiti\", \"Mongolian Baiti\", \"Myanmar Text\", \"Nirmala UI\", \"Segoe Fluent Icons\", \"Segoe MDL2 Assets\", \"Segoe Print\", \"Segoe Script\", \"Segoe UI\", \"Segoe UI Emoji\", \"Segoe UI Light\", \"Segoe UI Symbol\", \"Small Fonts\", \"Sylfaen\", \"Yu Gothic\", \"sans-serif-thin\", \"Roboto\", \"Roboto Condensed\", \"Roboto Mono\", \"Droid Sans\", \"Droid Serif\", \"Droid Sans Mono\", \"Noto Color Emoji\" ], \"lies\": [], \"lied\": false, \"$hash\": \"252f38fc06da4d827b4b70a5a4a80b83727f4df682a6e99d750ebb14bebcfcbd\" }, \"capturedErrors\": { \"data\": [], \"$hash\": \"8fe32e407a1038ee38753b70e5374b3a46d6ae9d5f16cd5b73c53abaca8f5ed0\" }, \"svg\": { \"bBox\": 161.78125, \"extentOfChar\": 25.9375, \"subStringLength\": 39.265625, \"computedTextLength\": 143.78125, \"emojiSet\": [ \"😀\", \"👨‍👩‍👧‍👦\", \"©\", \"™\", \"◼\" ], \"svgrectSystemSum\": 0.014378125, \"lied\": false, \"$hash\": \"d6c9b3ec4a8689ead6300c40243775d27da9aced0da3bc8f39442f009e0bdfc2\" }, \"resistance\": { \"engine\": \"Blink\", \"extensionHashPattern\": {}, \"$hash\": \"eb6b354ac6d35e0105cb59b0c16e993c11bfac795d929e0045e88565e14c7c2e\" }, \"intl\": { \"dateTimeFormat\": \"August at Indochina Time\", \"displayNames\": \"American English\", \"listFormat\": \"0 and 1\", \"numberFormat\": \"21M\", \"pluralRules\": \"other\", \"relativeTimeFormat\": \"in 1 year\", \"locale\": \"en\", \"lied\": false, \"$hash\": \"17e8f7c9743b414351f7a6fb9889207c4ab0a4bc212dc1ab1366bd334a7bcd20\" }, \"features\": { \"cssFeatures\": [ \"backdrop-filter\", \"color-scheme\", \"image-orientation\", \"contain-intrinsic-size\", \"appearance\", \"ruby-position\", \"aspect-ratio\", \"gap\", \"inset\", \"accent-color\" ], \"windowFeatures\": [ \"structuredClone\", \"queueMicrotask\", \"reportError\", \"crossOriginIsolated\", \"isSecureContext\", \"fetch\" ], \"jsFeatures\": [ \"Promise.any\", \"Object.hasOwn\", \"String.prototype.replaceAll\", \"Array.prototype.at\" ], \"htmlElementFeatures\": [ \"ariaAtomic\", \"ariaAutoComplete\", \"ariaBusy\", \"ariaBrailleLabel\", \"ariaBrailleRoleDescription\", \"ariaChecked\", \"ariaColCount\", \"ariaColIndex\", \"ariaColSpan\", \"ariaCurrent\", \"ariaDescription\", \"ariaDisabled\", \"ariaExpanded\", \"ariaHasPopup\", \"ariaHidden\", \"ariaInvalid\", \"ariaKeyShortcuts\", \"ariaLabel\", \"ariaLevel\", \"ariaLive\", \"ariaModal\", \"ariaMultiLine\", \"ariaMultiSelectable\", \"ariaOrientation\", \"ariaPlaceholder\", \"ariaPosInSet\", \"ariaPressed\", \"ariaReadOnly\", \"ariaRelevant\", \"ariaRequired\" ], \"$hash\": \"9dc8c77c652ce753acfe646a9c648e6306a1ed14e3b0f8a368aef48258c0c691\" }, \"proxyLies\": { \"data\": {}, \"totalLies\": 0, \"trash\": { \"trashBin\": [ { \"name\": \"WebGLRenderingContext.getParameter\", \"value\": \"suspicious gpu\" } ] }, \"$hash\": \"d58dbbc95def62f99aba9239f3e89d9618fbaf4481ec0da02a0a499e08612596\" }, \"network\": { \"rtt\": 100, \"downlink\": 1.4, \"max\": 98.5, \"effectiveType\": \"4g\", \"saveData\": false, \"type\": \"cellular\", \"onLine\": true, \"apiAvailable\": true, \"$hash\": \"304e33a329742e420e8cda9d8e655b3ef3de14841b7b6cc266e308fed72804c1\" }, \"battery\": { \"level\": \"100%\", \"charging\": true, \"chargeTime\": \"0s\", \"dischargeTime\": \"charging\", \"apiAvailable\": true, \"$hash\": \"4f5cb8cd396715368611b4afb7b8a1c8edcc84b6a2fe8edc46f187f986a4626b\" }, \"storage\": { \"quotaBytes\": 2147483648, \"usageBytes\": 0, \"quotaGB\": 2, \"usageGB\": 0, \"usagePercent\": 0, \"persistent\": false, \"apiAvailable\": true, \"$hash\": \"f740f6546a9798afbe5065afce4548eab98b85dd81e8a07d2f38fb399f5e2efe\" }, \"automation\": { \"isAutomated\": true, \"detectedBots\": [ \"HeadlessChrome\" ], \"verdicts\": [ { \"kind\": \"HeadlessChrome\", \"signal\": \"User-Agent contains \\\"HeadlessChrome\\\"\", \"level\": \"high\" }, { \"kind\": \"HeadlessChrome\", \"signal\": \"appVersion contains \\\"headlesschrome\\\"\", \"level\": \"high\" } ], \"signals\": { \"webdriver\": false, \"uaTokens\": [ \"HeadlessChrome\" ], \"appVersionTokens\": [ \"HeadlessChrome\" ], \"seleniumDocAttrKeys\": [], \"sequentum\": false, \"electronProcess\": false, \"functionBindBroken\": false, \"notificationDenied\": false, \"noLanguages\": false, \"noPlugins\": false, \"rttZero\": false, \"zeroOuterSize\": false, \"documentHasFocus\": true, \"webglHeadlessRenderer\": false, \"webglVendor\": \"Google Inc. (Google)\", \"webglRenderer\": \"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)\", \"productSub\": \"20030107\", \"productSubMismatch\": false, \"evalLength\": 33, \"evalLengthMismatch\": false, \"phantomErrorStack\": false, \"distinctivePropsHits\": [], \"cdp\": { \"engine\": \"blink\", \"skipped\": false, \"errorStackGetter\": false, \"objectToStringGetter\": false, \"elementIdGetter\": false, \"devtoolsViaSize\": false, \"devtoolsSizeDeltaPx\": { \"x\": 0, \"y\": 0 }, \"detected\": false } }, \"engine\": \"chromium\", \"$hash\": \"37d2f199c642af3c36f32dc90702e8320fdcc5a42e106f058e99110654d3f834\" } }"
+    - generic [ref=e316] [box=194,8695,1052,115]:
+      - heading "Let's try now!" [level=2] [ref=e317] [box=202,8713,292,79]
+      - button "Try Proxy Now ↗" [ref=e318] [cursor=pointer] [box=1059,8726,179,53]
+  - contentinfo [ref=e319] [box=0,8870,1440,61]

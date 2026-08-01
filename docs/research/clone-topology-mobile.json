@@ -1,0 +1,87 @@
+{
+  "scrollHeight": 15808,
+  "header": {
+    "top": 0,
+    "height": 66.015625,
+    "bottom": 66.015625,
+    "width": 390
+  },
+  "hero": {
+    "top": 96.015625,
+    "height": 417.34375,
+    "bottom": 513.359375,
+    "width": 342
+  },
+  "info": {
+    "top": 543.359375,
+    "height": 1916.34375,
+    "bottom": 2459.703125,
+    "width": 342
+  },
+  "diag": {
+    "top": 2519.703125,
+    "height": 2237.125,
+    "bottom": 4756.828125,
+    "width": 342
+  },
+  "diagGrid": {
+    "top": 2783.828125,
+    "height": 1973,
+    "bottom": 4756.828125,
+    "width": 342
+  },
+  "cdi": {
+    "top": 4806.828125,
+    "height": 4682.390625,
+    "bottom": 9489.21875,
+    "width": 342
+  },
+  "cdiSummary": {
+    "top": 5124.546875,
+    "height": 338.109375,
+    "bottom": 5462.65625,
+    "width": 334
+  },
+  "cdiList": {
+    "top": 5480.65625,
+    "height": 4008.5625,
+    "bottom": 9489.21875,
+    "width": 334
+  },
+  "tcp": {
+    "top": 9531.21875,
+    "height": 367.96875,
+    "bottom": 9899.1875,
+    "width": 342
+  },
+  "modules": {
+    "top": 10374.5625,
+    "height": 5077.765625,
+    "bottom": 15452.328125,
+    "width": 342
+  },
+  "moduleList": {
+    "top": 10495.390625,
+    "height": 4233.140625,
+    "bottom": 14728.53125,
+    "width": 342
+  },
+  "json": {
+    "top": 14758.53125,
+    "height": 693.796875,
+    "bottom": 15452.328125,
+    "width": 342
+  },
+  "cta": {
+    "top": 15512.328125,
+    "height": 160.140625,
+    "bottom": 15672.46875,
+    "width": 342
+  },
+  "footer": {
+    "top": 15732.46875,
+    "height": 76,
+    "bottom": 15808.46875,
+    "width": 390
+  }
+}

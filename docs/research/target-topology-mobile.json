@@ -1,0 +1,88 @@
+{
+  "scrollHeight": 16467,
+  "header": {
+    "top": 0,
+    "height": 106.015625,
+    "bottom": 106.015625,
+    "width": 390
+  },
+  "hero": {
+    "top": 136.015625,
+    "height": 417.34375,
+    "bottom": 553.359375,
+    "width": 342
+  },
+  "info": {
+    "top": 583.359375,
+    "height": 2004.609375,
+    "bottom": 2587.96875,
+    "width": 342
+  },
+  "diag": {
+    "top": 2647.96875,
+    "height": 2235.453125,
+    "bottom": 4883.421875,
+    "width": 342
+  },
+  "diagGrid": {
+    "top": 2912.09375,
+    "height": 1971.328125,
+    "bottom": 4883.421875,
+    "width": 342
+  },
+  "cdi": {
+    "top": 4933.421875,
+    "height": 4876.984375,
+    "bottom": 9810.40625,
+    "width": 342
+  },
+  "cdiSummary": {
+    "top": 5259.140625,
+    "height": 358.953125,
+    "bottom": 5618.09375,
+    "width": 334
+  },
+  "cdiList": {
+    "top": 5636.09375,
+    "height": 4174.3125,
+    "bottom": 9810.40625,
+    "width": 334
+  },
+  "tech": [
+    {
+      "top": 9860.40625,
+      "height": 426.59375,
+      "bottom": 10287
+    },
+    {
+      "top": 10337,
+      "height": 370.34375,
+      "bottom": 10707.34375
+    }
+  ],
+  "modules": {
+    "top": 10767.34375,
+    "height": 5358.25,
+    "bottom": 16125.59375,
+    "width": 342
+  },
+  "moduleList": null,
+  "json": {
+    "top": 15933.796875,
+    "height": 191.796875,
+    "bottom": 16125.59375,
+    "width": 342
+  },
+  "cta": {
+    "top": 16185.59375,
+    "height": 160.140625,
+    "bottom": 16345.734375,
+    "width": 342
+  },
+  "footer": {
+    "top": 16405.734375,
+    "height": 61,
+    "bottom": 16466.734375,
+    "width": 390
+  }
+}

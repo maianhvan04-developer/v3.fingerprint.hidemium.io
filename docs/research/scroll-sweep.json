@@ -1,0 +1,90 @@
+{
+  "samples": [
+    {
+      "requestedY": 0,
+      "actualY": 0,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 100,
+      "actualY": 100,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 500,
+      "actualY": 500,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 1500,
+      "actualY": 1500,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 3000,
+      "actualY": 3000,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 6000,
+      "actualY": 6000,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    },
+    {
+      "requestedY": 8931,
+      "actualY": 7831,
+      "header": {
+        "position": "static",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "boxShadow": "none",
+        "transform": "none",
+        "opacity": "1"
+      },
+      "bodyClasses": ""
+    }
+  ],
+  "smoothScroll": "auto",
+  "lenis": false
+}

@@ -1,0 +1,111 @@
+{
+  "buttons": [
+    {
+      "text": "Tất cả",
+      "className": ""
+    },
+    {
+      "text": "Chỉ lỗi",
+      "className": "active"
+    },
+    {
+      "text": "Chỉ nghiêm trọng",
+      "className": ""
+    },
+    {
+      "text": "Không kiểm được",
+      "className": ""
+    }
+  ],
+  "checks": [
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--skip cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--warn",
+      "display": "grid"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--fail",
+      "display": "grid"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    },
+    {
+      "className": "cdi-check cdi-check--pass cdi-hidden",
+      "display": "none"
+    }
+  ],
+  "visible": 2
+}

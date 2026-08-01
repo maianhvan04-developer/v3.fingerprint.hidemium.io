@@ -1,0 +1,40 @@
+{
+  "html": "<div class=\"card-ico\">&lt;/&gt;</div><h4>automation</h4> <p class=\"card-status\">3 high issues</p><button class=\"card-btn\">View troubles</button><div class=\"card-troubles\"><ul><li>🔴 User-Agent contains \"HeadlessChrome\" → HeadlessChrome</li><li>🔴 appVersion contains \"headlesschrome\" → HeadlessChrome</li><li>🟡 likeHeadlessRating = 6</li></ul></div>",
+  "children": [
+    {
+      "tag": "DIV",
+      "className": "card-ico",
+      "display": "grid",
+      "height": 30,
+      "text": "</>"
+    },
+    {
+      "tag": "H4",
+      "className": "",
+      "display": "block",
+      "height": 25.5625,
+      "text": "automation"
+    },
+    {
+      "tag": "P",
+      "className": "card-status",
+      "display": "flex",
+      "height": 22.46875,
+      "text": "3 high issues"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "card-btn",
+      "display": "block",
+      "height": 43.25,
+      "text": "View troubles"
+    },
+    {
+      "tag": "DIV",
+      "className": "card-troubles",
+      "display": "none",
+      "height": 0,
+      "text": "🔴 User-Agent contains \"HeadlessChrome\" → HeadlessChrome🔴 appVersion contains \"headlesschrome\" → HeadlessChrome🟡 likeHeadlessRating = 6"
+    }
+  ]
+}

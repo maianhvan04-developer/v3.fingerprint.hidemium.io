@@ -1,0 +1,409 @@
+{
+  "diagnostics": [
+    {
+      "name": "audio",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    },
+    {
+      "name": "automation",
+      "classes": "card has-errors",
+      "summary": "3 high issues"
+    },
+    {
+      "name": "canvas",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    },
+    {
+      "name": "cpu",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    },
+    {
+      "name": "device",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    },
+    {
+      "name": "gpu",
+      "classes": "card has-errors",
+      "summary": "2 high issues"
+    },
+    {
+      "name": "network",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    },
+    {
+      "name": "other",
+      "classes": "card has-errors",
+      "summary": "1 high issue"
+    },
+    {
+      "name": "font",
+      "classes": "card ok",
+      "summary": "No issues detected"
+    }
+  ],
+  "cdi": [
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-001",
+      "name": "ua_string == derive_ua(engine, os)",
+      "detail": "UA Chrome/151 agrees with Sec-CH-UA brand v151, platform Linux",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-002",
+      "name": "sec_ch_ua_full_version_list ⊇ engine.version",
+      "detail": "UA=151.0.0.0 vs Chromium full-version=151.0.7922.10 — majors agree",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-003",
+      "name": "js_api_surface == api_manifest(engine.version)",
+      "detail": "UA claims 151, API surface brackets 119–∞ — consistent",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-010",
+      "name": "tls.ja4 == ja4_table[engine.version][os]",
+      "detail": "requires server-side TLS inspection — the ClientHello is consumed by the terminator before JS exists, and JA4 is never exposed to script",
+      "status": "SKIP",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-011",
+      "name": "tcp.initial_ttl == os_ttl[os.family]",
+      "detail": "SYN fingerprint Linux agrees with Linux",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-012",
+      "name": "h2.settings_order == h2_table[engine.version]",
+      "detail": "requires server-side HTTP/2 frame inspection — SETTINGS order is invisible to fetch()",
+      "status": "SKIP",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-014",
+      "name": "timezone == geoip_tz(egress.ip)",
+      "detail": "both resolve to Asia/Bangkok",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-015",
+      "name": "accept_language coherent_with egress.country",
+      "detail": "locale region or IP country unavailable",
+      "status": "SKIP",
+      "severity": "WARN"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-016",
+      "name": "Intl.resolvedOptions() == derive_intl(locale)",
+      "detail": "en-US · calendar=gregory · numbering=latn — matches derive_intl(en-US)",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-020",
+      "name": "hash(render(op)) stable ∀ N=3",
+      "detail": "3/3 renders byte-identical — 5a6320a83a7a",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-021",
+      "name": "variance(canvas.solid_fill_region) == 0",
+      "detail": "4096/4096 px all exactly (58,123,213,255), variance 0",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-022",
+      "name": "∀r ∈ clientRects: (r × 64) ∈ ℤ",
+      "detail": "24 rect values on the 1/64 grid — Blink/WebKit LayoutUnit",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-023",
+      "name": "OfflineAudioContext(gain=0) → all samples == 0.0",
+      "detail": "44100/44100 samples exactly 0.0",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-024",
+      "name": "morans_I(canvas_residual) ≥ real_corpus_p05",
+      "detail": "no canvas residual to analyse — C-021 is clean, so there is nothing to test for structure",
+      "status": "SKIP",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-025",
+      "name": "fft_hf_energy_ratio(canvas) ≤ real_corpus_p95",
+      "detail": "no canvas residual to analyse — C-021 is clean",
+      "status": "SKIP",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--skip",
+      "id": "C-030",
+      "name": "joint_density(device.bundle) ≥ corpus_p01",
+      "detail": "requires a real-device corpus to place this hardware combination on the density manifold — no corpus, no honest verdict",
+      "status": "SKIP",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--warn",
+      "id": "C-031",
+      "name": "device.prevalence ≥ 0.005",
+      "detail": "canvas-signature prevalence 0.035% (120/341643 in the browserleaks corpus) — below the 0.5% floor, this signature is rare enough to be a handle · proxy for device-bundle prevalence, not the same metric",
+      "status": "WARN",
+      "severity": "WARN"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-040",
+      "name": "active_hours ∩ typical_hours(timezone) ≠ ∅",
+      "detail": "local hour 15:xx in Asia/Bangkok — inside typical waking hours 06–24 (single sample; the full rule needs a session-level activity profile)",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-041",
+      "name": "scroll.delta_quantum coherent_with form_factor",
+      "detail": "maxTouchPoints=0, form factor desktop, pointer fine — coherent",
+      "status": "PASS",
+      "severity": "WARN"
+    },
+    {
+      "classes": "cdi-check cdi-check--fail",
+      "id": "C-050",
+      "name": "navigator.webdriver === false ∧ CDP surface clean",
+      "detail": "bot signatures: HeadlessChrome",
+      "status": "FAIL",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-051",
+      "name": "stack traces expose no instrumentation frame",
+      "detail": "no known instrumentation markers in a thrown stack",
+      "status": "PASS",
+      "severity": "FATAL"
+    },
+    {
+      "classes": "cdi-check cdi-check--pass",
+      "id": "C-052",
+      "name": "toString() of every patched function == native code",
+      "detail": "7/7 core APIs verified native",
+      "status": "PASS",
+      "severity": "FATAL"
+    }
+  ],
+  "modules": [
+    {
+      "classes": "module module--clean",
+      "title": "Worker Scope",
+      "description": "Web Worker context vs main scope — phát hiện trình duyệt nói dối",
+      "meta": "✓ CLEAN9f3f9a540582… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Navigator",
+      "description": "UA, plugins, mimeTypes, permissions, WebGPU",
+      "meta": "4 LIESDiff check▶ea83dfd5b669… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Browser Version / Channel",
+      "description": "Version của mọi loại trình duyệt + platform version (UA-CH / oscpu / iOS) — cảnh báo bản không phải stable (beta/dev/canary/nightly/ESR/outdated) và version giả mạo",
+      "meta": "1 LIESDiff check▶61c9855da52c… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Window Features",
+      "description": "window object keys + prefix counts (webkit/moz/apple)",
+      "meta": "✓ CLEAN6d9db7c8575c… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Headless / Stealth",
+      "description": "Phát hiện Puppeteer / Playwright / stealth scripts",
+      "meta": "3 LIESDiff check▶27809260d3cf… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "HTMLElement",
+      "description": "Properties trên HTMLElement.prototype",
+      "meta": "✓ CLEAN94568b389311… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "CSS Media Queries",
+      "description": "prefers-color-scheme, hover, pointer, color-gamut...",
+      "meta": "✓ CLEAN10c14493dcfe… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "CSS Computed & System",
+      "description": "getComputedStyle + system fonts",
+      "meta": "✓ CLEAN14152fceb476… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Screen",
+      "description": "Kích thước, color depth, touch",
+      "meta": "✓ CLEANf0f06e6d26a0… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Voices",
+      "description": "SpeechSynthesis — local + remote voices",
+      "meta": "✓ CLEANf880bd3857e5… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Media (MimeTypes)",
+      "description": "canPlayType, MediaSource, MediaRecorder",
+      "meta": "✓ CLEAN8b317d1ffe64… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Canvas 2D",
+      "description": "Image / Blob / Paint / Text / Emoji",
+      "meta": "✓ CLEAN4db008e362d9… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "CPU Scaling Benchmark",
+      "description": "Worker-based parallelism — phát hiện spoofed hardwareConcurrency",
+      "meta": "✓ CLEANc031e214cbf3… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Canvas WebGL",
+      "description": "GPU vendor, renderer, extensions, parameters",
+      "meta": "2 LIESDiff check▶8d10f3a7a10b… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Math / JS Runtime",
+      "description": "So sánh hàm toán giữa Chrome / Firefox / Safari / Tor",
+      "meta": "✓ CLEANb42c6351f138… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Console Errors",
+      "description": "V8 / SpiderMonkey / JSCore wording",
+      "meta": "✓ CLEANa4c98e82c75b… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Timezone",
+      "description": "Intl + Date.toString + getTimezoneOffset",
+      "meta": "✓ CLEAN5f66d7b62394… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Client Rects",
+      "description": "getBoundingClientRect + emoji sub-pixel",
+      "meta": "✓ CLEAN0389cc4f116f… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Offline Audio Context",
+      "description": "compressorGainReduction, sampleSum",
+      "meta": "✓ CLEANe391e395d39a… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Fonts",
+      "description": "document.fonts.check + pixel measurements",
+      "meta": "✓ CLEAN252f38fc06da… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Captured Errors",
+      "description": "Lỗi runtime trong khi chạy fingerprint",
+      "meta": "✓ CLEAN8fe32e407a10… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "SVG (Text Metrics)",
+      "description": "getBBox, getExtentOfChar, getSubStringLength",
+      "meta": "✓ CLEANd6c9b3ec4a86… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Resistance",
+      "description": "Engine + extension hash patterns (Tor/Brave)",
+      "meta": "✓ CLEANeb6b354ac6d3… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Intl",
+      "description": "DateTimeFormat, ListFormat, NumberFormat, PluralRules",
+      "meta": "1 LIESDiff check▶17e8f7c9743b… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Features",
+      "description": "CSS / Window / JS version detection",
+      "meta": "✓ CLEAN9dc8c77c652c… ›"
+    },
+    {
+      "classes": "module module--has-lies",
+      "title": "Proxy / Tampering Lies",
+      "description": "creepjs-style: AudioBuffer, Canvas, DOMRect, HTMLElement, WebGL, Element",
+      "meta": "1 LIESDiff check▶d58dbbc95def… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Network",
+      "description": "NetworkInformation API — rtt, downlink, effectiveType, saveData, type",
+      "meta": "✓ CLEAN304e33a32974… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Battery",
+      "description": "Battery Status API — level, charging, charge/discharge time",
+      "meta": "✓ CLEAN4f5cb8cd3967… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Disk Storage",
+      "description": "StorageManager.estimate — disk quota & current origin usage",
+      "meta": "✓ CLEANf740f6546a97… ›"
+    },
+    {
+      "classes": "module module--clean",
+      "title": "Automation (BotD)",
+      "description": "fingerprintjs/BotD signal suite — webdriver, headless markers, Selenium/Puppeteer/Playwright/Electron/Phantom hooks",
+      "meta": "✓ CLEAN37d2f199c642… ›"
+    }
+  ]
+}

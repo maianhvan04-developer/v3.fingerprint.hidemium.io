@@ -1,0 +1,313 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 1100,
+    "scrollHeight": 8931
+  },
+  "header": {
+    "rect": {
+      "x": 0,
+      "y": -1068,
+      "width": 1440,
+      "height": 72.015625
+    },
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "16px 36px",
+    "margin": "0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "nav": {
+    "rect": {
+      "x": 554.828125,
+      "y": -1044.78125,
+      "width": 315.921875,
+      "height": 25.5625
+    },
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "28px",
+    "padding": "0px",
+    "margin": "0px",
+    "fontSize": "16.5px",
+    "position": "static",
+    "color": "rgb(185, 176, 216)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "main": {
+    "rect": {
+      "x": 170,
+      "y": -965.984375,
+      "width": 1100,
+      "height": 8707.859375
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "0px 24px",
+    "margin": "30px 170px 60px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "hero": {
+    "rect": {
+      "x": 194,
+      "y": -965.984375,
+      "width": 1052,
+      "height": 236.765625
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "0px",
+    "margin": "18px 0px 30px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "ipTitle": {
+    "rect": {
+      "x": 194,
+      "y": -909.515625,
+      "width": 1052,
+      "height": 54.25
+    },
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "14px",
+    "padding": "0px",
+    "margin": "6px 0px",
+    "fontSize": "35px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "info": {
+    "rect": {
+      "x": 194,
+      "y": -699.21875,
+      "width": 1052,
+      "height": 907.984375
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "28px 30px",
+    "margin": "20px 0px 0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(19, 10, 38), rgb(14, 7, 33)) repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "18px"
+  },
+  "infoRow": {
+    "rect": {
+      "x": 225,
+      "y": -670.21875,
+      "width": 990,
+      "height": 173.71875
+    },
+    "display": "grid",
+    "gridTemplateColumns": "280px 680px",
+    "gap": "30px",
+    "padding": "0px",
+    "margin": "0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "infoGrid": {
+    "rect": {
+      "x": 535,
+      "y": -670.21875,
+      "width": 680,
+      "height": 173.71875
+    },
+    "display": "grid",
+    "gridTemplateColumns": "322px 322px",
+    "gap": "14px 36px",
+    "padding": "0px",
+    "margin": "0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "diagnostics": {
+    "rect": {
+      "x": 194,
+      "y": 268.765625,
+      "width": 1052,
+      "height": 938.671875
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "0px",
+    "margin": "60px 0px 0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "cards": {
+    "rect": {
+      "x": 194,
+      "y": 455.359375,
+      "width": 1052,
+      "height": 752.078125
+    },
+    "display": "grid",
+    "gridTemplateColumns": "340px 340px 340px",
+    "gap": "16px",
+    "padding": "0px",
+    "margin": "0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "cdiSummary": {
+    "rect": {
+      "x": 198,
+      "y": 1438.9375,
+      "width": 1044,
+      "height": 129.140625
+    },
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "22px",
+    "padding": "16px 20px",
+    "margin": "0px 0px 18px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(19, 10, 38), rgb(14, 7, 33)) repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "14px"
+  },
+  "cdiCheck": {
+    "rect": {
+      "x": 198,
+      "y": 1586.078125,
+      "width": 1044,
+      "height": 71.71875
+    },
+    "display": "grid",
+    "gridTemplateColumns": "24px 62px 792.156px 93.8438px",
+    "gap": "12px",
+    "padding": "12px 16px",
+    "margin": "0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(19, 10, 38), rgb(14, 7, 33)) repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "12px"
+  },
+  "webrtc": {
+    "rect": {
+      "x": 198,
+      "y": 3525.6875,
+      "width": 1044,
+      "height": 153
+    },
+    "display": "grid",
+    "gridTemplateColumns": "512px 512px",
+    "gap": "20px",
+    "padding": "0px",
+    "margin": "10px 0px 14px",
+    "fontSize": "15px",
+    "position": "static",
+    "color": "rgb(207, 196, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "modules": {
+    "rect": {
+      "x": 194,
+      "y": 4135.96875,
+      "width": 1052,
+      "height": 3430.859375
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "0px",
+    "margin": "60px 0px 0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "module": {
+    "rect": {
+      "x": 194,
+      "y": 4237.40625,
+      "width": 1052,
+      "height": 77.25
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "0px",
+    "margin": "10px 0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) linear-gradient(rgb(19, 10, 38), rgb(14, 7, 33)) repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "14px"
+  },
+  "cta": {
+    "rect": {
+      "x": 194,
+      "y": 7626.828125,
+      "width": 1052,
+      "height": 115.046875
+    },
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "18px 8px",
+    "margin": "60px 0px 0px",
+    "fontSize": "17px",
+    "position": "static",
+    "color": "rgb(233, 230, 245)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  },
+  "footer": {
+    "rect": {
+      "x": 0,
+      "y": 7801.875,
+      "width": 1440,
+      "height": 61
+    },
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "padding": "36px 36px 24px",
+    "margin": "0px",
+    "fontSize": "15px",
+    "position": "relative",
+    "color": "rgb(142, 133, 173)",
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "0px"
+  }
+}

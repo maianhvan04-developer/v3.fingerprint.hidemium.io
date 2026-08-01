@@ -1,0 +1,22 @@
+{
+  "trouble": {
+    "expanded": "true",
+    "visible": true
+  },
+  "filters": {
+    "active": "Fail only",
+    "visible": 2
+  },
+  "module": {
+    "open": true,
+    "bodyVisible": "block"
+  },
+  "language": {
+    "menuVisible": true,
+    "options": [
+      "English",
+      "Tiếng Việt",
+      "Русский"
+    ]
+  }
+}
