@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { DiagnosticCard, Translation } from "@/types/fingerprint";
 
 interface DiagnosticsGridProps {
@@ -26,9 +27,9 @@ export function DiagnosticsGrid({ cards, onToggleCard, openCards, text }: Diagno
               {card.status === "ok" ? (
                 <span className="verified-label">✓ Verified</span>
               ) : (
-                <button aria-expanded={isOpen} className="card-button" onClick={() => onToggleCard(card.name)} type="button">
+                <Button aria-expanded={isOpen} className="card-button" onClick={() => onToggleCard(card.name)}>
                   {isOpen ? "Hide troubles" : "View troubles"}
-                </button>
+                </Button>
               )}
             </article>
           );

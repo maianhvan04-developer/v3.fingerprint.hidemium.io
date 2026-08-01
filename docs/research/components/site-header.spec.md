@@ -1,7 +1,7 @@
 # SiteHeader specification
 
 ## Overview
-- **Target file:** `src/components/fingerprint/site-header.tsx`
+- **Target file:** `src/components/layout/site-header.tsx`
 - **Screenshot:** `docs/design-references/fingerprint-target-desktop.png`
 - **Interaction model:** click-driven language menu; static navigation
 
@@ -14,7 +14,7 @@
 ## States
 - Navigation links brighten to white in 150ms on hover.
 - Signup brightens to `filter: brightness(1.1)`.
-- Language menu exposes English, Tiếng Việt, and Русский; selection persists to `fpc.lang`.
+- Language menu exposes English, Tiếng Việt, 中文, and Русский from `locales/*.json`; selection persists to `fpc.lang`.
 
 ## Responsive
 - Desktop: one horizontal row.

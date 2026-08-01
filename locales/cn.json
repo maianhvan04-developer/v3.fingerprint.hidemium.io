@@ -1,0 +1,12 @@
+{
+  "languageName": "中文",
+  "badge": "查看您的 IP",
+  "browserScore": "浏览器评分：",
+  "copied": "已复制！",
+  "copyIp": "复制 IP",
+  "details": "查看详情",
+  "diagnostics": "详细的代理和系统诊断",
+  "diagnosticsSub": "分析您当前的连接和浏览器环境：检测 WebRTC IP 地址和 JavaScript 状态，验证匿名性并发现潜在的数据泄露。",
+  "ipRisk": "IP 风险评分：",
+  "myIp": "我的 IP："
+}

@@ -2,7 +2,7 @@ export type AuditFilter = "all" | "fail" | "fatal" | "skip";
 export type AuditStatus = "pass" | "warn" | "fatal" | "skip";
 export type CopyKind = "ip" | "json";
 export type DiagnosticStatus = "ok" | "warning" | "error";
-export type Language = "EN" | "VI" | "RU";
+export type Language = "EN" | "VI" | "CN" | "RU";
 
 export interface AuditItem {
   detail: string;
@@ -91,6 +91,7 @@ export interface IpLookupResponse {
 }
 
 export interface Translation {
+  languageName: string;
   badge: string;
   browserScore: string;
   copied: string;

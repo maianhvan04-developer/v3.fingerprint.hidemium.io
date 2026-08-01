@@ -7,7 +7,7 @@ import { FingerprintModules } from "@/components/fingerprint/fingerprint-modules
 import { InfoCard } from "@/components/fingerprint/info-card";
 import { IpHero } from "@/components/fingerprint/ip-hero";
 import { NetworkReports } from "@/components/fingerprint/network-reports";
-import { SiteHeader } from "@/components/fingerprint/site-header";
+import { SiteHeader } from "@/components/layout/site-header";
 import { useFingerprintDashboard } from "@/hooks/use-fingerprint-dashboard";
 
 export function FingerprintDashboard() {

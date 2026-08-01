@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { AuditCounts, AuditFilter, AuditItem, AuditStatus } from "@/types/fingerprint";
 
 const filters: Array<[AuditFilter, string]> = [
@@ -58,9 +59,9 @@ export function CdiValidator({
         </div>
         <div className="audit-filters">
           {filters.map(([value, label]) => (
-            <button className={filter === value ? "active" : ""} key={value} onClick={() => onFilterChange(value)} type="button">
+            <Button className={filter === value ? "active" : ""} key={value} onClick={() => onFilterChange(value)}>
               {label}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

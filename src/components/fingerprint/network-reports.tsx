@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { BrowserProfile, IpLookupResponse, WebRtcResult } from "@/types/fingerprint";
 
 interface NetworkReportsProps {
@@ -39,7 +40,7 @@ function WebRtcReport({ ipInfo, onRestartWebRtc, webRtc }: Omit<NetworkReportsPr
     <section className="technical-block">
       <div className="technical-head">
         <h2>WebRTC Check</h2>
-        <button className="restart-button" onClick={onRestartWebRtc} type="button">Restart check</button>
+        <Button className="restart-button" onClick={onRestartWebRtc}>Restart check</Button>
       </div>
       <p>Status: <span className={`rtc-status rtc-${webRtc.status}`}>{webRtc.status}</span></p>
       <div className="technical-grid">

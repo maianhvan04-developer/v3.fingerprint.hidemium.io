@@ -1,3 +1,4 @@
+import { CopyButton } from "@/components/ui/copy-button";
 import type { CopyKind, IpLookupResponse, Translation } from "@/types/fingerprint";
 
 interface IpHeroProps {
@@ -37,9 +38,13 @@ export function IpHero({
         <span className="flag" aria-hidden="true">{flag}</span>
         <span>{text.myIp}</span>
         <span className={ipLoading ? "loading-text" : "ip-address"}>{ipAddress}</span>
-        <button className="copy-button" disabled={!ipInfo.ip} onClick={onCopyIp} type="button">
-          {copied === "ip" ? `✓ ${text.copied}` : `▣ ${text.copyIp}`}
-        </button>
+        <CopyButton
+          copied={copied === "ip"}
+          copiedLabel={text.copied}
+          disabled={!ipInfo.ip}
+          label={text.copyIp}
+          onClick={onCopyIp}
+        />
       </h1>
 
       <div className="ip-family-row">

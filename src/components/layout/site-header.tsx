@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { translations } from "@/lib/fingerprint/presentation";
 import type { Language } from "@/types/fingerprint";
 
 interface SiteHeaderProps {
@@ -10,9 +12,10 @@ interface SiteHeaderProps {
 }
 
 const languageLabels: Record<Language, string> = {
-  EN: "English",
-  VI: "Tiếng Việt",
-  RU: "Русский",
+  EN: translations.EN.languageName,
+  VI: translations.VI.languageName,
+  CN: translations.CN.languageName,
+  RU: translations.RU.languageName,
 };
 
 export function SiteHeader({
@@ -30,15 +33,14 @@ export function SiteHeader({
         <span className="brand-name">Fingerprint Checked</span>
       </a>
 
-      <button
+      <Button
         aria-expanded={menuOpen}
         aria-label="Toggle navigation"
         className="menu-toggle"
         onClick={onToggleMenu}
-        type="button"
       >
         <span /><span /><span />
-      </button>
+      </Button>
 
       <nav className={menuOpen ? "site-nav site-nav-open" : "site-nav"}>
         <a href="https://hideproxy.io/">Proxy</a>
@@ -48,20 +50,19 @@ export function SiteHeader({
 
       <div className="header-actions">
         <div className="language-picker">
-          <button aria-expanded={languageOpen} className="language-button" onClick={onToggleLanguage} type="button">
+          <Button aria-expanded={languageOpen} className="language-button" onClick={onToggleLanguage}>
             {language} <span aria-hidden="true">⌄</span>
-          </button>
+          </Button>
           {languageOpen ? (
             <div className="language-menu">
               {(Object.keys(languageLabels) as Language[]).map((option) => (
-                <button
+                <Button
                   className={language === option ? "active" : ""}
                   key={option}
                   onClick={() => onSelectLanguage(option)}
-                  type="button"
                 >
                   {languageLabels[option]}
-                </button>
+                </Button>
               ))}
             </div>
           ) : null}

@@ -1,0 +1,12 @@
+{
+  "languageName": "Tiếng Việt",
+  "badge": "Kiểm tra địa chỉ IP",
+  "browserScore": "Điểm trình duyệt:",
+  "copied": "Đã sao chép!",
+  "copyIp": "Sao chép IP",
+  "details": "Xem chi tiết",
+  "diagnostics": "Chẩn đoán proxy & hệ thống chi tiết",
+  "diagnosticsSub": "Phân tích kết nối và môi trường trình duyệt hiện tại, kiểm tra WebRTC, JavaScript và các nguy cơ rò rỉ dữ liệu.",
+  "ipRisk": "Điểm rủi ro IP:",
+  "myIp": "IP của tôi:"
+}

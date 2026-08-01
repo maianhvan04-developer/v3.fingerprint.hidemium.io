@@ -32,7 +32,7 @@ export function useFingerprintDashboard() {
 
   useEffect(() => {
     const saved = localStorage.getItem("fpc.lang")?.toUpperCase();
-    if (saved !== "EN" && saved !== "VI" && saved !== "RU") return;
+    if (saved !== "EN" && saved !== "VI" && saved !== "CN" && saved !== "RU") return;
     const frame = window.requestAnimationFrame(() => setLanguage(saved));
     return () => window.cancelAnimationFrame(frame);
   }, []);

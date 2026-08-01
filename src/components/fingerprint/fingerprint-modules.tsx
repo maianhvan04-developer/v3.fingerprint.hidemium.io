@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/ui/copy-button";
 import type { CopyKind, FingerprintModule } from "@/types/fingerprint";
 
 interface FingerprintModulesProps {
@@ -51,10 +53,13 @@ export function FingerprintModules({
         <div className="json-head">
           <h3>📋 Full Fingerprint JSON</h3>
           <div>
-            <button className="copy-button" onClick={onCopyJson} type="button">
-              {copied === "json" ? "✓ Copied!" : "▣ Copy JSON"}
-            </button>
-            <button className="copy-button" onClick={onDownloadJson} type="button">↓ Download</button>
+            <CopyButton
+              copied={copied === "json"}
+              copiedLabel="Copied!"
+              label="Copy JSON"
+              onClick={onCopyJson}
+            />
+            <Button className="copy-button" onClick={onDownloadJson}>↓ Download</Button>
           </div>
         </div>
         <pre>{fullJson}</pre>
