@@ -40,3 +40,8 @@
 - Inset the colored rail by `2px` and use a smooth green-to-lime-to-yellow-to-orange-to-red gradient.
 - Use a `20px` navy marker with a white outer ring, white center, and layered shadow.
 - Animate marker position changes over `320ms` without introducing any continuous animation.
+
+## Revision — Fingerprint globe icon
+- Replace the latitude/longitude `Globe2` symbol beside `Your Fingerprint` with the continent-shaped `Earth` symbol.
+- Preserve the existing `27px` size, blue inherited color, stroke treatment, and alignment.
+- The icon remains decorative with `aria-hidden="true"`.

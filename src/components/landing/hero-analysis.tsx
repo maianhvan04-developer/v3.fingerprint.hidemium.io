@@ -7,8 +7,8 @@ import {
   Cloud,
   Compass,
   Copy,
+  Earth,
   FileText,
-  Globe2,
   Laptop,
   Monitor,
   Network,
@@ -157,7 +157,7 @@ export function HeroAnalysis({
           <div className={styles.analysisTop}>
             <div className={styles.fingerprintBlock}>
               <div className={styles.fingerprintTitle}>
-                <Globe2 aria-hidden="true" size={27} />
+                <Earth aria-hidden="true" size={27} />
                 <div>
                   <span>Your Fingerprint</span>
                   <strong>{ipAddress}</strong>
