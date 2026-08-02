@@ -71,3 +71,18 @@
 ## Assets and Content
 - No new assets.
 - Keep all existing text, Lucide icons, API-backed values, and component structure.
+
+## Revision 2 — Explicit Large-Type Pass
+- **Reason:** User visual QA found the first readability pass still too small.
+- Replace compact desktop typography rather than applying a small incremental bump.
+- Trust heading: `14px`; partner names: `18px` base with branded wordmarks up to `22px`.
+- Feature cards: `80px` high; title `18px`; description `14px` with an `18px` line-height; icon tile `46px` with a `31px` icon.
+- Overview category rail: `240px`; tab labels `15px`; tab icons `20px`; buttons `38px` high.
+- Workspace heading: `22px`; subtitle `15px`; analysis metadata `13px`.
+- Metric labels: `12.5px`; metric values `15px`; auxiliary values `12px`; cards `48px` high.
+- Table header: `13px` text and `32px` height.
+- Table body: `13px` text and at least `26px` row height; attribute icons `15px`.
+- Mobile card table: attribute `13px`, category `11.5px`, value `13px`, result `12.5px`.
+- Increase container heights and spacing only as needed to avoid clipping; preserve responsive layouts and no horizontal page overflow.
+- Lay out metric labels and values on two internal rows so large type never overlaps at `1440px`.
+- Feature descriptions may use up to three lines; cards must be tall enough to avoid ellipsis for the existing copy.
