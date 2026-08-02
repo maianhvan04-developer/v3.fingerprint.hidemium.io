@@ -21,7 +21,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className={styles.process} aria-labelledby="process-title">
+    <section className={styles.process} id="how-it-works" aria-labelledby="process-title">
       <div className={styles.processIntro}>
         <h2 id="process-title">How it works</h2>
         <p>Powerful fingerprinting in three simple steps.</p>

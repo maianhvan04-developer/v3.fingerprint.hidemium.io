@@ -1,0 +1,34 @@
+- generic [active] [ref=f4e1] [box=0,0,375,4148]:
+  - generic [ref=f4e2] [box=0,0,375,4148]:
+    - banner [ref=f4e3] [box=0,0,375,52]:
+      - generic [ref=f4e4] [box=0,0,375,51]:
+        - link "Fingerprint Checked home" [ref=f4e5] [cursor=pointer] [box=16,13,185,25]:
+          - /url: "#top"
+        - button "Open navigation" [ref=f4e12] [cursor=pointer] [box=325,9,34,34]
+      - navigation "Mobile navigation" [ref=f4e15] [box=0,51,375,276]:
+        - button "Product" [ref=f4e17] [cursor=pointer] [box=16,61,343,40]
+        - button "Use Cases" [ref=f4e21] [cursor=pointer] [box=16,101,343,40]
+        - link "Docs" [ref=f4e24] [cursor=pointer] [box=16,141,343,40]:
+          - /url: "#documentation"
+        - link "Pricing" [ref=f4e25] [cursor=pointer] [box=16,181,343,40]:
+          - /url: "#pricing"
+        - button "Company" [ref=f4e27] [cursor=pointer] [box=16,221,343,40]
+        - generic [ref=f4e30] [box=16,261,343,50]
+    - main [ref=f4e33] [box=0,52,375,3273]:
+      - generic [ref=f4e98] [box=0,52,375,972]:
+        - generic [ref=f4e99] [box=16,80,343,381]
+        - generic [ref=f4e130] [box=16,485,343,515]
+      - region "TRUSTED BY SECURITY-FOCUSED TEAMS WORLDWIDE" [ref=f4e240] [box=0,1024,375,386]:
+        - generic [ref=f4e241] [box=0,1024,375,386]
+      - region "Fingerprint Overview" [ref=f4e293] [box=14,1416,347,1551]:
+        - navigation "Fingerprint categories" [ref=f4e294] [box=15,1417,346,52]
+        - generic [ref=f4e366] [box=15,1469,346,1498]
+      - region "How it works" [ref=f4e608] [box=14,2976,347,349]:
+        - generic [ref=f4e609] [box=15,2976,346,68]
+        - list [ref=f4e612] [box=15,3044,346,198]
+        - complementary [ref=f4e628] [box=15,3242,346,82]
+    - contentinfo "Site footer" [ref=f4e635] [box=0,3330,375,818]:
+      - generic [ref=f4e636] [box=14,3330,347,818]:
+        - generic [ref=f4e637] [box=14,3330,347,718]
+        - generic [ref=f4e690] [box=14,4048,347,100]
+  - alert [ref=f4e738] [box=-1,4147,1,1]

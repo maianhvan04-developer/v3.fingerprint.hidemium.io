@@ -15,6 +15,48 @@ import type {
 
 const emptyIp: IpLookupResponse = {};
 
+interface IpheyResponse {
+  asn?: number;
+  city?: string;
+  country?: string;
+  countryName?: string;
+  ip?: string;
+  latitude?: string;
+  longitude?: string;
+  org?: string;
+  region?: string;
+  timezone?: { name?: string };
+  zipCode?: string;
+}
+
+function normalizeIpheyResponse(data: IpheyResponse): IpLookupResponse {
+  return {
+    success: Boolean(data.ip),
+    ip: data.ip,
+    type: data.ip?.includes(":") ? "IPv6" : "IPv4",
+    country: data.countryName,
+    country_code: data.country,
+    region: data.region,
+    city: data.city,
+    postal: data.zipCode,
+    latitude: data.latitude ? Number(data.latitude) : undefined,
+    longitude: data.longitude ? Number(data.longitude) : undefined,
+    connection: {
+      asn: data.asn,
+      org: data.org,
+      isp: data.org,
+    },
+    timezone: { id: data.timezone?.name },
+    security: {
+      anonymous: false,
+      hosting: false,
+      proxy: false,
+      tor: false,
+      vpn: false,
+    },
+  };
+}
+
 export function useFingerprintDashboard() {
   const { browser, browserReady, modules } = useBrowserProfile();
   const { runWebRtc, webRtc } = useWebRtcCheck();
@@ -40,11 +82,26 @@ export function useFingerprintDashboard() {
   useEffect(() => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 9000);
-    void fetch("/api/ip", { cache: "no-store", signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error("IP lookup failed");
-        return response.json() as Promise<IpLookupResponse>;
-      })
+    const fetchIp = async () => {
+      try {
+        const liveResponse = await fetch("https://ipgeo.iphey.com/", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!liveResponse.ok) throw new Error("Live IP lookup failed");
+        return normalizeIpheyResponse(await liveResponse.json() as IpheyResponse);
+      } catch (error) {
+        if (controller.signal.aborted) throw error;
+        const fallbackResponse = await fetch("/api/ip", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!fallbackResponse.ok) throw new Error("IP lookup failed");
+        return fallbackResponse.json() as Promise<IpLookupResponse>;
+      }
+    };
+
+    void fetchIp()
       .then((data) => {
         if (data.success === false) throw new Error("IP lookup unavailable");
         setIpInfo(data);

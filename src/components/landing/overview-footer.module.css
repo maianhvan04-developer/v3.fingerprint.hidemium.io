@@ -3,7 +3,7 @@
   grid-template-columns: 200px minmax(0, 1fr);
   width: min(1536px, calc(100% - 48px));
   min-height: 264px;
-  margin: 6px auto 0;
+  margin: 0 auto;
   overflow: hidden;
   background: #fff;
   border: 1px solid #d5e1f0;
@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding: 9px 8px;
+  padding: 6px 8px;
   border-right: 1px solid #dce6f2;
   background: #fbfdff;
 }
@@ -25,7 +25,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 27px;
+  height: 22px;
   padding: 0 10px;
   gap: 9px;
   color: #354866;
@@ -52,8 +52,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 36px;
-  padding: 4px 16px;
+  height: 36px;
+  padding: 2px 16px;
   gap: 18px;
   border-bottom: 1px solid #e3eaf4;
 }
@@ -104,8 +104,8 @@
 .metrics {
   display: grid;
   grid-template-columns: minmax(230px, 1.35fr) repeat(4, minmax(130px, 1fr));
-  gap: 12px;
-  padding: 5px 16px;
+  gap: 10px;
+  padding: 3px 16px;
 }
 
 .idMetric,
@@ -114,7 +114,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  height: 40px;
+  height: 30px;
   padding: 0 12px;
   gap: 7px;
   background: #fff;
@@ -191,7 +191,7 @@
 }
 
 .tableHeader {
-  height: 22px;
+  height: 18px;
   color: #30435f;
   background: #f5f8fc;
   font-size: 9px;
@@ -210,10 +210,10 @@
 }
 
 .tableRow {
-  min-height: 18px;
+  min-height: 12px;
   color: #172b49;
   border-top: 1px solid #edf1f6;
-  font-size: 9px;
+  font-size: 8px;
   line-height: 1.25;
 }
 
@@ -274,7 +274,7 @@
   align-items: stretch;
   width: min(1536px, calc(100% - 48px));
   min-height: 62px;
-  margin: 8px auto 0;
+  margin: 4px auto 0;
   overflow: hidden;
   border: 1px solid #d8e3f0;
   border-radius: 10px;
@@ -401,7 +401,7 @@
 }
 
 .footer {
-  margin-top: 5px;
+  margin-top: 2px;
   background: #fff;
 }
 
@@ -414,7 +414,7 @@
   display: grid;
   grid-template-columns: 1.65fr repeat(3, 0.8fr) 1.45fr;
   gap: 48px;
-  padding: 18px 0 22px;
+  padding: 10px 0 8px;
 }
 
 .footerBrand > a {
@@ -545,7 +545,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 38px;
+  min-height: 30px;
   gap: 24px;
   color: #62728a;
   border-top: 1px solid #dde6f1;

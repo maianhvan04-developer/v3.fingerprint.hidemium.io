@@ -266,7 +266,7 @@ export function FingerprintOverview({
   }, [browser, browserReady, diagnostics, ipInfo, webRtc]);
 
   return (
-    <section className={styles.overview} aria-labelledby="fingerprint-overview-title">
+    <section className={styles.overview} id="overview" aria-labelledby="fingerprint-overview-title">
       <nav className={styles.categoryRail} aria-label="Fingerprint categories">
         {categories.map(({ icon: Icon, label }) => (
           <button
@@ -339,7 +339,9 @@ export function FingerprintOverview({
             <span role="columnheader">Similarity / Result</span>
           </div>
           <div className={styles.tableBody}>
-            {rows.map(({ attribute, category, icon: Icon, result, tone, value }) => (
+            {rows
+              .filter(({ attribute }) => !["Canvas", "GPU", "Timezone", "Fonts"].includes(attribute))
+              .map(({ attribute, category, icon: Icon, result, tone, value }) => (
               <div className={styles.tableRow} key={attribute} role="row">
                 <span className={styles.attributeCell} role="cell">
                   <Icon aria-hidden="true" size={11} strokeWidth={1.8} />

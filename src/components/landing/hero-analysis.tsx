@@ -114,7 +114,7 @@ export function HeroAnalysis({
             Real-time browser fingerprint analysis
           </div>
           <h1>
-            Detect. Analyze.<br />
+            Detect. Analyze.{" "}<br />
             Trust with <em>Confidence.</em>
           </h1>
           <p>
