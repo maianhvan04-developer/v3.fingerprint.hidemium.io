@@ -33,3 +33,10 @@
 - Long values wrap with `overflow-wrap: anywhere` and grow their rows/card naturally.
 - Allocate `64%` of the analysis header to fingerprint/IP details and `36%` to risk details.
 - Preserve mobile wrapping and no horizontal overflow.
+
+## Revision — Risk rail polish
+- Preserve the existing score-to-position mapping and accessible risk score label.
+- Use a `14px` rounded outer track with a soft neutral inset background and subtle border.
+- Inset the colored rail by `2px` and use a smooth green-to-lime-to-yellow-to-orange-to-red gradient.
+- Use a `20px` navy marker with a white outer ring, white center, and layered shadow.
+- Animate marker position changes over `320ms` without introducing any continuous animation.
