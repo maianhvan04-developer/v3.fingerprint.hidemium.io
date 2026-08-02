@@ -17,10 +17,7 @@ Primary UI reference: user-supplied 1680×940 screenshot. Live data/content sour
    - Vertical category rail
    - Analysis ID and four metric cards
    - Dense attribute/category/value/result table populated from live browser data
-5. How-it-works / compact CTA row (about 62px desktop)
-   - Three numbered steps
-   - Trial CTA card
-6. White footer
+5. White footer, separated from page content by a full-width horizontal rule
    - Brand statement
    - Product, Resources, Company link groups
    - Newsletter field and social links

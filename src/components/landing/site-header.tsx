@@ -22,7 +22,6 @@ const navigation: NavigationItem[] = [
     items: [
       { href: "#analysis", label: "Fingerprint Analysis" },
       { href: "#overview", label: "Browser Signals" },
-      { href: "#how-it-works", label: "How it works" },
     ],
   },
   {

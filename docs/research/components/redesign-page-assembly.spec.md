@@ -11,7 +11,6 @@
    - `HeroAnalysis`
    - `TrustFeatures`
    - `FingerprintOverview`
-   - `HowItWorks`
 3. `SiteFooter`
 
 ## Data wiring
@@ -21,7 +20,7 @@
 
 ## Page styles
 - White base with no global max-width around the hero background.
-- Trust, overview, process and footer sections keep their own frame widths from their specs.
+- Trust, overview and footer sections keep their own frame widths from their specs.
 - Desktop target is a compact one-screen-like composition at 1680×940; content may naturally exceed the viewport at smaller heights.
 - No horizontal overflow at 390px, 768px, 1440px or 1680px.
 

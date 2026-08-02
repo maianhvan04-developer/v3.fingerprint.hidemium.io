@@ -2,7 +2,6 @@
 
 import { FingerprintOverview } from "@/components/landing/fingerprint-overview";
 import { HeroAnalysis } from "@/components/landing/hero-analysis";
-import { HowItWorks } from "@/components/landing/how-it-works";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
 import { TrustFeatures } from "@/components/landing/trust-features";
@@ -36,7 +35,6 @@ export function FingerprintDashboard() {
           riskScore={dashboard.riskScore}
           webRtc={dashboard.webRtc}
         />
-        <HowItWorks />
       </main>
       <SiteFooter />
     </div>

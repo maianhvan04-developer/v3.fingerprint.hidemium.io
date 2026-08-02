@@ -14,7 +14,7 @@ Source behavior was inspected with Playwright MCP at 1440px, 768px, and 390px. T
 
 ## Responsive behavior
 
-- Desktop ≥ 1100px: exact two-column hero, four-column feature row, overview rail + table, four-part how-it-works row.
+- Desktop ≥ 1100px: exact two-column hero, four-column feature row, overview rail + table, and separated footer.
 - Tablet 768–1099px: hero stacks, feature cards form a 2×2 grid, overview rail becomes horizontal, footer becomes two rows.
 - Mobile < 768px: navigation collapses; all cards stack; dense overview rows expose Attribute, Value, and Result while Category is secondary text; CTA and newsletter controls become full width.
 
