@@ -2,16 +2,16 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FingerprintChecked — Browser Fingerprint Diagnostics",
+  title: "Fingerprint Checked — Browser Fingerprint Analysis",
   description:
-    "Inspect your IP, browser environment, WebRTC surface, and browser fingerprint coherence.",
+    "Analyze your browser fingerprint, IP, WebRTC, device, and privacy signals in real time.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  colorScheme: "dark",
-  themeColor: "#0b0613",
+  colorScheme: "light",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({

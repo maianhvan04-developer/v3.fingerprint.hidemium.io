@@ -109,3 +109,11 @@ export interface WebRtcResult {
   session: string;
   status: "checking" | "complete" | "unavailable";
 }
+
+export interface OverviewRow {
+  attribute: string;
+  category: "Network" | "Browser" | "System" | "Hardware" | "Privacy";
+  result: "Clear" | "Exact match" | "High similarity" | "Live";
+  tone: "good" | "warn";
+  value: string;
+}

@@ -1,22 +1,20 @@
-# Observed behaviors
+# Behaviors — light redesign
 
-Source inspected with Playwright MCP on 2026-08-01 at 1440×1100, 768×1024, and 390×844.
+Source behavior was inspected with Playwright MCP at 1440px, 768px, and 390px. The user-provided screenshot is the visual authority.
 
-- Header is static and transparent. It never sticks or changes while scrolling.
-- Navigation links and purple action buttons brighten on hover. The primary action does not move.
-- Language control cycles EN → VI → RU and persists the selection in `localStorage` under `fpc.lang`.
-- `Copy IP` writes the detected address and briefly changes its label.
-- Diagnostic issue cards reveal an inline trouble panel. The card grows naturally; sibling cards keep their own height.
-- CDI filters show all, failed/warned, fatal, or skipped invariants without a page reload.
-- Fingerprint modules are accordions. The row chevron rotates 90 degrees and a summary/JSON body is inserted beneath it.
-- Issue surfaces breathe with red or amber glow; clean surfaces use green. Hover increases brightness and glow.
-- Reduced-motion preference disables loops and collapses transitions to near-instant.
-- No lazy image or video regions were observed. The design uses gradients, type, borders, emoji, and live text.
+- Header stays in document flow and does not transform on scroll.
+- Product, Use Cases, and Company expose small click/hover dropdowns on desktop. The mobile header uses one menu toggle.
+- `Copy IP` writes the live address and temporarily changes to `Copied`.
+- IP, browser, OS, device, WebRTC, security and location values are collected after hydration; loading placeholders preserve layout.
+- The risk rail and metric values animate only their width/count on first load.
+- Overview category buttons update the active label. The visible summary remains a compact cross-category table, matching the screenshot.
+- Primary buttons brighten and lift 1px on hover; outline buttons tint blue. Cards get a subtle blue border/shadow on hover.
+- Footer newsletter submit prevents navigation and changes the button label to `Subscribed` locally.
+- Reduced-motion preference disables transitions and the initial metric animation.
 
 ## Responsive behavior
 
-- At 900px and below: center navigation is hidden, info sections become one column, diagnostics become two columns, and WebRTC becomes one column.
-- At 600px and below: header wraps, diagnostics become one column, hero title drops from 35px to 27px, and CTA stacks vertically.
-- At 640px and below: CDI rows become a two-column mobile layout with ID, content, and tags stacked in column two.
-- The page intentionally becomes very tall on mobile; content is not horizontally clipped.
+- Desktop ≥ 1100px: exact two-column hero, four-column feature row, overview rail + table, four-part how-it-works row.
+- Tablet 768–1099px: hero stacks, feature cards form a 2×2 grid, overview rail becomes horizontal, footer becomes two rows.
+- Mobile < 768px: navigation collapses; all cards stack; dense overview rows expose Attribute, Value, and Result while Category is secondary text; CTA and newsletter controls become full width.
 
