@@ -350,8 +350,8 @@
 
 .analysisCard {
   position: relative;
-  width: min(100%, 920px);
-  flex: 0 1 920px;
+  width: min(100%, 1150px);
+  flex: 0 1 1150px;
   align-self: stretch;
   min-width: 0;
   padding: 10px 19px 10px;
@@ -376,7 +376,7 @@
 
 .analysisTop {
   display: grid;
-  grid-template-columns: 58% 42%;
+  grid-template-columns: 64% 36%;
   min-height: 94px;
   padding: 7px 0 5px;
 }
@@ -411,15 +411,14 @@
 
 .fingerprintTitle strong {
   display: block;
-  overflow: hidden;
   margin-top: 3px;
   color: #08183e;
   font-size: 24px;
   font-weight: 750;
   letter-spacing: 0.1px;
   line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .copyButton {
@@ -453,6 +452,7 @@
 .ipMeta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 8px 0 5px 40px;
   color: #53688c;
@@ -484,12 +484,11 @@
   align-items: center;
   gap: 8px;
   margin-left: 40px;
-  overflow: hidden;
   color: #25395d;
   font-size: 10px;
   font-weight: 650;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .flag {
@@ -633,13 +632,12 @@
 }
 
 .summaryValue {
-  overflow: hidden;
   color: #0b1d44;
   font-size: 10px;
   font-weight: 650;
   line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .trustSection {
@@ -900,7 +898,7 @@
   }
 
   .analysisCard {
-    width: min(100%, 920px);
+    width: min(100%, 1150px);
     min-height: 278px;
   }
 

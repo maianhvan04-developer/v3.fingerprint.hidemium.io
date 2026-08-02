@@ -26,3 +26,10 @@
 - Copy IP interaction remains unchanged.
 - Live/detecting/unavailable states remain unchanged.
 - No new assets.
+
+## Revision — Full value visibility
+- Increase the centered desktop card width to `min(100%, 1150px)`.
+- Never use ellipsis for the primary IP, location, WebRTC IPs, provider, browser, operating system, or device values.
+- Long values wrap with `overflow-wrap: anywhere` and grow their rows/card naturally.
+- Allocate `64%` of the analysis header to fingerprint/IP details and `36%` to risk details.
+- Preserve mobile wrapping and no horizontal overflow.
