@@ -32,6 +32,7 @@ export function FingerprintDashboard() {
           browserScore={dashboard.browserScore}
           diagnostics={dashboard.diagnostics}
           ipInfo={dashboard.ipInfo}
+          modules={dashboard.modules}
           riskScore={dashboard.riskScore}
           webRtc={dashboard.webRtc}
         />
