@@ -1,5 +1,29 @@
-import { Cloud, Code2, Crosshair, ShieldCheck, Zap } from "lucide-react";
+import {
+  Cloud,
+  Code2,
+  Crosshair,
+  ShieldCheck,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import styles from "./header-hero.module.css";
+
+interface Partner {
+  className: string;
+  icon?: LucideIcon;
+  iconSize?: number;
+  name: string;
+}
+
+const partners: readonly Partner[] = [
+  { className: styles.cloudflare, icon: Cloud, iconSize: 18, name: "Cloudflare" },
+  { className: styles.akamai, name: "Akamai" },
+  { className: styles.datadome, name: "DATADOME" },
+  { className: styles.imperva, name: "imperva" },
+  { className: styles.seon, icon: Crosshair, iconSize: 17, name: "SEON" },
+  { className: styles.riskified, icon: ShieldCheck, iconSize: 16, name: "riskified" },
+  { className: styles.appfuel, icon: Zap, iconSize: 16, name: "appfuel" },
+];
 
 const features = [
   {
@@ -24,20 +48,45 @@ const features = [
   },
 ];
 
+function PartnerMarks({ duplicate = false }: { duplicate?: boolean }) {
+  return (
+    <div
+      aria-hidden={duplicate ? true : undefined}
+      aria-label={duplicate ? undefined : "Trusted partners"}
+      className={styles.partnerMarks}
+      role={duplicate ? undefined : "list"}
+    >
+      {partners.map((partner) => {
+        const Icon = partner.icon;
+
+        return (
+          <span
+            className={partner.className}
+            key={partner.name}
+            role={duplicate ? undefined : "listitem"}
+          >
+            {Icon ? <Icon aria-hidden="true" size={partner.iconSize} /> : null}
+            {partner.name}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 export function TrustFeatures() {
   return (
     <section className={styles.trustSection} aria-labelledby="trust-heading">
       <div className={styles.trustInner}>
         <h2 id="trust-heading">TRUSTED BY SECURITY-FOCUSED TEAMS WORLDWIDE</h2>
-        <div className={styles.partnerScroller}>
-          <div className={styles.partnerMarks} aria-label="Trusted partners">
-            <span className={styles.cloudflare}><Cloud aria-hidden="true" size={18} />Cloudflare</span>
-            <span className={styles.akamai}>Akamai</span>
-            <span className={styles.datadome}>DATADOME</span>
-            <span className={styles.imperva}>imperva</span>
-            <span className={styles.seon}><Crosshair aria-hidden="true" size={17} />SEON</span>
-            <span className={styles.riskified}><ShieldCheck aria-hidden="true" size={16} />riskified</span>
-            <span className={styles.appfuel}><Zap aria-hidden="true" size={16} />appfuel</span>
+        <div
+          aria-label="Trusted partner logos"
+          className={styles.partnerScroller}
+          tabIndex={0}
+        >
+          <div className={styles.partnerTrack}>
+            <PartnerMarks />
+            <PartnerMarks duplicate />
           </div>
         </div>
 

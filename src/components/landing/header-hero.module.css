@@ -676,14 +676,48 @@
 
 .partnerScroller {
   overflow: hidden;
+  margin-bottom: 12px;
+  outline: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 24px,
+    #000 calc(100% - 24px),
+    transparent
+  );
+}
+
+.partnerScroller:focus-visible {
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px rgb(23 103 239 / 24%);
+}
+
+.partnerTrack {
+  display: flex;
+  width: max-content;
+  animation: partner-marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.partnerScroller:hover .partnerTrack,
+.partnerScroller:focus-within .partnerTrack {
+  animation-play-state: paused;
 }
 
 .partnerMarks {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   align-items: center;
-  min-width: 900px;
+  width: max(980px, min(1536px, calc(100vw - 48px)));
   min-height: 22px;
+  flex: 0 0 auto;
   color: #7a899f;
 }
 
@@ -729,7 +763,17 @@
 .featureGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
+  gap: 28px;
+}
+
+@keyframes partner-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .featureCard {
@@ -1010,14 +1054,6 @@
     color: #ffffff;
   }
 
-  .partnerScroller {
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .partnerScroller::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 @media (max-width: 639px) {
@@ -1134,8 +1170,26 @@
   }
 
   .partnerMarks {
+    width: 924px;
     grid-template-columns: repeat(7, 132px);
-    min-width: 924px;
+  }
+
+  .partnerScroller {
+    margin-bottom: 10px;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent
+    );
   }
 
   .featureGrid {
@@ -1153,5 +1207,18 @@
   .trustSection * {
     scroll-behavior: auto;
     transition-duration: 0.01ms;
+  }
+
+  .partnerScroller {
+    overflow-x: auto;
+    mask-image: none;
+    scrollbar-width: thin;
+    -webkit-mask-image: none;
+  }
+
+  .partnerTrack {
+    animation: none;
+    transform: none;
+    will-change: auto;
   }
 }
