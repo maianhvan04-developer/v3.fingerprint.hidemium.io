@@ -11,11 +11,11 @@
   display: grid;
   grid-template-columns: 270px 1fr 210px;
   align-items: center;
-  width: 100%;
-  max-width: 1480px;
+  width: min(1536px, calc(100% - 48px));
+  max-width: none;
   height: 47px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0;
 }
 
 .brand {
@@ -212,11 +212,11 @@
   grid-template-columns: minmax(0, 0.93fr) minmax(660px, 1.07fr);
   align-items: center;
   gap: 36px;
-  width: 100%;
-  max-width: 1480px;
+  width: min(1536px, calc(100% - 48px));
+  max-width: none;
   min-height: 292px;
   margin: 0 auto;
-  padding: 6px 24px 7px;
+  padding: 14px 0 16px;
 }
 
 .heroCopy {
@@ -658,10 +658,10 @@
 }
 
 .trustInner {
-  width: 100%;
-  max-width: 1480px;
+  width: min(1536px, calc(100% - 48px));
+  max-width: none;
   margin: 0 auto;
-  padding: 2px 24px 3px;
+  padding: 12px 0 14px;
 }
 
 .trustInner > h2 {
@@ -1025,6 +1025,7 @@
   .mobilePanel nav,
   .heroInner,
   .trustInner {
+    width: 100%;
     padding-right: 16px;
     padding-left: 16px;
   }
