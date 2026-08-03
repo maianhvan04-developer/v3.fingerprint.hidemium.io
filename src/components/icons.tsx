@@ -1,21 +1,22 @@
+import Image from "next/image";
 import type { SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
 
-export function BrandMark(props: IconProps) {
+interface BrandMarkProps {
+  className?: string;
+}
+
+export function BrandMark({ className }: BrandMarkProps) {
   return (
-    <svg viewBox="0 0 44 36" fill="none" aria-hidden="true" {...props}>
-      <path d="M22 1.8 39 8v19.8L22 34.2 5 27.8V8L22 1.8Z" fill="url(#brand-gradient)" />
-      <path d="M14.2 21.5c0-5.4 3.3-9.1 7.8-9.1s7.8 3.7 7.8 9.1" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M17 22c0-3.8 2-6.5 5-6.5s5 2.7 5 6.5c0 3.1-.8 5.2-1.9 7" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M19.7 22.5c0-2.2.8-3.8 2.3-3.8s2.3 1.6 2.3 3.8c0 2.8-.7 4.9-1.6 6.7M14.5 25.1c.5 2 1.2 3.6 2.1 5M29.4 25.1c-.5 2-1.2 3.6-2.1 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" />
-      <defs>
-        <linearGradient id="brand-gradient" x1="7" y1="4" x2="38" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#2F82FF" />
-          <stop offset="1" stopColor="#0C52E7" />
-        </linearGradient>
-      </defs>
-    </svg>
+    <Image
+      alt=""
+      aria-hidden="true"
+      className={className}
+      height={1004}
+      src="/images/brand-logo.png"
+      width={917}
+    />
   );
 }
 

@@ -33,8 +33,9 @@
 
 .brandMark {
   width: 34px;
-  height: 26px;
+  height: 34px;
   flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .desktopNav {
@@ -1260,7 +1261,7 @@
 
   .brandMark {
     width: 31px;
-    height: 25px;
+    height: 31px;
   }
 
   .heroInner {

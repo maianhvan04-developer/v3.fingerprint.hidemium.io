@@ -347,9 +347,10 @@
   font-size: 15px;
 }
 
-.footerBrand svg {
+.footerBrand img {
   width: 36px;
-  height: 30px;
+  height: 36px;
+  object-fit: contain;
 }
 
 .footerBrand p {

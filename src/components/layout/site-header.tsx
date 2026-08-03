@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { BrandMark } from "@/components/icons";
 import { translations } from "@/lib/fingerprint/presentation";
 import type { Language } from "@/types/fingerprint";
 
@@ -29,7 +30,7 @@ export function SiteHeader({
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="Fingerprint Checked home">
-        <span className="logo" aria-hidden="true">⚡</span>
+        <BrandMark className="logo" />
         <span className="brand-name">Fingerprint Checked</span>
       </a>
 
