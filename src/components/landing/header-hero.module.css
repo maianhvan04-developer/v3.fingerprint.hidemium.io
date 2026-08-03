@@ -516,12 +516,19 @@
   display: block;
   margin-top: 3px;
   color: #08183e;
-  font-size: 27px;
+  font-size: clamp(20px, 1.65vw, 24px);
   font-weight: 750;
-  letter-spacing: 0.1px;
+  letter-spacing: 0;
   line-height: 1;
-  overflow-wrap: anywhere;
-  white-space: normal;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overflow-wrap: normal;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+
+.fingerprintTitle strong::-webkit-scrollbar {
+  display: none;
 }
 
 .copyButton {
