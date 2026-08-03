@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Languages, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/icons";
 import { translations } from "@/lib/fingerprint/presentation";
 import type { Language, Translation } from "@/types/fingerprint";
@@ -83,7 +83,6 @@ export function SiteHeader({
               onClick={onToggleLanguage}
               type="button"
             >
-              <Languages aria-hidden="true" size={14} />
               {language}
               <ChevronDown aria-hidden="true" size={12} />
             </button>
