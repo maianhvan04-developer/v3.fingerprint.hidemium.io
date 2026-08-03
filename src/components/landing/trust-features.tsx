@@ -89,7 +89,15 @@ export function TrustFeatures() {
             <PartnerMarks duplicate />
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
+export function ProductFeatures() {
+  return (
+    <section className={styles.featureSection} aria-label="Product capabilities">
+      <div className={styles.featureInner}>
         <div className={styles.featureGrid}>
           {features.map((feature) => {
             const Icon = feature.icon;

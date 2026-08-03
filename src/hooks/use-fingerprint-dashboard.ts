@@ -9,36 +9,72 @@ import type {
   AuditCounts,
   AuditFilter,
   CopyKind,
+  HttpHeadersSnapshot,
   IpLookupResponse,
+  IpRiskProfile,
   Language,
 } from "@/types/fingerprint";
 
 const emptyIp: IpLookupResponse = {};
+const emptyHeaders: HttpHeadersSnapshot = { headers: {}, status: "loading" };
+const emptyRisk: IpRiskProfile = { status: "loading" };
+
+const languageTags: Record<Language, string> = {
+  CN: "zh-CN",
+  EN: "en",
+  RU: "ru",
+  VI: "vi",
+};
 
 interface IpheyResponse {
+  airport?: string;
   asn?: number;
   city?: string;
+  continent?: string;
   country?: string;
   countryName?: string;
   ip?: string;
+  languages?: string | string[];
   latitude?: string;
   longitude?: string;
   org?: string;
   region?: string;
+  regionCode?: string;
   timezone?: { name?: string };
   zipCode?: string;
 }
 
+interface IpifyResponse {
+  ip?: string;
+}
+
+interface IpRiskResponse {
+  code?: number;
+  data?: {
+    risk_english?: string;
+    score?: number;
+  };
+}
+
 function normalizeIpheyResponse(data: IpheyResponse): IpLookupResponse {
+  const languages = Array.isArray(data.languages)
+    ? data.languages
+    : data.languages?.split(",").map((language) => language.trim()).filter(Boolean);
   return {
     success: Boolean(data.ip),
     ip: data.ip,
+    ipv4: data.ip && !data.ip.includes(":") ? data.ip : undefined,
+    ipv6: data.ip?.includes(":") ? data.ip : undefined,
     type: data.ip?.includes(":") ? "IPv6" : "IPv4",
     country: data.countryName,
     country_code: data.country,
+    continent: data.continent,
     region: data.region,
+    region_code: data.regionCode,
     city: data.city,
     postal: data.zipCode,
+    airport: data.airport,
+    languages,
     latitude: data.latitude ? Number(data.latitude) : undefined,
     longitude: data.longitude ? Number(data.longitude) : undefined,
     connection: {
@@ -47,13 +83,6 @@ function normalizeIpheyResponse(data: IpheyResponse): IpLookupResponse {
       isp: data.org,
     },
     timezone: { id: data.timezone?.name },
-    security: {
-      anonymous: false,
-      hosting: false,
-      proxy: false,
-      tor: false,
-      vpn: false,
-    },
   };
 }
 
@@ -62,9 +91,11 @@ export function useFingerprintDashboard() {
   const { runWebRtc, webRtc } = useWebRtcCheck();
   const [copied, setCopied] = useState<CopyKind | null>(null);
   const [filter, setFilter] = useState<AuditFilter>("all");
+  const [httpHeaders, setHttpHeaders] = useState<HttpHeadersSnapshot>(emptyHeaders);
   const [ipError, setIpError] = useState(false);
   const [ipInfo, setIpInfo] = useState<IpLookupResponse>(emptyIp);
   const [ipLoading, setIpLoading] = useState(true);
+  const [ipRisk, setIpRisk] = useState<IpRiskProfile>(emptyRisk);
   const [language, setLanguage] = useState<Language>("EN");
   const [languageOpen, setLanguageOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -80,8 +111,12 @@ export function useFingerprintDashboard() {
   }, []);
 
   useEffect(() => {
+    document.documentElement.lang = languageTags[language];
+  }, [language]);
+
+  useEffect(() => {
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 9000);
+    const timer = window.setTimeout(() => controller.abort(), 12000);
     const fetchIp = async () => {
       try {
         const liveResponse = await fetch("https://ipgeo.iphey.com/", {
@@ -101,16 +136,85 @@ export function useFingerprintDashboard() {
       }
     };
 
-    void fetchIp()
-      .then((data) => {
-        if (data.success === false) throw new Error("IP lookup unavailable");
-        setIpInfo(data);
+    const fetchIpv4 = async () => {
+      const response = await fetch("https://api4.ipify.org?format=json", {
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      if (!response.ok) throw new Error("IPv4 lookup failed");
+      const data = await response.json() as IpifyResponse;
+      if (!data.ip || data.ip.includes(":")) throw new Error("IPv4 unavailable");
+      return data.ip;
+    };
+
+    void Promise.allSettled([fetchIp(), fetchIpv4()])
+      .then(async ([ipResult, ipv4Result]) => {
+        if (ipResult.status === "rejected" && ipv4Result.status === "rejected") {
+          throw new Error("IP lookup unavailable");
+        }
+        const data = ipResult.status === "fulfilled" ? ipResult.value : {};
+        const ipv4 = ipv4Result.status === "fulfilled"
+          ? ipv4Result.value
+          : data.ipv4 || (data.ip && !data.ip.includes(":") ? data.ip : undefined);
+        const ipv6 = data.ipv6 || (data.ip?.includes(":") ? data.ip : undefined);
+        const merged: IpLookupResponse = {
+          ...data,
+          ip: data.ip || ipv6 || ipv4,
+          ipv4,
+          ipv6,
+          success: Boolean(data.ip || ipv4 || ipv6),
+          type: data.ip?.includes(":") || (!data.ip && ipv6) ? "IPv6" : "IPv4",
+        };
+        setIpInfo(merged);
+
+        const riskIp = ipv4 || merged.ip;
+        if (!riskIp) {
+          setIpRisk({ status: "unavailable" });
+          return;
+        }
+        try {
+          const response = await fetch(
+            `https://ip234.in/fraud_check?ip=${encodeURIComponent(riskIp)}`,
+            { cache: "no-store", signal: controller.signal },
+          );
+          if (!response.ok) throw new Error("Risk lookup failed");
+          const riskData = await response.json() as IpRiskResponse;
+          const score = riskData.data?.score;
+          if (typeof score !== "number") throw new Error("Risk score unavailable");
+          setIpRisk({
+            score: Math.max(0, Math.min(100, Math.round(score))),
+            status: "complete",
+            verdict: riskData.data?.risk_english,
+          });
+        } catch {
+          setIpRisk({ status: "unavailable" });
+        }
       })
-      .catch(() => setIpError(true))
+      .catch(() => {
+        setIpError(true);
+        setIpRisk({ status: "unavailable" });
+      })
       .finally(() => {
         window.clearTimeout(timer);
         setIpLoading(false);
       });
+    return () => {
+      controller.abort();
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 7000);
+    void fetch("/api/headers", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Header inspection failed");
+        const data = await response.json() as { headers?: Record<string, string> };
+        setHttpHeaders({ headers: data.headers ?? {}, status: "complete" });
+      })
+      .catch(() => setHttpHeaders({ headers: {}, status: "unavailable" }))
+      .finally(() => window.clearTimeout(timer));
     return () => {
       controller.abort();
       window.clearTimeout(timer);
@@ -167,6 +271,7 @@ export function useFingerprintDashboard() {
   }, [browser, browserReady]);
 
   const riskScore = useMemo(() => {
+    if (typeof ipRisk.score === "number") return ipRisk.score;
     const security = ipInfo.security;
     if (!security) return 8;
     return Math.min(99, 8 +
@@ -174,16 +279,18 @@ export function useFingerprintDashboard() {
       (security.proxy ? 35 : 0) +
       (security.vpn ? 25 : 0) +
       (security.tor ? 50 : 0));
-  }, [ipInfo.security]);
+  }, [ipInfo.security, ipRisk.score]);
 
   const fullJson = useMemo(() => JSON.stringify({
     audit: audits,
     browser,
     generatedAt: time.toISOString(),
+    httpHeaders,
     ip: ipInfo,
+    ipRisk,
     modules: Object.fromEntries(modules.map((module) => [module.name, module.result])),
     webRTC: webRtc,
-  }, null, 2), [audits, browser, ipInfo, modules, time, webRtc]);
+  }, null, 2), [audits, browser, httpHeaders, ipInfo, ipRisk, modules, time, webRtc]);
 
   const copyValue = useCallback(async (value: string, kind: CopyKind) => {
     try {
@@ -247,10 +354,12 @@ export function useFingerprintDashboard() {
     filter,
     flag: ipInfo.flag?.emoji || getFlag(ipInfo.country_code),
     fullJson,
+    httpHeaders,
     ipAddress,
     ipError,
     ipInfo,
     ipLoading,
+    ipRisk,
     language,
     languageOpen,
     localTime,

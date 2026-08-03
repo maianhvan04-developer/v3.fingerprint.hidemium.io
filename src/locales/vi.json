@@ -8,5 +8,15 @@
   "diagnostics": "Chẩn đoán proxy & hệ thống chi tiết",
   "diagnosticsSub": "Phân tích kết nối và môi trường trình duyệt hiện tại, kiểm tra WebRTC, JavaScript và các nguy cơ rò rỉ dữ liệu.",
   "ipRisk": "Điểm rủi ro IP:",
-  "myIp": "IP của tôi:"
+  "myIp": "IP của tôi:",
+  "navigation": {
+    "antidetectBrowser": "Trình duyệt Antidetect",
+    "closeNavigation": "Đóng điều hướng",
+    "contacts": "Liên hệ",
+    "language": "Ngôn ngữ",
+    "logIn": "Đăng nhập",
+    "openNavigation": "Mở điều hướng",
+    "proxy": "Proxy",
+    "signUp": "Đăng ký"
+  }
 }

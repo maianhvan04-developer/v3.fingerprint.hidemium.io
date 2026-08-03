@@ -86,3 +86,17 @@
 - Increase container heights and spacing only as needed to avoid clipping; preserve responsive layouts and no horizontal page overflow.
 - Lay out metric labels and values on two internal rows so large type never overlaps at `1440px`.
 - Feature descriptions may use up to three lines; cards must be tall enough to avoid ellipsis for the existing copy.
+
+## Revision 3 — Partner Heading Separation
+- **Reason:** User visual QA found the trust heading and animated partner row visually attached.
+- Current measured vertical gap between the heading box and partner scroller: `0px`.
+- Add a `16px` bottom margin to the trust heading, producing a clear `16px` separation before the animated logo row.
+- Preserve the existing trust container padding, partner sizes, horizontal distribution, marquee speed, masks, hover/focus pause, and reduced-motion behavior.
+
+## Revision 4 — Fingerprint ID Icon Alignment
+- **Reason:** User visual QA found the fingerprint icon detached from its value because it was pinned to the card's right edge.
+- Current desktop layout uses `value | icon`; the icon begins at `x=515.2px` while the value begins at `x=298.6px` inside a `264.2px`-wide card.
+- Change the second row to `icon | value`, keeping the label across the full first row.
+- Use a `20px` icon column and an `8px` gap, with the icon and ID vertically centered on the same baseline.
+- Preserve the current card size, ID truncation, live value, typography, colors, and responsive metric stacking.
+- At desktop and mobile widths, the card must remain contained with no horizontal page overflow.

@@ -1,60 +1,50 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Languages, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/icons";
+import { translations } from "@/lib/fingerprint/presentation";
+import type { Language, Translation } from "@/types/fingerprint";
 import styles from "./header-hero.module.css";
 
-interface DropdownItem {
+interface SiteHeaderProps {
+  language: Language;
+  languageOpen: boolean;
+  onSelectLanguage: (language: Language) => void;
+  onToggleLanguage: () => void;
+  translation: Translation;
+}
+
+interface NavigationItem {
   href: string;
   label: string;
 }
 
-interface NavigationItem {
-  href?: string;
-  items?: DropdownItem[];
-  label: string;
-}
+const languageLabels: Record<Language, string> = {
+  EN: translations.EN.languageName,
+  VI: translations.VI.languageName,
+  CN: translations.CN.languageName,
+  RU: translations.RU.languageName,
+};
 
-const navigation: NavigationItem[] = [
-  {
-    label: "Product",
-    items: [
-      { href: "#analysis", label: "Fingerprint Analysis" },
-      { href: "#overview", label: "Browser Signals" },
-    ],
-  },
-  {
-    label: "Use Cases",
-    items: [
-      { href: "#overview", label: "Fraud prevention" },
-      { href: "#overview", label: "Bot detection" },
-      { href: "#overview", label: "Account protection" },
-    ],
-  },
-  { href: "#documentation", label: "Docs" },
-  { href: "#pricing", label: "Pricing" },
-  {
-    label: "Company",
-    items: [
-      { href: "#about", label: "About" },
-      { href: "#customers", label: "Customers" },
-      { href: "#contact", label: "Contact" },
-    ],
-  },
-];
+const languageOptions = Object.keys(languageLabels) as Language[];
 
-export function SiteHeader() {
+export function SiteHeader({
+  language,
+  languageOpen,
+  onSelectLanguage,
+  onToggleLanguage,
+  translation,
+}: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-
-  const toggleDropdown = (label: string) => {
-    setOpenDropdown((current) => (current === label ? null : label));
-  };
+  const navigation: NavigationItem[] = [
+    { href: "https://hideproxy.io/", label: translation.navigation.proxy },
+    { href: "https://hidemium.io/", label: translation.navigation.antidetectBrowser },
+    { href: "https://t.me/hideproxyio", label: translation.navigation.contacts },
+  ];
 
   const closeNavigation = () => {
     setMobileOpen(false);
-    setOpenDropdown(null);
   };
 
   return (
@@ -66,60 +56,61 @@ export function SiteHeader() {
         </a>
 
         <nav className={styles.desktopNav} aria-label="Primary navigation">
-          {navigation.map((item) =>
-            item.items ? (
-              <div
-                className={styles.navDropdown}
-                key={item.label}
-                onMouseEnter={() => setOpenDropdown(item.label)}
-                onMouseLeave={() => setOpenDropdown(null)}
-                onBlur={(event) => {
-                  if (!event.currentTarget.contains(event.relatedTarget)) {
-                    setOpenDropdown(null);
-                  }
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") setOpenDropdown(null);
-                }}
-              >
-                <button
-                  className={styles.navButton}
-                  type="button"
-                  aria-expanded={openDropdown === item.label}
-                  aria-haspopup="menu"
-                  onClick={() => toggleDropdown(item.label)}
-                >
-                  {item.label}
-                  <ChevronDown aria-hidden="true" size={13} strokeWidth={2} />
-                </button>
-                <div
-                  className={styles.dropdownPanel}
-                  data-open={openDropdown === item.label}
-                  role="menu"
-                >
-                  {item.items.map((dropdownItem) => (
-                    <a
-                      href={dropdownItem.href}
-                      key={dropdownItem.label}
-                      onClick={closeNavigation}
-                      role="menuitem"
-                    >
-                      {dropdownItem.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <a className={styles.navLink} href={item.href} key={item.label}>
-                {item.label}
-              </a>
-            ),
-          )}
+          {navigation.map((item) => (
+            <a className={styles.navLink} href={item.href} key={item.href}>
+              {item.label}
+            </a>
+          ))}
         </nav>
 
         <div className={styles.desktopActions}>
-          <a className={styles.loginLink} href="#login">Log in</a>
-          <a className={styles.signupLink} href="#signup">Sign up</a>
+          <div
+            className={styles.languagePicker}
+            onBlur={(event) => {
+              if (languageOpen && !event.currentTarget.contains(event.relatedTarget)) {
+                onToggleLanguage();
+              }
+            }}
+            onKeyDown={(event) => {
+              if (languageOpen && event.key === "Escape") onToggleLanguage();
+            }}
+          >
+            <button
+              aria-expanded={languageOpen}
+              aria-haspopup="menu"
+              aria-label={translation.navigation.language}
+              className={styles.languageButton}
+              onClick={onToggleLanguage}
+              type="button"
+            >
+              <Languages aria-hidden="true" size={14} />
+              {language}
+              <ChevronDown aria-hidden="true" size={12} />
+            </button>
+            <div
+              aria-label={translation.navigation.language}
+              className={styles.languageMenu}
+              data-open={languageOpen}
+              role="menu"
+            >
+              {languageOptions.map((option) => (
+                <button
+                  aria-checked={language === option}
+                  className={styles.languageOption}
+                  data-active={language === option}
+                  key={option}
+                  onClick={() => onSelectLanguage(option)}
+                  role="menuitemradio"
+                  type="button"
+                >
+                  <strong>{option}</strong>
+                  <span>{languageLabels[option]}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <a className={styles.loginLink} href="#login">{translation.navigation.logIn}</a>
+          <a className={styles.signupLink} href="#signup">{translation.navigation.signUp}</a>
         </div>
 
         <button
@@ -127,7 +118,7 @@ export function SiteHeader() {
           type="button"
           aria-expanded={mobileOpen}
           aria-controls="mobile-navigation"
-          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          aria-label={mobileOpen ? translation.navigation.closeNavigation : translation.navigation.openNavigation}
           onClick={() => setMobileOpen((current) => !current)}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -140,37 +131,33 @@ export function SiteHeader() {
         id="mobile-navigation"
       >
         <nav aria-label="Mobile navigation">
-          {navigation.map((item) =>
-            item.items ? (
-              <div className={styles.mobileGroup} key={item.label}>
+          {navigation.map((item) => (
+            <a className={styles.mobileDirectLink} href={item.href} key={item.href} onClick={closeNavigation}>
+              {item.label}
+            </a>
+          ))}
+          <div className={styles.mobileLanguage} aria-label={translation.navigation.language}>
+            <span>{translation.navigation.language}</span>
+            <div>
+              {languageOptions.map((option) => (
                 <button
+                  aria-pressed={language === option}
+                  data-active={language === option}
+                  key={option}
+                  onClick={() => {
+                    onSelectLanguage(option);
+                    closeNavigation();
+                  }}
                   type="button"
-                  aria-expanded={openDropdown === item.label}
-                  onClick={() => toggleDropdown(item.label)}
                 >
-                  {item.label}
-                  <ChevronDown aria-hidden="true" size={15} />
+                  {option}
                 </button>
-                <div
-                  className={styles.mobileSubmenu}
-                  data-open={openDropdown === item.label}
-                >
-                  {item.items.map((dropdownItem) => (
-                    <a href={dropdownItem.href} key={dropdownItem.label} onClick={closeNavigation}>
-                      {dropdownItem.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <a className={styles.mobileDirectLink} href={item.href} key={item.label} onClick={closeNavigation}>
-                {item.label}
-              </a>
-            ),
-          )}
+              ))}
+            </div>
+          </div>
           <div className={styles.mobileActions}>
-            <a href="#login" onClick={closeNavigation}>Log in</a>
-            <a href="#signup" onClick={closeNavigation}>Sign up</a>
+            <a href="#login" onClick={closeNavigation}>{translation.navigation.logIn}</a>
+            <a href="#signup" onClick={closeNavigation}>{translation.navigation.signUp}</a>
           </div>
         </nav>
       </div>

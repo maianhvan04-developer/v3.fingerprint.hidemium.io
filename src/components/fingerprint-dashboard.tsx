@@ -4,7 +4,7 @@ import { FingerprintOverview } from "@/components/landing/fingerprint-overview";
 import { HeroAnalysis } from "@/components/landing/hero-analysis";
 import { SiteFooter } from "@/components/landing/site-footer";
 import { SiteHeader } from "@/components/landing/site-header";
-import { TrustFeatures } from "@/components/landing/trust-features";
+import { ProductFeatures, TrustFeatures } from "@/components/landing/trust-features";
 import { useFingerprintDashboard } from "@/hooks/use-fingerprint-dashboard";
 
 export function FingerprintDashboard() {
@@ -12,7 +12,13 @@ export function FingerprintDashboard() {
 
   return (
     <div className="site-shell">
-      <SiteHeader />
+      <SiteHeader
+        language={dashboard.language}
+        languageOpen={dashboard.languageOpen}
+        onSelectLanguage={dashboard.selectLanguage}
+        onToggleLanguage={dashboard.toggleLanguageMenu}
+        translation={dashboard.t}
+      />
       <main>
         <HeroAnalysis
           browser={dashboard.browser}
@@ -30,11 +36,14 @@ export function FingerprintDashboard() {
           browserReady={dashboard.browserReady}
           browserScore={dashboard.browserScore}
           diagnostics={dashboard.diagnostics}
+          httpHeaders={dashboard.httpHeaders}
           ipInfo={dashboard.ipInfo}
+          ipRisk={dashboard.ipRisk}
           modules={dashboard.modules}
           riskScore={dashboard.riskScore}
           webRtc={dashboard.webRtc}
         />
+        <ProductFeatures />
       </main>
       <SiteFooter />
     </div>

@@ -7,7 +7,6 @@ import {
   Cloud,
   Compass,
   Copy,
-  Earth,
   FileText,
   Laptop,
   Monitor,
@@ -90,6 +89,7 @@ export function HeroAnalysis({
   const webRtcStatus = webRtc.status === "checking"
     ? "Checking"
     : webRtc.status === "unavailable" ? "Unavailable" : "No leak";
+  const securityKnown = Boolean(ipInfo.security);
   const isProxy = Boolean(ipInfo.security?.proxy || ipInfo.security?.vpn || ipInfo.security?.tor);
   const isCloud = Boolean(ipInfo.security?.hosting);
   const browserLabel = [readable(browser.browser), browser.browserVersion]
@@ -100,6 +100,8 @@ export function HeroAnalysis({
     .join(" ");
   const normalizedRisk = Math.max(0, Math.min(100, Math.round(riskScore)));
   const riskLevel = String(Math.round(normalizedRisk / 10));
+  const ipv4Address = ipInfo.ipv4 || (ipInfo.ip && !ipInfo.ip.includes(":") ? ipInfo.ip : undefined);
+  const ipv6Address = ipInfo.ipv6 || (ipInfo.ip?.includes(":") ? ipInfo.ip : undefined);
 
   return (
     <section className={styles.heroSection} id="top">
@@ -157,7 +159,9 @@ export function HeroAnalysis({
           <div className={styles.analysisTop}>
             <div className={styles.fingerprintBlock}>
               <div className={styles.fingerprintTitle}>
-                <Earth aria-hidden="true" size={27} />
+                <span className={styles.fingerprintGlobe} aria-hidden="true">
+                  🌐
+                </span>
                 <div>
                   <span>Your Fingerprint</span>
                   <strong>{ipAddress}</strong>
@@ -174,9 +178,10 @@ export function HeroAnalysis({
                 </button>
               </div>
               <div className={styles.ipMeta}>
-                <span className={styles.ipv4Pill}>{ipInfo.type || "IPv4"}</span>
-                <span>{ipAddress}</span>
-                <span className={styles.ipv6Pill}>IPv6 not detected</span>
+                <span className={styles.ipv4Pill}>IPv4</span>
+                <span className={styles.ipAddressValue}>{ipv4Address || "Not detected"}</span>
+                <span className={styles.ipv6Pill}>IPv6</span>
+                <span className={styles.ipAddressValue}>{ipv6Address || "Not detected"}</span>
               </div>
               <div className={styles.locationLine}>
                 <span className={styles.flag}>{flag}</span>
@@ -185,10 +190,22 @@ export function HeroAnalysis({
             </div>
 
             <div className={styles.riskBlock}>
-              <div className={styles.riskLabel}>Risk Score <span aria-label="Risk score information">?</span></div>
-              <strong>{normalizedRisk} <small>/ 100</small></strong>
-              <div className={styles.riskRail} data-level={riskLevel} aria-label={`Risk score ${normalizedRisk} out of 100`}>
-                <span className={styles.riskMarker} />
+              <div className={styles.riskPill}>
+                <div className={styles.riskLabel}>IP risk score:</div>
+                <strong>{normalizedRisk} <small>/ 100</small></strong>
+                <div
+                  aria-label={`IP risk score ${normalizedRisk} out of 100`}
+                  aria-valuemax={100}
+                  aria-valuemin={0}
+                  aria-valuenow={normalizedRisk}
+                  className={styles.riskRail}
+                  data-level={riskLevel}
+                  role="meter"
+                >
+                  <span className={styles.riskTrack} aria-hidden="true">
+                    <span className={styles.riskFill} />
+                  </span>
+                </div>
               </div>
               <div className={styles.browserScore}>
                 Browser Score: <strong>{browserScore} / 100</strong>
@@ -201,12 +218,12 @@ export function HeroAnalysis({
               <SummaryRow icon={<Server size={14} />} label="ISP / Provider" value={provider} />
               <SummaryRow icon={<RadioTower size={14} />} label="WebRTC IPs" value={webRtcIps} />
               <SummaryRow icon={<Wifi size={14} />} label="WebRTC used" tone={webRtcStatus === "No leak" ? "good" : "warning"} value={webRtcStatus} />
-              <SummaryRow icon={<ShieldCheck size={14} />} label="Anonymizer" tone={isProxy ? "warning" : "good"} value={isProxy ? "Detected" : "No"} />
-              <SummaryRow icon={<Network size={14} />} label="TCP/IP Fingerprint" value={readable(browser.os)} />
+              <SummaryRow icon={<ShieldCheck size={14} />} label="Anonymizer" tone={isProxy ? "warning" : securityKnown ? "good" : "neutral"} value={isProxy ? "Detected" : securityKnown ? "No" : "Not evaluated"} />
+              <SummaryRow icon={<Network size={14} />} label="TCP/IP Fingerprint" value={`${readable(browser.os)} · browser heuristic`} />
             </div>
             <div className={styles.summaryColumn}>
-              <SummaryRow icon={<BriefcaseBusiness size={14} />} label="Fake ISP" tone={isProxy ? "warning" : "good"} value={isProxy ? "Possible" : "No"} />
-              <SummaryRow icon={<Cloud size={14} />} label="Cloud Provider" tone={isCloud ? "warning" : "good"} value={isCloud ? "Yes" : "No"} />
+              <SummaryRow icon={<BriefcaseBusiness size={14} />} label="Fake ISP" tone={isProxy ? "warning" : securityKnown ? "good" : "neutral"} value={isProxy ? "Possible" : securityKnown ? "No" : "Not evaluated"} />
+              <SummaryRow icon={<Cloud size={14} />} label="Cloud Provider" tone={isCloud ? "warning" : securityKnown ? "good" : "neutral"} value={isCloud ? "Yes" : securityKnown ? "No" : "Not evaluated"} />
               <SummaryRow icon={<Compass size={14} />} label="Browser" value={browserLabel || "Detecting…"} />
               <SummaryRow icon={<Monitor size={14} />} label="Operating System" value={osLabel || "Detecting…"} />
               <SummaryRow

@@ -8,5 +8,15 @@
   "diagnostics": "Detailed proxy & system diagnostics",
   "diagnosticsSub": "Analyze your current connection and browser environment: detected WebRTC IP address, JavaScript status. Verify anonymity and detect potential leaks.",
   "ipRisk": "IP risk score:",
-  "myIp": "My IP:"
+  "myIp": "My IP:",
+  "navigation": {
+    "antidetectBrowser": "Antidetect Browser",
+    "closeNavigation": "Close navigation",
+    "contacts": "Contacts",
+    "language": "Language",
+    "logIn": "Log in",
+    "openNavigation": "Open navigation",
+    "proxy": "Proxy",
+    "signUp": "Sign up"
+  }
 }

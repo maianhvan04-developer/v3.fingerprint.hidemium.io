@@ -8,5 +8,15 @@
   "diagnostics": "详细的代理和系统诊断",
   "diagnosticsSub": "分析您当前的连接和浏览器环境：检测 WebRTC IP 地址和 JavaScript 状态，验证匿名性并发现潜在的数据泄露。",
   "ipRisk": "IP 风险评分：",
-  "myIp": "我的 IP："
+  "myIp": "我的 IP：",
+  "navigation": {
+    "antidetectBrowser": "防检测浏览器",
+    "closeNavigation": "关闭导航",
+    "contacts": "联系方式",
+    "language": "语言",
+    "logIn": "登录",
+    "openNavigation": "打开导航",
+    "proxy": "代理",
+    "signUp": "注册"
+  }
 }

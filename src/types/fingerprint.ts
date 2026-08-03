@@ -59,15 +59,32 @@ export interface FingerprintModule {
   result: Record<string, unknown>;
 }
 
+export interface HttpHeadersSnapshot {
+  headers: Record<string, string>;
+  status: "loading" | "complete" | "unavailable";
+}
+
+export interface IpRiskProfile {
+  score?: number;
+  status: "loading" | "complete" | "unavailable";
+  verdict?: string;
+}
+
 export interface IpLookupResponse {
   success?: boolean;
   ip?: string;
+  ipv4?: string;
+  ipv6?: string;
   type?: string;
   country?: string;
   country_code?: string;
+  continent?: string;
   region?: string;
+  region_code?: string;
   city?: string;
   postal?: string;
+  airport?: string;
+  languages?: string[];
   latitude?: number;
   longitude?: number;
   flag?: { emoji?: string };
@@ -101,6 +118,16 @@ export interface Translation {
   diagnosticsSub: string;
   ipRisk: string;
   myIp: string;
+  navigation: {
+    antidetectBrowser: string;
+    closeNavigation: string;
+    contacts: string;
+    language: string;
+    logIn: string;
+    openNavigation: string;
+    proxy: string;
+    signUp: string;
+  };
 }
 
 export interface WebRtcResult {
