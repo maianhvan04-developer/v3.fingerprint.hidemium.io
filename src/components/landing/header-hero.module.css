@@ -449,7 +449,8 @@
   flex: 0 1 1150px;
   align-self: stretch;
   min-width: 0;
-  padding: 10px 19px 10px;
+  min-height: 330px;
+  padding: 14px 19px 16px;
   border: 1px solid #d7e2f2;
   border-radius: 14px;
   background: rgb(255 255 255 / 90%);
@@ -472,8 +473,8 @@
 .analysisTop {
   display: grid;
   grid-template-columns: 64% 36%;
-  min-height: 94px;
-  padding: 7px 0 5px;
+  min-height: 112px;
+  padding: 10px 0 9px;
 }
 
 .fingerprintBlock {
@@ -722,7 +723,7 @@
 
 .summaryColumn {
   min-width: 0;
-  padding: 5px 15px;
+  padding: 9px 15px;
 }
 
 .summaryColumn + .summaryColumn {
@@ -733,7 +734,7 @@
   display: grid;
   grid-template-columns: 18px 118px minmax(0, 1fr);
   align-items: center;
-  min-height: 20px;
+  min-height: 25px;
   color: #172b50;
 }
 
@@ -1038,7 +1039,7 @@
 
   .analysisCard {
     width: min(100%, 1150px);
-    min-height: 278px;
+    min-height: 320px;
   }
 
   .featureGrid {
