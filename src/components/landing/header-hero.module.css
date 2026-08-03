@@ -617,12 +617,12 @@
   min-height: 40px;
   padding: 6px 14px;
   gap: 10px;
-  border: 1px solid #72e93e;
+  border: 1px solid #1767ef;
   border-radius: 999px;
   background: #fff;
   box-shadow:
-    0 0 11px rgb(114 255 35 / 28%),
-    0 4px 12px rgb(25 49 88 / 8%);
+    0 0 8px rgb(23 103 239 / 18%),
+    0 4px 14px rgb(23 103 239 / 12%);
 }
 
 .riskLabel {
@@ -637,11 +637,11 @@
   display: flex;
   align-items: baseline;
   gap: 4px;
-  color: #79ff2f;
+  color: #1767ef;
   font-size: 17px;
   font-weight: 800;
   line-height: 1;
-  text-shadow: 0 0 8px rgb(113 255 47 / 55%);
+  text-shadow: 0 0 5px rgb(23 103 239 / 18%);
   white-space: nowrap;
 }
 
@@ -655,9 +655,9 @@
   min-width: 80px;
   height: 7px;
   overflow: hidden;
-  border: 1px solid #d5cdec;
+  border: 1px solid #cdddf8;
   border-radius: 999px;
-  background: #ede9f7;
+  background: #edf4ff;
   box-shadow: inset 0 1px 2px rgb(26 41 76 / 12%);
 }
 
@@ -671,7 +671,7 @@
 .riskTrack {
   overflow: hidden;
   border-radius: 999px;
-  background: #ede9f7;
+  background: #edf4ff;
 }
 
 .riskFill {
