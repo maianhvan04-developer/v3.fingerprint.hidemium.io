@@ -449,8 +449,8 @@
   flex: 0 1 1150px;
   align-self: stretch;
   min-width: 0;
-  min-height: 330px;
-  padding: 14px 19px 16px;
+  min-height: 370px;
+  padding: 16px 23px 19px;
   border: 1px solid #d7e2f2;
   border-radius: 14px;
   background: rgb(255 255 255 / 90%);
@@ -459,9 +459,9 @@
 }
 
 .liveBadge {
-  height: 18px;
-  padding: 0 10px;
-  font-size: 10px;
+  height: 20px;
+  padding: 0 11px;
+  font-size: 11px;
   letter-spacing: 0.2px;
 }
 
@@ -473,8 +473,8 @@
 .analysisTop {
   display: grid;
   grid-template-columns: 64% 36%;
-  min-height: 112px;
-  padding: 10px 0 9px;
+  min-height: 128px;
+  padding: 12px 0 11px;
 }
 
 .fingerprintBlock {
@@ -490,11 +490,11 @@
 
 .fingerprintGlobe {
   display: inline-grid;
-  width: 27px;
-  height: 27px;
+  width: 31px;
+  height: 31px;
   place-items: center;
   font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
-  font-size: 27px;
+  font-size: 31px;
   line-height: 1;
 }
 
@@ -506,7 +506,7 @@
 .riskLabel {
   display: block;
   color: #34476c;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
   line-height: 1.1;
 }
@@ -515,7 +515,7 @@
   display: block;
   margin-top: 3px;
   color: #08183e;
-  font-size: 24px;
+  font-size: 27px;
   font-weight: 750;
   letter-spacing: 0.1px;
   line-height: 1;
@@ -528,13 +528,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  width: 84px;
-  height: 24px;
+  width: 92px;
+  height: 28px;
   border: 1px solid #d5e0ef;
   border-radius: 5px;
   background: #ffffff;
   color: #263b62;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
   cursor: pointer;
 }
@@ -555,10 +555,10 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 0 5px 40px;
+  gap: 9px;
+  margin: 10px 0 7px 42px;
   color: #53688c;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 650;
 }
 
@@ -566,7 +566,7 @@
 .ipv6Pill {
   display: inline-flex;
   align-items: center;
-  height: 18px;
+  height: 20px;
   padding: 0 7px;
   border-radius: 4px;
 }
@@ -590,9 +590,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: 40px;
+  margin-left: 42px;
   color: #25395d;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
   overflow-wrap: anywhere;
   white-space: normal;
@@ -698,12 +698,12 @@
 .browserScore {
   width: fit-content;
   margin: 10px 0 0 auto;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border: 1px solid #d7e2f2;
   border-radius: 5px;
   background: #f7faff;
   color: #536789;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 650;
 }
 
@@ -723,7 +723,7 @@
 
 .summaryColumn {
   min-width: 0;
-  padding: 9px 15px;
+  padding: 11px 18px;
 }
 
 .summaryColumn + .summaryColumn {
@@ -732,15 +732,20 @@
 
 .summaryRow {
   display: grid;
-  grid-template-columns: 18px 118px minmax(0, 1fr);
+  grid-template-columns: 20px 128px minmax(0, 1fr);
   align-items: center;
-  min-height: 25px;
+  min-height: 29px;
   color: #172b50;
 }
 
 .summaryIcon {
   display: inline-flex;
   color: #1767ef;
+}
+
+.summaryIcon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .summaryIcon[data-tone="good"],
@@ -755,13 +760,13 @@
 
 .summaryLabel {
   color: #536789;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 650;
 }
 
 .summaryValue {
   color: #0b1d44;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 650;
   line-height: 1.15;
   overflow-wrap: anywhere;
@@ -1001,7 +1006,7 @@
   }
 
   .summaryRow {
-    grid-template-columns: 18px 105px minmax(0, 1fr);
+    grid-template-columns: 20px 112px minmax(0, 1fr);
   }
 
   .featureGrid {
@@ -1039,7 +1044,7 @@
 
   .analysisCard {
     width: min(100%, 1150px);
-    min-height: 320px;
+    min-height: 360px;
   }
 
   .featureGrid {
