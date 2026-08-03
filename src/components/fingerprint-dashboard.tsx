@@ -35,11 +35,17 @@ export function FingerprintDashboard() {
           browser={dashboard.browser}
           browserReady={dashboard.browserReady}
           browserScore={dashboard.browserScore}
+          collectedModuleCount={dashboard.collectedModuleCount}
+          copied={dashboard.copied}
           diagnostics={dashboard.diagnostics}
+          fullJson={dashboard.fullJson}
+          fullJsonReady={dashboard.fullJsonReady}
           httpHeaders={dashboard.httpHeaders}
           ipInfo={dashboard.ipInfo}
           ipRisk={dashboard.ipRisk}
           modules={dashboard.modules}
+          onCopyJson={dashboard.copyJson}
+          onDownloadJson={dashboard.downloadJson}
           riskScore={dashboard.riskScore}
           webRtc={dashboard.webRtc}
         />

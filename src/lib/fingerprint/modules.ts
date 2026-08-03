@@ -42,7 +42,7 @@ interface OfflineWindow extends ExtendedWindow {
   webkitOfflineAudioContext?: typeof OfflineAudioContext;
 }
 
-type RawModule = [string, string, Record<string, unknown>, number];
+type RawModule = [FingerprintModule["key"], string, string, Record<string, unknown>, number];
 
 const fontCandidates = [
   "American Typewriter", "Apple Chancery", "Arial", "Arial Black", "Avenir",
@@ -483,8 +483,8 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
     userAgent: profile.userAgent,
   };
   const rawModules: RawModule[] = [
-    ["Worker Scope", "Web Worker context vs main scope — detect browser contradictions", environment, 0],
-    ["Navigator", "UA, plugins, mimeTypes, permissions, and WebGPU", {
+    ["workerScope", "Worker Scope", "Web Worker context vs main scope — detect browser contradictions", environment, 0],
+    ["navigator", "Navigator", "UA, plugins, mimeTypes, permissions, and WebGPU", {
       appVersion: navigator.appVersion,
       cookieEnabled: navigator.cookieEnabled,
       deviceMemory: navigatorExtras.deviceMemory ?? null,
@@ -507,13 +507,13 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       webdriver: navigator.webdriver,
       webgpu: webGpu,
     }, automated ? 4 : 0],
-    ["Browser Version / Channel", "Browser and platform release channel coherence", {
+    ["browserVersion", "Browser Version / Channel", "Browser and platform release channel coherence", {
       browser: profile.browser,
       engine: profile.engine,
       userAgentData: uaHints,
       version: profile.browserVersion,
     }, automated ? 1 : 0],
-    ["Window Features", "window object keys and vendor prefix counts", {
+    ["windowFeatures", "Window Features", "window object keys and vendor prefix counts", {
       apple: windowKeys.filter((key) => key.toLowerCase().startsWith("apple")).length,
       keysCount: windowKeys.length,
       moz: windowKeys.filter((key) => key.toLowerCase().startsWith("moz")).length,
@@ -521,7 +521,7 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       outerWidth,
       webkit: windowKeys.filter((key) => key.toLowerCase().startsWith("webkit")).length,
     }, 0],
-    ["Headless / Stealth", "Detect Puppeteer, Playwright, and stealth-script markers", {
+    ["headless", "Headless / Stealth", "Detect Puppeteer, Playwright, and stealth-script markers", {
       automated,
       documentHasFocus: document.hasFocus(),
       headlessUserAgent: /HeadlessChrome/i.test(profile.userAgent),
@@ -529,15 +529,15 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       webdriver: profile.webdriver,
       zeroOuterSize: outerWidth === 0 || outerHeight === 0,
     }, automated ? 3 : 0],
-    ["HTMLElement", "Properties exposed on HTMLElement.prototype", { keysCount: htmlKeys.length }, 0],
-    ["CSS Media Queries", "prefers-color-scheme, hover, pointer, color-gamut, and accessibility media", cssMedia, 0],
-    ["CSS Computed & System", "getComputedStyle and system font behavior", {
+    ["htmlElementVersion", "HTMLElement", "Properties exposed on HTMLElement.prototype", { keysCount: htmlKeys.length }, 0],
+    ["cssMedia", "CSS Media Queries", "prefers-color-scheme, hover, pointer, color-gamut, and accessibility media", cssMedia, 0],
+    ["css", "CSS Computed & System", "getComputedStyle and system font behavior", {
       colorScheme: getComputedStyle(document.documentElement).colorScheme || "normal",
       grid: CSS.supports("display", "grid"),
       systemFont: getComputedStyle(document.body).fontFamily,
       variables: CSS.supports("color", "var(--x)"),
     }, 0],
-    ["Screen", "Dimensions, available size, color depth, pixel ratio, orientation, and touch", {
+    ["screen", "Screen", "Dimensions, available size, color depth, pixel ratio, orientation, and touch", {
       availHeight: screen.availHeight,
       availWidth: screen.availWidth,
       colorDepth: screen.colorDepth,
@@ -550,16 +550,16 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       viewportWidth: innerWidth,
       width: screen.width,
     }, 0],
-    ["Voices", "SpeechSynthesis local and remote voices", voices, 0],
-    ["Media (MimeTypes)", "canPlayType, MediaSource, MediaRecorder, AudioContext, and media devices", media, 0],
-    ["Canvas 2D", "Image, blob, paint, text, and emoji rendering", canvas, 0],
-    ["CPU Scaling Benchmark", "Hardware concurrency and available device-memory signals", {
+    ["voices", "Voices", "SpeechSynthesis local and remote voices", voices, 0],
+    ["media", "Media (MimeTypes)", "canPlayType, MediaSource, MediaRecorder, AudioContext, and media devices", media, 0],
+    ["canvas2d", "Canvas 2D", "Image, blob, paint, text, and emoji rendering", canvas, 0],
+    ["cpuScaling", "CPU Scaling Benchmark", "Hardware concurrency and available device-memory signals", {
       architecture: profile.architecture,
       claimed: profile.hardwareConcurrency,
       deviceMemory: navigatorExtras.deviceMemory ?? null,
     }, 0],
-    ["Canvas WebGL", "GPU vendor, renderer, extensions, versions, and limits", webGl, automated && /SwiftShader/i.test(profile.gpuRenderer) ? 2 : 0],
-    ["Math / JS Runtime", "Math output differences across JavaScript engines", {
+    ["canvasWebgl", "Canvas WebGL", "GPU vendor, renderer, extensions, versions, and limits", webGl, automated && /SwiftShader/i.test(profile.gpuRenderer) ? 2 : 0],
+    ["maths", "Math / JS Runtime", "Math output differences across JavaScript engines", {
       acos: Math.acos(0.123),
       cos: Math.cos(1e308),
       hypot: Math.hypot(3, 4),
@@ -567,35 +567,35 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       sin: Math.sin(-1e300),
       tan: Math.tan(-1),
     }, 0],
-    ["Console Errors", "V8, SpiderMonkey, and JavaScriptCore wording", {
+    ["consoleErrors", "Console Errors", "V8, SpiderMonkey, and JavaScriptCore wording", {
       engine: profile.engine,
       errorName: safeValue(() => {
         JSON.parse("{");
         return "none";
       }, "SyntaxError"),
     }, 0],
-    ["Timezone", "Intl, Date.toString, and timezone offset", {
+    ["timezone", "Timezone", "Intl, Date.toString, and timezone offset", {
       dateString: new Date().toString(),
       locale: Intl.DateTimeFormat().resolvedOptions().locale,
       offset: new Date().getTimezoneOffset(),
       timezone: profile.timezone,
     }, 0],
-    ["Client Rects", "getBoundingClientRect and emoji sub-pixel geometry", clientRects, 0],
-    ["Offline Audio Context", "Compressor gain reduction and rendered sample output", audio, 0],
-    ["Fonts", "Pixel-measurement font detection across Windows, macOS, Linux, and Android candidates", {
+    ["clientRects", "Client Rects", "getBoundingClientRect and emoji sub-pixel geometry", clientRects, 0],
+    ["offlineAudioContext", "Offline Audio Context", "Compressor gain reduction and rendered sample output", audio, 0],
+    ["fonts", "Fonts", "Pixel-measurement font detection across Windows, macOS, Linux, and Android candidates", {
       detected: detectedFonts,
       method: "pixel measurement against monospace, sans-serif, and serif baselines",
       platform: profile.platform,
       total: detectedFonts.length,
     }, 0],
-    ["Captured Errors", "Runtime errors raised while fingerprinting", { data: [] }, 0],
-    ["SVG (Text Metrics)", "getBBox, getExtentOfChar, and getSubStringLength", collectSvg(), 0],
-    ["Resistance", "Engine and privacy-extension indicators", {
+    ["capturedErrors", "Captured Errors", "Runtime errors raised while fingerprinting", { data: [] }, 0],
+    ["svg", "SVG (Text Metrics)", "getBBox, getExtentOfChar, and getSubStringLength", collectSvg(), 0],
+    ["resistance", "Resistance", "Engine and privacy-extension indicators", {
       doNotTrack: profile.doNotTrack,
       engine: profile.engine,
       globalPrivacyControl: (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl ?? false,
     }, 0],
-    ["Intl", "DateTimeFormat, ListFormat, NumberFormat, PluralRules, and RelativeTimeFormat", {
+    ["intl", "Intl", "DateTimeFormat, ListFormat, NumberFormat, PluralRules, and RelativeTimeFormat", {
       calendar: new Intl.DateTimeFormat().resolvedOptions().calendar,
       dateTimeLocale: new Intl.DateTimeFormat().resolvedOptions().locale,
       list: new Intl.ListFormat(profile.language).format(["0", "1"]),
@@ -603,7 +603,7 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       pluralRule: new Intl.PluralRules(profile.language).select(2),
       relativeTime: new Intl.RelativeTimeFormat(profile.language).format(1, "year"),
     }, automated ? 1 : 0],
-    ["Features", "CSS, Window, and JavaScript feature detection", {
+    ["features", "Features", "CSS, Window, and JavaScript feature detection", {
       broadcastChannel: "BroadcastChannel" in window,
       cacheStorage: "caches" in window,
       cssContainerQueries: CSS.supports("container-type", "inline-size"),
@@ -613,12 +613,12 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       webAssembly: "WebAssembly" in window,
       webCodecs: "VideoEncoder" in window,
     }, 0],
-    ["Proxy / Tampering Lies", "Native-function integrity checks across browser APIs", {
+    ["proxyLies", "Proxy / Tampering Lies", "Native-function integrity checks across browser APIs", {
       nativeChecks,
       totalLies: nativeChecks.filter((value) => !value).length,
       webdriver: profile.webdriver,
     }, nativeChecks.filter((value) => !value).length],
-    ["Network", "NetworkInformation API — RTT, downlink, effective type, saveData, and online state", {
+    ["network", "Network", "NetworkInformation API — RTT, downlink, effective type, saveData, and online state", {
       apiAvailable: Boolean(connection),
       downlink: connection?.downlink ?? null,
       effectiveType: connection?.effectiveType ?? null,
@@ -627,9 +627,9 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
       saveData: connection?.saveData ?? false,
       type: connection?.type ?? null,
     }, navigator.onLine ? 0 : 1],
-    ["Battery", "Battery Status API — level, charging, and timing", battery, 0],
-    ["Disk Storage", "StorageManager estimate, quota, current usage, and storage APIs", storage, 0],
-    ["Automation (BotD)", "Browser automation and headless signal suite", {
+    ["battery", "Battery", "Battery Status API — level, charging, and timing", battery, 0],
+    ["storage", "Disk Storage", "StorageManager estimate, quota, current usage, and storage APIs", storage, 0],
+    ["automation", "Automation (BotD)", "Browser automation and headless signal suite", {
       detectedBots: automated ? ["webdriver/headless marker"] : [],
       engine: profile.engine,
       isAutomated: automated,
@@ -644,10 +644,11 @@ export async function createModules(profile: BrowserProfile): Promise<Fingerprin
     }, automated ? 3 : 0],
   ];
 
-  return Promise.all(rawModules.map(async ([name, description, result, issues]) => ({
+  return Promise.all(rawModules.map(async ([key, name, description, result, issues]) => ({
     description,
     hash: await sha256(JSON.stringify(result)),
     issues,
+    key,
     name,
     result,
   })));

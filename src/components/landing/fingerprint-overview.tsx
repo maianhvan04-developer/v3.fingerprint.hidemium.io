@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { type KeyboardEvent, useMemo, useState } from "react";
 import {
   Activity,
   AudioLines,
@@ -8,12 +8,16 @@ import {
   Braces,
   CircleCheck,
   CircleGauge,
+  Clipboard,
   Cookie,
   Cpu,
   Database,
+  Download,
+  FileJson,
   Fingerprint,
   Globe2,
   HardDrive,
+  Hash,
   Image as ImageIcon,
   Languages,
   LayoutDashboard,
@@ -26,14 +30,16 @@ import {
   Type,
   Wifi,
 } from "lucide-react";
-import type {
-  BrowserProfile,
-  DiagnosticCard,
-  FingerprintModule,
-  HttpHeadersSnapshot,
-  IpLookupResponse,
-  IpRiskProfile,
-  WebRtcResult,
+import {
+  fingerprintModuleKeys,
+  type BrowserProfile,
+  type CopyKind,
+  type DiagnosticCard,
+  type FingerprintModule,
+  type HttpHeadersSnapshot,
+  type IpLookupResponse,
+  type IpRiskProfile,
+  type WebRtcResult,
 } from "@/types/fingerprint";
 import styles from "./overview-footer.module.css";
 
@@ -41,11 +47,17 @@ interface FingerprintOverviewProps {
   browser: BrowserProfile;
   browserReady: boolean;
   browserScore: string;
+  collectedModuleCount: number;
+  copied: CopyKind | null;
   diagnostics: DiagnosticCard[];
+  fullJson: string;
+  fullJsonReady: boolean;
   httpHeaders: HttpHeadersSnapshot;
   ipInfo: IpLookupResponse;
   ipRisk: IpRiskProfile;
   modules: FingerprintModule[];
+  onCopyJson: () => void;
+  onDownloadJson: () => void;
   riskScore: number;
   webRtc: WebRtcResult;
 }
@@ -73,6 +85,7 @@ const categories = [
   { icon: Radio, key: "media", label: "Media" },
   { icon: Database, key: "storage", label: "Storage" },
   { icon: Network, key: "network", label: "Network" },
+  { icon: FileJson, key: "full-json", label: "Full JSON" },
 ] as const;
 
 type CategoryKey = (typeof categories)[number]["key"];
@@ -122,7 +135,18 @@ const categoryCopy: Record<CategoryKey, { subtitle: string; title: string }> = {
     subtitle: "Public network identity, connection, timezone, and WebRTC exposure.",
     title: "Network Details",
   },
+  "full-json": {
+    subtitle: "Complete live payload from all collected fingerprint modules.",
+    title: "Full Fingerprint JSON",
+  },
 };
+
+function formatPayloadSize(value: string) {
+  const bytes = new TextEncoder().encode(value).byteLength;
+  if (bytes >= 1024 ** 2) return `${(bytes / 1024 ** 2).toFixed(2)} MB`;
+  if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${bytes} B`;
+}
 
 function displayValue(value: string | undefined, fallback = "Collecting…") {
   if (!value || value === "Detecting…" || value === "Unknown") return fallback;
@@ -200,11 +224,17 @@ export function FingerprintOverview({
   browser,
   browserReady,
   browserScore,
+  collectedModuleCount,
+  copied,
   diagnostics,
+  fullJson,
+  fullJsonReady,
   httpHeaders,
   ipInfo,
   ipRisk,
   modules,
+  onCopyJson,
+  onDownloadJson,
   riskScore,
   webRtc,
 }: FingerprintOverviewProps) {
@@ -596,11 +626,35 @@ export function FingerprintOverview({
       media: mediaRows,
       storage: storageRows,
       network: networkRows,
+      "full-json": [],
     };
   }, [boundedRiskScore, browser, browserReady, diagnostics, httpHeaders, ipInfo, ipRisk, modules, webRtc]);
 
   const activeCopy = categoryCopy[activeCategory];
   const activeRows = rowsByCategory[activeCategory];
+  const isFullJson = activeCategory === "full-json";
+  const moduleTotal = fingerprintModuleKeys.length;
+  const payloadSize = fullJsonReady ? formatPayloadSize(fullJson) : "Calculating…";
+
+  const handleCategoryKeyDown = (event: KeyboardEvent<HTMLButtonElement>, key: CategoryKey) => {
+    const currentIndex = categories.findIndex((category) => category.key === key);
+    let nextIndex: number | undefined;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = categories.length - 1;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      nextIndex = (currentIndex + 1) % categories.length;
+    }
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      nextIndex = (currentIndex - 1 + categories.length) % categories.length;
+    }
+    if (nextIndex === undefined) return;
+    event.preventDefault();
+    const nextCategory = categories[nextIndex];
+    setActiveCategory(nextCategory.key);
+    window.requestAnimationFrame(() => {
+      document.getElementById(`fingerprint-tab-${nextCategory.key}`)?.focus();
+    });
+  };
 
   return (
     <section className={styles.overview} id="overview" aria-labelledby="fingerprint-overview-title">
@@ -613,6 +667,7 @@ export function FingerprintOverview({
             id={`fingerprint-tab-${key}`}
             key={key}
             onClick={() => setActiveCategory(key)}
+            onKeyDown={(event) => handleCategoryKeyDown(event, key)}
             role="tab"
             tabIndex={activeCategory === key ? 0 : -1}
             type="button"
@@ -628,6 +683,7 @@ export function FingerprintOverview({
         className={styles.workspace}
         id="fingerprint-category-panel"
         role="tabpanel"
+        tabIndex={0}
       >
         <header className={styles.workspaceHeader}>
           <div>
@@ -635,9 +691,19 @@ export function FingerprintOverview({
             <p>{activeCopy.subtitle}</p>
           </div>
           <div className={styles.analysisMeta}>
-            <span>Analysis ID: {fingerprintId}</span>
-            <span>Browser score: {scoreText(browserScore)}</span>
-            <span>Analyzed: just now</span>
+            {isFullJson ? (
+              <>
+                <span>Modules: {collectedModuleCount} / {moduleTotal}</span>
+                <span>Payload: {payloadSize}</span>
+                <span>Status: {fullJsonReady ? "Ready" : "Collecting"}</span>
+              </>
+            ) : (
+              <>
+                <span>Analysis ID: {fingerprintId}</span>
+                <span>Browser score: {scoreText(browserScore)}</span>
+                <span>Analyzed: just now</span>
+              </>
+            )}
           </div>
         </header>
 
@@ -647,58 +713,131 @@ export function FingerprintOverview({
             <Fingerprint aria-hidden="true" size={13} />
             <strong>{fingerprintId}</strong>
           </div>
-          <div className={styles.metricCard}>
-            <Activity aria-hidden="true" size={15} />
-            <span>Uniqueness</span>
-            <strong className={styles.goodText}>Very High</strong>
-            <small>99.7%</small>
-          </div>
-          <div className={styles.metricCard}>
-            <Radio aria-hidden="true" size={15} />
-            <span>Stability</span>
-            <strong className={styles.goodText}>Low</strong>
-            <small>2.3%</small>
-          </div>
-          <div className={styles.metricCard}>
-            <CircleGauge aria-hidden="true" size={15} />
-            <span>Fraud Risk</span>
-            <strong className={riskTone === "good" ? styles.goodText : styles.warnText}>{riskLabel}</strong>
-            <small>{boundedRiskScore} / 100</small>
-          </div>
-          <div className={styles.metricCard}>
-            <ShieldCheck aria-hidden="true" size={15} />
-            <span>Status</span>
-            <strong className={browserReady ? styles.goodText : styles.neutralText}>
-              {browserReady ? "Completed" : "Analyzing"}
-            </strong>
-            {browserReady ? <CircleCheck aria-hidden="true" className={styles.metricCheck} size={14} /> : null}
-          </div>
+          {isFullJson ? (
+            <>
+              <div className={styles.metricCard}>
+                <Boxes aria-hidden="true" size={15} />
+                <span>Module count</span>
+                <strong className={fullJsonReady ? styles.goodText : styles.neutralText}>
+                  {collectedModuleCount} / {moduleTotal}
+                </strong>
+              </div>
+              <div className={styles.metricCard}>
+                <FileJson aria-hidden="true" size={15} />
+                <span>Format</span>
+                <strong>JSON</strong>
+              </div>
+              <div className={styles.metricCard}>
+                <Hash aria-hidden="true" size={15} />
+                <span>Hashing</span>
+                <strong>SHA-256</strong>
+              </div>
+              <div className={styles.metricCard}>
+                <ShieldCheck aria-hidden="true" size={15} />
+                <span>Status</span>
+                <strong className={fullJsonReady ? styles.goodText : styles.neutralText}>
+                  {fullJsonReady ? "Ready" : "Collecting"}
+                </strong>
+                {fullJsonReady ? <CircleCheck aria-hidden="true" className={styles.metricCheck} size={14} /> : null}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.metricCard}>
+                <Activity aria-hidden="true" size={15} />
+                <span>Uniqueness</span>
+                <strong className={styles.goodText}>Very High</strong>
+                <small>99.7%</small>
+              </div>
+              <div className={styles.metricCard}>
+                <Radio aria-hidden="true" size={15} />
+                <span>Stability</span>
+                <strong className={styles.goodText}>Low</strong>
+                <small>2.3%</small>
+              </div>
+              <div className={styles.metricCard}>
+                <CircleGauge aria-hidden="true" size={15} />
+                <span>Fraud Risk</span>
+                <strong className={riskTone === "good" ? styles.goodText : styles.warnText}>{riskLabel}</strong>
+                <small>{boundedRiskScore} / 100</small>
+              </div>
+              <div className={styles.metricCard}>
+                <ShieldCheck aria-hidden="true" size={15} />
+                <span>Status</span>
+                <strong className={browserReady ? styles.goodText : styles.neutralText}>
+                  {browserReady ? "Completed" : "Analyzing"}
+                </strong>
+                {browserReady ? <CircleCheck aria-hidden="true" className={styles.metricCheck} size={14} /> : null}
+              </div>
+            </>
+          )}
         </div>
 
-        <div className={styles.summaryTable} role="table" aria-label={`${activeCopy.title} signal summary`}>
-          <div className={styles.tableHeader} role="row">
-            <span role="columnheader">Attribute</span>
-            <span role="columnheader">Category</span>
-            <span role="columnheader">Value</span>
-            <span role="columnheader">Similarity / Result</span>
-          </div>
-          <div className={styles.tableBody}>
-            {activeRows.map(({ attribute, category, icon: Icon, result, tone, value }, index) => (
-              <div className={styles.tableRow} key={`${attribute}-${index}`} role="row">
-                <span className={styles.attributeCell} role="cell">
-                  <Icon aria-hidden="true" size={11} strokeWidth={1.8} />
-                  <span>{attribute}</span>
-                </span>
-                <span className={styles.categoryCell} role="cell">{category}</span>
-                <span className={styles.valueCell} role="cell" title={value}>{value}</span>
-                <span className={`${styles.resultCell} ${styles[tone]}`} role="cell">
-                  <i aria-hidden="true" />
-                  {result}
-                </span>
+        {isFullJson ? (
+          <div
+            aria-busy={!fullJsonReady}
+            aria-label="Full fingerprint JSON payload"
+            className={styles.jsonViewer}
+          >
+            <div className={styles.jsonToolbar}>
+              <span>30-module payload</span>
+              <div className={styles.jsonActions}>
+                <button
+                  className={copied === "json" ? styles.jsonActionCopied : styles.jsonAction}
+                  disabled={!fullJsonReady}
+                  onClick={onCopyJson}
+                  type="button"
+                >
+                  <Clipboard aria-hidden="true" />
+                  {copied === "json" ? "Copied" : "Copy JSON"}
+                </button>
+                <button
+                  className={styles.jsonAction}
+                  disabled={!fullJsonReady}
+                  onClick={onDownloadJson}
+                  type="button"
+                >
+                  <Download aria-hidden="true" />
+                  Download JSON
+                </button>
               </div>
-            ))}
+            </div>
+            {fullJsonReady ? (
+              <pre className={styles.jsonCode}><code>{fullJson}</code></pre>
+            ) : (
+              <div className={styles.jsonLoading} role="status" aria-live="polite">
+                <Activity aria-hidden="true" />
+                <strong>Collecting fingerprint modules…</strong>
+                <span>{collectedModuleCount} of {moduleTotal} modules ready.</span>
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <div className={styles.summaryTable} role="table" aria-label={`${activeCopy.title} signal summary`}>
+            <div className={styles.tableHeader} role="row">
+              <span role="columnheader">Attribute</span>
+              <span role="columnheader">Category</span>
+              <span role="columnheader">Value</span>
+              <span role="columnheader">Similarity / Result</span>
+            </div>
+            <div className={styles.tableBody}>
+              {activeRows.map(({ attribute, category, icon: Icon, result, tone, value }, index) => (
+                <div className={styles.tableRow} key={`${attribute}-${index}`} role="row">
+                  <span className={styles.attributeCell} role="cell">
+                    <Icon aria-hidden="true" size={11} strokeWidth={1.8} />
+                    <span>{attribute}</span>
+                  </span>
+                  <span className={styles.categoryCell} role="cell">{category}</span>
+                  <span className={styles.valueCell} role="cell" title={value}>{value}</span>
+                  <span className={`${styles.resultCell} ${styles[tone]}`} role="cell">
+                    <i aria-hidden="true" />
+                    {result}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

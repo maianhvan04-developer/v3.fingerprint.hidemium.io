@@ -5,14 +5,15 @@ import { useBrowserProfile } from "@/hooks/use-browser-profile";
 import { useWebRtcCheck } from "@/hooks/use-webrtc-check";
 import { createAudits, createDiagnostics } from "@/lib/fingerprint/audits";
 import { getFlag, translations } from "@/lib/fingerprint/presentation";
-import type {
-  AuditCounts,
-  AuditFilter,
-  CopyKind,
-  HttpHeadersSnapshot,
-  IpLookupResponse,
-  IpRiskProfile,
-  Language,
+import {
+  fingerprintModuleKeys,
+  type AuditCounts,
+  type AuditFilter,
+  type CopyKind,
+  type HttpHeadersSnapshot,
+  type IpLookupResponse,
+  type IpRiskProfile,
+  type Language,
 } from "@/types/fingerprint";
 
 const emptyIp: IpLookupResponse = {};
@@ -281,16 +282,27 @@ export function useFingerprintDashboard() {
       (security.tor ? 50 : 0));
   }, [ipInfo.security, ipRisk.score]);
 
-  const fullJson = useMemo(() => JSON.stringify({
-    audit: audits,
-    browser,
-    generatedAt: time.toISOString(),
-    httpHeaders,
-    ip: ipInfo,
-    ipRisk,
-    modules: Object.fromEntries(modules.map((module) => [module.name, module.result])),
-    webRTC: webRtc,
-  }, null, 2), [audits, browser, httpHeaders, ipInfo, ipRisk, modules, time, webRtc]);
+  const { collectedModuleCount, fullJson, fullJsonReady } = useMemo(() => {
+    const modulesByKey = new Map(modules.map((module) => [module.key, module]));
+    const collectedCount = fingerprintModuleKeys.filter((key) => modulesByKey.has(key)).length;
+    if (collectedCount !== fingerprintModuleKeys.length) {
+      return { collectedModuleCount: collectedCount, fullJson: "", fullJsonReady: false };
+    }
+
+    const payload = fingerprintModuleKeys.reduce<Record<string, Record<string, unknown>>>(
+      (result, key) => {
+        const module = modulesByKey.get(key);
+        if (module) result[key] = { ...module.result, $hash: module.hash };
+        return result;
+      },
+      {},
+    );
+    return {
+      collectedModuleCount: collectedCount,
+      fullJson: JSON.stringify(payload, null, 2),
+      fullJsonReady: true,
+    };
+  }, [modules]);
 
   const copyValue = useCallback(async (value: string, kind: CopyKind) => {
     try {
@@ -304,8 +316,12 @@ export function useFingerprintDashboard() {
   }, []);
 
   const copyIp = useCallback(() => copyValue(ipInfo.ip || "", "ip"), [copyValue, ipInfo.ip]);
-  const copyJson = useCallback(() => copyValue(fullJson, "json"), [copyValue, fullJson]);
+  const copyJson = useCallback(() => {
+    if (!fullJsonReady) return;
+    void copyValue(fullJson, "json");
+  }, [copyValue, fullJson, fullJsonReady]);
   const downloadJson = useCallback(() => {
+    if (!fullJsonReady) return;
     const blob = new Blob([fullJson], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -313,7 +329,7 @@ export function useFingerprintDashboard() {
     link.download = `fingerprint-${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
-  }, [fullJson]);
+  }, [fullJson, fullJsonReady]);
 
   const selectLanguage = useCallback((nextLanguage: Language) => {
     setLanguage(nextLanguage);
@@ -346,6 +362,7 @@ export function useFingerprintDashboard() {
     browser,
     browserReady,
     browserScore,
+    collectedModuleCount,
     copied,
     copyIp,
     copyJson,
@@ -354,6 +371,7 @@ export function useFingerprintDashboard() {
     filter,
     flag: ipInfo.flag?.emoji || getFlag(ipInfo.country_code),
     fullJson,
+    fullJsonReady,
     httpHeaders,
     ipAddress,
     ipError,

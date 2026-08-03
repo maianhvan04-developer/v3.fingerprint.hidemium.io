@@ -4,6 +4,41 @@ export type CopyKind = "ip" | "json";
 export type DiagnosticStatus = "ok" | "warning" | "error";
 export type Language = "EN" | "VI" | "CN" | "RU";
 
+export const fingerprintModuleKeys = [
+  "workerScope",
+  "navigator",
+  "browserVersion",
+  "windowFeatures",
+  "headless",
+  "htmlElementVersion",
+  "cssMedia",
+  "css",
+  "screen",
+  "voices",
+  "media",
+  "canvas2d",
+  "cpuScaling",
+  "canvasWebgl",
+  "maths",
+  "consoleErrors",
+  "timezone",
+  "clientRects",
+  "offlineAudioContext",
+  "fonts",
+  "capturedErrors",
+  "svg",
+  "resistance",
+  "intl",
+  "features",
+  "proxyLies",
+  "network",
+  "battery",
+  "storage",
+  "automation",
+] as const;
+
+export type FingerprintModuleKey = (typeof fingerprintModuleKeys)[number];
+
 export interface AuditItem {
   detail: string;
   id: string;
@@ -55,6 +90,7 @@ export interface FingerprintModule {
   description: string;
   hash: string;
   issues: number;
+  key: FingerprintModuleKey;
   name: string;
   result: Record<string, unknown>;
 }
