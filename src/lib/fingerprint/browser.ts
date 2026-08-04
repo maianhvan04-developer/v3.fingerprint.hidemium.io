@@ -122,12 +122,60 @@ function getCanvasSignature() {
 }
 
 function getAvailableFonts() {
-  if (!document.fonts) return [];
   const candidates = [
-    "Arial", "Arial Black", "Calibri", "Cambria", "Courier New", "Georgia",
-    "Helvetica", "Segoe UI", "Tahoma", "Times New Roman", "Trebuchet MS", "Verdana",
+    "American Typewriter", "Apple Chancery", "Arial", "Arial Black", "Avenir",
+    "Avenir Next", "Calibri", "Calibri Light", "Cambria", "Cambria Math",
+    "Century", "Century Gothic", "Charter", "Cochin", "Comic Sans MS",
+    "Consolas", "Courier New", "Ebrima", "Franklin Gothic", "Gabriola",
+    "Geneva", "Georgia", "Helvetica", "Helvetica Neue", "Hiragino Sans",
+    "Hoefler Text", "Impact", "Javanese Text", "Leelawadee UI", "Lucida Console",
+    "Lucida Grande", "Lucida Sans Unicode", "Marker Felt", "Marlett", "Menlo",
+    "Microsoft JhengHei", "Microsoft Sans Serif", "Microsoft Tai Le", "Microsoft YaHei",
+    "Microsoft Yi Baiti", "Monaco", "Mongolian Baiti", "MS Gothic", "MS PGothic",
+    "MS UI Gothic", "Myanmar Text", "Nirmala UI", "Noto Color Emoji", "Noto Sans",
+    "Noteworthy", "Optima", "Palatino Linotype", "Papyrus", "PingFang SC",
+    "Roboto", "Roboto Condensed", "Roboto Mono", "Segoe Fluent Icons",
+    "Segoe MDL2 Assets", "Segoe Print", "Segoe Script", "Segoe UI", "Segoe UI Emoji",
+    "Segoe UI Light", "Segoe UI Symbol", "Skia", "Snell Roundhand", "Sylfaen",
+    "Tahoma", "Times New Roman", "Trebuchet MS", "Ubuntu", "Ubuntu Mono",
+    "Verdana", "Yu Gothic", "Zapfino",
   ];
-  return candidates.filter((font) => document.fonts.check(`12px "${font}"`));
+  if (!document.body) return [];
+
+  const sample = document.createElement("span");
+  const baseFamilies = ["monospace", "sans-serif", "serif"];
+  sample.textContent = "mmmmmmmmmmlliWW@@##";
+  sample.setAttribute("aria-hidden", "true");
+  Object.assign(sample.style, {
+    fontSize: "72px",
+    left: "-9999px",
+    lineHeight: "normal",
+    position: "absolute",
+    top: "-9999px",
+    visibility: "hidden",
+    whiteSpace: "nowrap",
+  });
+  document.body.append(sample);
+
+  const baseSizes = new Map<string, { height: number; width: number }>();
+  for (const baseFamily of baseFamilies) {
+    sample.style.fontFamily = baseFamily;
+    baseSizes.set(baseFamily, {
+      height: sample.offsetHeight,
+      width: sample.offsetWidth,
+    });
+  }
+
+  const detected = candidates.filter((font) => baseFamilies.some((baseFamily) => {
+    sample.style.fontFamily = `"${font}", ${baseFamily}`;
+    const baseSize = baseSizes.get(baseFamily);
+    return Boolean(baseSize && (
+      sample.offsetWidth !== baseSize.width || sample.offsetHeight !== baseSize.height
+    ));
+  }));
+
+  sample.remove();
+  return detected;
 }
 
 function hasStorage() {

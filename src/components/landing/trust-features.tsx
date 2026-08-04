@@ -6,7 +6,6 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import styles from "./header-hero.module.css";
 
 interface Partner {
   className: string;
@@ -16,13 +15,13 @@ interface Partner {
 }
 
 const partners: readonly Partner[] = [
-  { className: styles.cloudflare, icon: Cloud, iconSize: 18, name: "Cloudflare" },
-  { className: styles.akamai, name: "Akamai" },
-  { className: styles.datadome, name: "DATADOME" },
-  { className: styles.imperva, name: "imperva" },
-  { className: styles.seon, icon: Crosshair, iconSize: 17, name: "SEON" },
-  { className: styles.riskified, icon: ShieldCheck, iconSize: 16, name: "riskified" },
-  { className: styles.appfuel, icon: Zap, iconSize: 16, name: "appfuel" },
+  { className: "hh-cloudflare", icon: Cloud, iconSize: 18, name: "Cloudflare" },
+  { className: "hh-akamai", name: "Akamai" },
+  { className: "hh-datadome", name: "DATADOME" },
+  { className: "hh-imperva", name: "imperva" },
+  { className: "hh-seon", icon: Crosshair, iconSize: 17, name: "SEON" },
+  { className: "hh-riskified", icon: ShieldCheck, iconSize: 16, name: "riskified" },
+  { className: "hh-appfuel", icon: Zap, iconSize: 16, name: "appfuel" },
 ];
 
 const features = [
@@ -53,7 +52,7 @@ function PartnerMarks({ duplicate = false }: { duplicate?: boolean }) {
     <div
       aria-hidden={duplicate ? true : undefined}
       aria-label={duplicate ? undefined : "Trusted partners"}
-      className={styles.partnerMarks}
+      className="hh-partnerMarks"
       role={duplicate ? undefined : "list"}
     >
       {partners.map((partner) => {
@@ -76,15 +75,15 @@ function PartnerMarks({ duplicate = false }: { duplicate?: boolean }) {
 
 export function TrustFeatures() {
   return (
-    <section className={styles.trustSection} aria-labelledby="trust-heading">
-      <div className={styles.trustInner}>
+    <section className="hh-trustSection" aria-labelledby="trust-heading">
+      <div className="hh-trustInner">
         <h2 id="trust-heading">TRUSTED BY SECURITY-FOCUSED TEAMS WORLDWIDE</h2>
         <div
           aria-label="Trusted partner logos"
-          className={styles.partnerScroller}
+          className="hh-partnerScroller"
           tabIndex={0}
         >
-          <div className={styles.partnerTrack}>
+          <div className="hh-partnerTrack">
             <PartnerMarks />
             <PartnerMarks duplicate />
           </div>
@@ -96,14 +95,14 @@ export function TrustFeatures() {
 
 export function ProductFeatures() {
   return (
-    <section className={styles.featureSection} aria-label="Product capabilities">
-      <div className={styles.featureInner}>
-        <div className={styles.featureGrid}>
+    <section className="hh-featureSection" aria-label="Product capabilities">
+      <div className="hh-featureInner">
+        <div className="hh-featureGrid">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
-              <article className={styles.featureCard} key={feature.title}>
-                <span className={styles.featureIcon}><Icon aria-hidden="true" size={23} /></span>
+              <article className="hh-featureCard" key={feature.title}>
+                <span className="hh-featureIcon"><Icon aria-hidden="true" size={23} /></span>
                 <div>
                   <h3>{feature.title}</h3>
                   <p>{feature.description}</p>

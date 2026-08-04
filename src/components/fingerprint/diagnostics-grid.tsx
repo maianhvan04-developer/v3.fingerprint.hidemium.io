@@ -1,36 +1,86 @@
-import { Button } from "@/components/ui/button";
+import {
+  Activity,
+  Bot,
+  CircleAlert,
+  Cpu,
+  Database,
+  Image as ImageIcon,
+  MonitorCog,
+  Network,
+  Smartphone,
+  Type,
+  type LucideIcon,
+} from "lucide-react";
 import type { DiagnosticCard, Translation } from "@/types/fingerprint";
 
 interface DiagnosticsGridProps {
   cards: DiagnosticCard[];
-  onToggleCard: (name: string) => void;
-  openCards: string[];
   text: Translation;
 }
 
-export function DiagnosticsGrid({ cards, onToggleCard, openCards, text }: DiagnosticsGridProps) {
+const diagnosticMeta: Record<string, { category: string; icon: LucideIcon }> = {
+  audio: { category: "Media", icon: Activity },
+  automation: { category: "Browser", icon: Bot },
+  canvas: { category: "Canvas", icon: ImageIcon },
+  cpu: { category: "Hardware", icon: Cpu },
+  device: { category: "System", icon: Smartphone },
+  font: { category: "Fonts", icon: Type },
+  gpu: { category: "Hardware", icon: MonitorCog },
+  network: { category: "Network", icon: Network },
+  other: { category: "Storage / Privacy", icon: Database },
+};
+
+const statusLabels = {
+  error: "Error",
+  ok: "Verified",
+  warning: "Warning",
+} as const;
+
+export function DiagnosticsGrid({ cards, text }: DiagnosticsGridProps) {
   return (
-    <section className="diagnostics" id="diagnostics">
-      <div className="eyebrow">📋 Detailed Summary</div>
-      <h2>{text.diagnostics}</h2>
-      <p className="section-subtitle">{text.diagnosticsSub}</p>
-      <div className="diagnostic-grid">
+    <section className="diag-section" id="diagnostics" aria-labelledby="diagnostics-title">
+      <header className="diag-header">
+        <div>
+          <span className="diag-kicker">Environment intelligence</span>
+          <h2 id="diagnostics-title">{text.diagnostics}</h2>
+          <p>{text.diagnosticsSub}</p>
+        </div>
+      </header>
+
+      <div className="diag-grid">
         {cards.map((card) => {
-          const isOpen = openCards.includes(card.name);
-          const statusClass = card.status === "ok" ? "ok" : card.status === "error" ? "has-errors" : "has-issues";
+          const meta = diagnosticMeta[card.name] || { category: "System", icon: MonitorCog };
+          const Icon = meta.icon;
           return (
-            <article className={`diagnostic-card ${statusClass}`} key={card.name}>
-              <div className="code-icon" aria-hidden="true">&lt;/&gt;</div>
-              <h4>{card.name}</h4>
-              <p className="card-summary">{card.status === "ok" ? "✓ " : "● "}{card.summary}</p>
-              {isOpen ? <p className="card-detail">{card.detail}</p> : null}
-              {card.status === "ok" ? (
-                <span className="verified-label">✓ Verified</span>
-              ) : (
-                <Button aria-expanded={isOpen} className="card-button" onClick={() => onToggleCard(card.name)}>
-                  {isOpen ? "Hide troubles" : "View troubles"}
-                </Button>
-              )}
+            <article className="diag-card" data-status={card.status} key={card.name}>
+              <div className="diag-cardTop">
+                <span className="diag-cardIcon"><Icon aria-hidden="true" /></span>
+                <div>
+                  <span>{meta.category}</span>
+                  <h3>{card.name}</h3>
+                </div>
+                <span className="diag-statusBadge">{statusLabels[card.status]}</span>
+              </div>
+              <strong className="diag-summary">
+                {card.status !== "ok" && <CircleAlert aria-hidden="true" />}
+                <span>{card.summary}</span>
+              </strong>
+              <div
+                className="diag-detail"
+                role={card.status === "error" ? "alert" : undefined}
+              >
+                {card.status !== "ok" && (
+                  <strong className="diag-detailLabel">
+                    <CircleAlert aria-hidden="true" />
+                    {card.status === "error" ? "Detected issue" : "Needs review"}
+                  </strong>
+                )}
+                <div className="diag-detailLines">
+                  {card.detail.split("\n").map((line) => (
+                    <span key={line}>{line}</span>
+                  ))}
+                </div>
+              </div>
             </article>
           );
         })}

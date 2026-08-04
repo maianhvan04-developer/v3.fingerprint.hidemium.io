@@ -10,14 +10,20 @@ Primary UI reference: user-supplied 1680×940 screenshot. Live data/content sour
    - Left: analysis eyebrow, marketing headline, supporting copy, two CTAs, four benefit notes
    - Right: live IP, location, risk score, browser score, and two-column connection summary
    - Decorative pale-blue wave background is CSS-only
-3. Trust and feature band (about 92px desktop)
+3. Trust band (about 92px desktop)
    - Security-team logo row
-   - Four product-value cards
 4. Fingerprint overview workspace (about 268px desktop)
-   - Vertical category rail
-   - Analysis ID and four metric cards
-   - Dense attribute/category/value/result table populated from live browser data
-5. White footer, separated from page content by a full-width horizontal rule
+   - Vertical category rail that filters the 30 CreepJS modules by runtime, browser, screen, hardware, canvas, WebGL, fonts, media, storage, and network
+   - Compact Fingerprint ID at the end of the category rail
+   - Dense module/category/JSON/SHA-256 table populated from live CreepJS module results
+5. Network fingerprint reports
+   - TCP/IP Fingerprint (p0f) report with explicit server-required SYN fields
+   - Restartable browser-side WebRTC check, observed addresses, leak verdict, and ICE candidate disclosure
+6. Four product-value cards
+7. Standalone `Full Fingerprint JSON` section immediately above the footer
+   - Aggregated 30-module payload with readiness metrics
+   - Scrollable JSON viewer with Copy and Download actions
+8. White footer, separated from page content by a full-width horizontal rule
    - Brand statement
    - Product, Resources, Company link groups
    - Newsletter field and social links

@@ -1,5 +1,10 @@
 import { type ExtendedWindow } from "@/lib/fingerprint/browser";
-import type { AuditItem, BrowserProfile, DiagnosticCard } from "@/types/fingerprint";
+import type {
+  AuditItem,
+  BrowserProfile,
+  DiagnosticCard,
+  FingerprintModule,
+} from "@/types/fingerprint";
 
 export function createAudits(profile: BrowserProfile): AuditItem[] {
   const automated = profile.webdriver || /HeadlessChrome/i.test(profile.userAgent);
@@ -142,7 +147,11 @@ export function createAudits(profile: BrowserProfile): AuditItem[] {
   ];
 }
 
-export function createDiagnostics(profile: BrowserProfile, browserReady: boolean): DiagnosticCard[] {
+export function createDiagnostics(
+  profile: BrowserProfile,
+  browserReady: boolean,
+  modules: FingerprintModule[],
+): DiagnosticCard[] {
   if (!browserReady) {
     return ["audio", "automation", "canvas", "cpu", "device", "gpu", "network", "other", "font"].map((name) => ({
       detail: "The browser signal is still being collected.",
@@ -155,6 +164,37 @@ export function createDiagnostics(profile: BrowserProfile, browserReady: boolean
   const extendedWindow = window as ExtendedWindow;
   const audioAvailable = Boolean(extendedWindow.AudioContext || extendedWindow.webkitAudioContext);
   const browserAutomated = profile.webdriver || /HeadlessChrome/i.test(profile.userAgent);
+  const appleOnlyFonts = [
+    "American Typewriter", "Apple Chancery", "Avenir", "Avenir Next", "Charter",
+    "Cochin", "Geneva", "Helvetica Neue", "Hiragino Sans", "Hoefler Text",
+    "Lucida Grande", "Marker Felt", "Menlo", "Monaco", "Noteworthy", "Optima",
+    "Papyrus", "PingFang SC", "Skia", "Snell Roundhand", "Zapfino",
+  ];
+  const windowsOnlyFonts = [
+    "Calibri", "Calibri Light", "Cambria", "Cambria Math", "Ebrima", "Gabriola",
+    "Javanese Text", "Leelawadee UI", "Marlett", "Microsoft JhengHei",
+    "Microsoft Tai Le", "Microsoft YaHei", "Microsoft Yi Baiti", "Mongolian Baiti",
+    "MS Gothic", "MS PGothic", "MS UI Gothic", "Myanmar Text", "Nirmala UI",
+    "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe Print", "Segoe Script",
+    "Segoe UI", "Segoe UI Light",
+  ];
+  const usesWindowsUa = /Windows/i.test(profile.userAgent) || profile.os === "Windows";
+  const usesAppleUa = /Macintosh|Mac OS X|iPhone|iPad|iPod/i.test(profile.userAgent)
+    || /macOS|iOS/i.test(profile.os);
+  const fontModule = modules.find((module) => module.key === "fonts");
+  const moduleFonts = Array.isArray(fontModule?.result.detected)
+    ? fontModule.result.detected.filter((font): font is string => typeof font === "string")
+    : [];
+  const detectedFonts = fontModule ? moduleFonts : profile.fonts;
+  const mismatchedFonts = detectedFonts.filter((font) => (
+    (usesWindowsUa && appleOnlyFonts.includes(font))
+    || (usesAppleUa && windowsOnlyFonts.includes(font))
+  ));
+  const fontIssues = mismatchedFonts.map((font) => {
+    const expectedPlatform = usesWindowsUa ? "macOS/iOS" : "Windows";
+    const reportedPlatform = usesWindowsUa ? "Windows" : "macOS/iOS";
+    return `Fonts — "${font}" is a ${expectedPlatform}-only font but detected under ${reportedPlatform} UA — UA spoof / font cross-contamination`;
+  });
   return [
     {
       detail: audioAvailable ? "Web Audio API is available and reports a normal execution surface." : "The Web Audio API is unavailable or blocked.",
@@ -179,6 +219,21 @@ export function createDiagnostics(profile: BrowserProfile, browserReady: boolean
     { detail: `${profile.gpuVendor} — ${profile.gpuRenderer}`, name: "gpu", status: profile.webgl ? "ok" : "warning", summary: profile.webgl ? "WebGL renderer available" : "WebGL unavailable" },
     { detail: `${profile.connection}. Online state: ${navigator.onLine ? "online" : "offline"}.`, name: "network", status: navigator.onLine ? "ok" : "warning", summary: profile.connection },
     { detail: `Cookies: ${profile.cookies ? "enabled" : "disabled"}; storage: ${profile.storage ? "available" : "blocked"}; DNT: ${profile.doNotTrack}.`, name: "other", status: profile.storage ? "ok" : "warning", summary: profile.storage ? "Storage surface is coherent" : "Storage is restricted" },
-    { detail: profile.fonts.length ? profile.fonts.join(", ") : "Font enumeration is unavailable.", name: "font", status: profile.fonts.length ? "ok" : "warning", summary: `${profile.fonts.length} common fonts detected` },
+    {
+      detail: fontIssues.length
+        ? fontIssues.join("\n")
+        : !fontModule
+          ? "The complete font module is still being collected."
+          : detectedFonts.length
+            ? `Detected fonts: ${detectedFonts.join(", ")}`
+            : "Font enumeration is unavailable.",
+      name: "font",
+      status: fontIssues.length ? "error" : fontModule && detectedFonts.length ? "ok" : "warning",
+      summary: fontIssues.length
+        ? `${fontIssues.length} high ${fontIssues.length === 1 ? "issue" : "issues"}`
+        : fontModule
+          ? `${detectedFonts.length} common fonts detected`
+          : "Collecting font signal",
+    },
   ];
 }

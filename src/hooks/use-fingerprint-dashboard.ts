@@ -100,7 +100,6 @@ export function useFingerprintDashboard() {
   const [language, setLanguage] = useState<Language>("EN");
   const [languageOpen, setLanguageOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openCards, setOpenCards] = useState<string[]>([]);
   const [time, setTime] = useState(() => new Date(0));
   const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -241,8 +240,8 @@ export function useFingerprintDashboard() {
     [browser, browserReady],
   );
   const diagnostics = useMemo(
-    () => createDiagnostics(browser, browserReady),
-    [browser, browserReady],
+    () => createDiagnostics(browser, browserReady, modules),
+    [browser, browserReady, modules],
   );
 
   const visibleAudits = audits.filter((audit) => {
@@ -291,8 +290,10 @@ export function useFingerprintDashboard() {
 
     const payload = fingerprintModuleKeys.reduce<Record<string, Record<string, unknown>>>(
       (result, key) => {
-        const module = modulesByKey.get(key);
-        if (module) result[key] = { ...module.result, $hash: module.hash };
+        const collectedModule = modulesByKey.get(key);
+        if (collectedModule) {
+          result[key] = { ...collectedModule.result, $hash: collectedModule.hash };
+        }
         return result;
       },
       {},
@@ -336,12 +337,6 @@ export function useFingerprintDashboard() {
     localStorage.setItem("fpc.lang", nextLanguage.toLowerCase());
     setLanguageOpen(false);
   }, []);
-  const toggleCard = useCallback((name: string) => {
-    setOpenCards((current) => current.includes(name)
-      ? current.filter((card) => card !== name)
-      : [...current, name]);
-  }, []);
-
   const ipAddress = ipLoading ? "Detecting…" : ipInfo.ip || "Unavailable";
   const preferredTimezone = ipInfo.timezone?.id ||
     (["Detecting…", "Unknown"].includes(browser.timezone) ? undefined : browser.timezone);
@@ -383,13 +378,11 @@ export function useFingerprintDashboard() {
     localTime,
     menuOpen,
     modules,
-    openCards,
     riskScore,
     runWebRtc,
     selectLanguage,
     setFilter,
     t: translations[language],
-    toggleCard,
     toggleLanguageMenu: () => setLanguageOpen((open) => !open),
     toggleMenu: () => setMenuOpen((open) => !open),
     visibleAudits,

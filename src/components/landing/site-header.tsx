@@ -5,7 +5,6 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/icons";
 import { translations } from "@/lib/fingerprint/presentation";
 import type { Language, Translation } from "@/types/fingerprint";
-import styles from "./header-hero.module.css";
 
 interface SiteHeaderProps {
   language: Language;
@@ -48,24 +47,24 @@ export function SiteHeader({
   };
 
   return (
-    <header className={styles.siteHeader}>
-      <div className={styles.headerInner}>
-        <a className={styles.brand} href="#top" aria-label="Fingerprint Checked home">
-          <BrandMark className={styles.brandMark} />
+    <header className="hh-siteHeader">
+      <div className="hh-headerInner">
+        <a className="hh-brand" href="#top" aria-label="Fingerprint Checked home">
+          <BrandMark className="hh-brandMark" />
           <span>Fingerprint Checked</span>
         </a>
 
-        <nav className={styles.desktopNav} aria-label="Primary navigation">
+        <nav className="hh-desktopNav" aria-label="Primary navigation">
           {navigation.map((item) => (
-            <a className={styles.navLink} href={item.href} key={item.href}>
+            <a className="hh-navLink" href={item.href} key={item.href}>
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className={styles.desktopActions}>
+        <div className="hh-desktopActions">
           <div
-            className={styles.languagePicker}
+            className="hh-languagePicker"
             onBlur={(event) => {
               if (languageOpen && !event.currentTarget.contains(event.relatedTarget)) {
                 onToggleLanguage();
@@ -79,7 +78,7 @@ export function SiteHeader({
               aria-expanded={languageOpen}
               aria-haspopup="menu"
               aria-label={translation.navigation.language}
-              className={styles.languageButton}
+              className="hh-languageButton"
               onClick={onToggleLanguage}
               type="button"
             >
@@ -88,14 +87,14 @@ export function SiteHeader({
             </button>
             <div
               aria-label={translation.navigation.language}
-              className={styles.languageMenu}
+              className="hh-languageMenu"
               data-open={languageOpen}
               role="menu"
             >
               {languageOptions.map((option) => (
                 <button
                   aria-checked={language === option}
-                  className={styles.languageOption}
+                  className="hh-languageOption"
                   data-active={language === option}
                   key={option}
                   onClick={() => onSelectLanguage(option)}
@@ -108,12 +107,12 @@ export function SiteHeader({
               ))}
             </div>
           </div>
-          <a className={styles.loginLink} href="#login">{translation.navigation.logIn}</a>
-          <a className={styles.signupLink} href="#signup">{translation.navigation.signUp}</a>
+          <a className="hh-loginLink" href="#login">{translation.navigation.logIn}</a>
+          <a className="hh-signupLink" href="#signup">{translation.navigation.signUp}</a>
         </div>
 
         <button
-          className={styles.menuButton}
+          className="hh-menuButton"
           type="button"
           aria-expanded={mobileOpen}
           aria-controls="mobile-navigation"
@@ -125,17 +124,17 @@ export function SiteHeader({
       </div>
 
       <div
-        className={styles.mobilePanel}
+        className="hh-mobilePanel"
         data-open={mobileOpen}
         id="mobile-navigation"
       >
         <nav aria-label="Mobile navigation">
           {navigation.map((item) => (
-            <a className={styles.mobileDirectLink} href={item.href} key={item.href} onClick={closeNavigation}>
+            <a className="hh-mobileDirectLink" href={item.href} key={item.href} onClick={closeNavigation}>
               {item.label}
             </a>
           ))}
-          <div className={styles.mobileLanguage} aria-label={translation.navigation.language}>
+          <div className="hh-mobileLanguage" aria-label={translation.navigation.language}>
             <span>{translation.navigation.language}</span>
             <div>
               {languageOptions.map((option) => (
@@ -154,7 +153,7 @@ export function SiteHeader({
               ))}
             </div>
           </div>
-          <div className={styles.mobileActions}>
+          <div className="hh-mobileActions">
             <a href="#login" onClick={closeNavigation}>{translation.navigation.logIn}</a>
             <a href="#signup" onClick={closeNavigation}>{translation.navigation.signUp}</a>
           </div>

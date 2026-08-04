@@ -1,23 +1,22 @@
+import { AlertTriangle, Check, Minus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { AuditCounts, AuditFilter, AuditItem, AuditStatus } from "@/types/fingerprint";
 
 const filters: Array<[AuditFilter, string]> = [
-  ["all", "All"],
-  ["fail", "Fail only"],
+  ["all", "All checks"],
+  ["fail", "Needs review"],
   ["fatal", "Fatal only"],
   ["skip", "Not evaluable"],
 ];
-const warningSeverityIds = ["C-015", "C-031", "C-041"];
 
-function StatusTag({ status }: { status: AuditStatus }) {
-  const labels: Record<AuditStatus, string> = {
-    fatal: "FAIL",
-    pass: "PASS",
-    skip: "SKIP",
-    warn: "WARN",
-  };
-  return <span className={`status-tag status-${status}`}>{labels[status]}</span>;
-}
+const warningSeverityIds = new Set(["C-015", "C-031", "C-041"]);
+
+const statusMeta: Record<AuditStatus, { icon: typeof Check; label: string }> = {
+  fatal: { icon: X, label: "Fail" },
+  pass: { icon: Check, label: "Pass" },
+  skip: { icon: Minus, label: "Skip" },
+  warn: { icon: AlertTriangle, label: "Warning" },
+};
 
 interface CdiValidatorProps {
   auditCounts: AuditCounts;
@@ -38,52 +37,72 @@ export function CdiValidator({
   onFilterChange,
   visibleAudits,
 }: CdiValidatorProps) {
+  const verdictTone = !browserReady
+    ? "running"
+    : auditCounts.fatal ? "fail" : auditCounts.warn ? "review" : "pass";
+
   return (
-    <section className="audit-section">
-      <div className="eyebrow">🧬 CDI v2.0 · Coherence Contract</div>
-      <h2>Coherent Device Identity Validator</h2>
-      <p className="section-subtitle">
-        Checks the current browser profile against cdi-core@2.0, invariants C-001…C-052. One failing fatal means the profile does not qualify for state:active. Rules that cannot be evaluated from a page are marked SKIP and are never counted as passes.
-      </p>
-      <div className="audit-summary">
-        <div className="verdict">
-          <span>RESULT</span>
-          <strong className={`verdict-${auditVerdict.toLowerCase()}`}>{auditVerdict}</strong>
+    <section className="cdi-section" id="cdi-validator" aria-labelledby="cdi-title">
+      <header className="cdi-header">
+        <div>
+          <span className="cdi-kicker">CDI v2.0 · Coherence contract</span>
+          <h2 id="cdi-title">Coherent Device Identity Validator</h2>
+          <p>
+            Cross-checks the browser profile against C-001…C-052. Server-only rules remain SKIP
+            and never count as successful checks.
+          </p>
         </div>
-        <div className="audit-stats">
-          <div><b>{audits.length || "—"}</b><span>RUN</span></div>
-          <div className="stat-pass"><b>{browserReady ? auditCounts.pass : "—"}</b><span>PASS</span></div>
-          <div className="stat-warn"><b>{browserReady ? auditCounts.warn : "—"}</b><span>WARN</span></div>
-          <div className="stat-fatal"><b>{browserReady ? auditCounts.fatal : "—"}</b><span>FATAL</span></div>
-          <div className="stat-skip"><b>{browserReady ? auditCounts.skip : "—"}</b><span>SKIP</span></div>
+      </header>
+
+      <div className="cdi-overview">
+        <div className="cdi-verdict" data-verdict={verdictTone}>
+          <span>Coherence result</span>
+          <strong>{auditVerdict}</strong>
+          <small>{browserReady ? `${audits.length} invariants evaluated` : "Collecting browser signals…"}</small>
         </div>
-        <div className="audit-filters">
+        <div className="cdi-stats">
+          <div><span>Run</span><strong>{audits.length || "—"}</strong></div>
+          <div data-tone="pass"><span>Pass</span><strong>{browserReady ? auditCounts.pass : "—"}</strong></div>
+          <div data-tone="warn"><span>Warn</span><strong>{browserReady ? auditCounts.warn : "—"}</strong></div>
+          <div data-tone="fatal"><span>Fatal</span><strong>{browserReady ? auditCounts.fatal : "—"}</strong></div>
+          <div data-tone="skip"><span>Skip</span><strong>{browserReady ? auditCounts.skip : "—"}</strong></div>
+        </div>
+      </div>
+
+      <div className="cdi-toolbar">
+        <div>
+          <strong>Invariant results</strong>
+          <span>{visibleAudits.length} visible</span>
+        </div>
+        <nav aria-label="Audit filters">
           {filters.map(([value, label]) => (
-            <Button className={filter === value ? "active" : ""} key={value} onClick={() => onFilterChange(value)}>
+            <Button data-active={filter === value} key={value} onClick={() => onFilterChange(value)}>
               {label}
             </Button>
           ))}
-        </div>
+        </nav>
       </div>
-      <div className="audit-list">
-        {!browserReady ? <div className="audit-loading">Running coherence checks…</div> : null}
-        {browserReady && !visibleAudits.length ? <div className="audit-empty">No checks match this filter.</div> : null}
+
+      <div className="cdi-grid">
+        {!browserReady ? <div className="cdi-message">Running coherence checks…</div> : null}
+        {browserReady && !visibleAudits.length ? <div className="cdi-message">No checks match this filter.</div> : null}
         {visibleAudits.map((audit) => {
-          const warnSeverity = warningSeverityIds.includes(audit.id);
+          const meta = statusMeta[audit.status];
+          const StatusIcon = meta.icon;
+          const severity = warningSeverityIds.has(audit.id) ? "warn" : "fatal";
           return (
-            <div className={`audit-item audit-${audit.status}`} key={audit.id}>
-              <span className="audit-mark" aria-hidden="true">
-                {audit.status === "pass" ? "✓" : audit.status === "fatal" ? "✕" : audit.status === "warn" ? "!" : "–"}
-              </span>
-              <span className="audit-number">{audit.id}</span>
-              <div className="audit-body"><h3>{audit.name}</h3><p>{audit.detail}</p></div>
-              <div className="audit-tags">
-                <StatusTag status={audit.status} />
-                <span className={`severity-tag ${warnSeverity ? "severity-warn" : "severity-fatal"}`}>
-                  {warnSeverity ? "WARN" : "FATAL"}
-                </span>
+            <article className="cdi-card" data-status={audit.status} key={audit.id}>
+              <div className="cdi-cardTop">
+                <span className="cdi-id">{audit.id}</span>
+                <span className="cdi-result"><StatusIcon aria-hidden="true" />{meta.label}</span>
               </div>
-            </div>
+              <h3>{audit.name}</h3>
+              <p>{audit.detail}</p>
+              <footer>
+                <span>Rule severity</span>
+                <strong data-severity={severity}>{severity}</strong>
+              </footer>
+            </article>
           );
         })}
       </div>

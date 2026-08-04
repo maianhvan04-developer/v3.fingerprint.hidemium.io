@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { AtSign, BriefcaseBusiness, Code2 } from "lucide-react";
 import { BrandMark } from "@/components/icons";
-import styles from "./overview-footer.module.css";
 
 const footerGroups = [
   {
@@ -24,10 +23,10 @@ export function SiteFooter() {
   const [subscribed, setSubscribed] = useState(false);
 
   return (
-    <footer className={styles.footer} aria-label="Site footer">
-      <div className={styles.footerInner}>
-        <div className={styles.footerGrid}>
-          <div className={styles.footerBrand}>
+    <footer className="of-footer" aria-label="Site footer">
+      <div className="of-footerInner">
+        <div className="of-footerGrid">
+          <div className="of-footerBrand">
             <a href="#top" aria-label="Fingerprint Checked home">
               <BrandMark />
               <strong>Fingerprint Checked</strong>
@@ -36,7 +35,7 @@ export function SiteFooter() {
           </div>
 
           {footerGroups.map((group) => (
-            <nav className={styles.footerGroup} aria-label={group.title} key={group.title}>
+            <nav className="of-footerGroup" aria-label={group.title} key={group.title}>
               <h2>{group.title}</h2>
               {group.links.map((link) => (
                 <a href={`#${link.toLowerCase().replaceAll(" ", "-")}`} key={link}>{link}</a>
@@ -44,7 +43,7 @@ export function SiteFooter() {
             </nav>
           ))}
 
-          <div className={styles.newsletter}>
+          <div className="of-newsletter">
             <h2>Stay updated</h2>
             <p>Get the latest product updates and fraud insights.</p>
             <form
@@ -65,7 +64,7 @@ export function SiteFooter() {
                 {subscribed ? "Subscribed" : "Subscribe"}
               </button>
             </form>
-            <div className={styles.socials} aria-label="Social media links">
+            <div className="of-socials" aria-label="Social media links">
               <a aria-label="Fingerprint Checked on X" href="https://x.com/">
                 <AtSign aria-hidden="true" />
               </a>
@@ -79,7 +78,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className={styles.legal}>
+        <div className="of-legal">
           <p>© 2026 Fingerprint Checked. All rights reserved.</p>
           <nav aria-label="Legal links">
             <a href="#privacy-policy">Privacy Policy</a>

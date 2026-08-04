@@ -20,7 +20,12 @@ export function useWebRtcCheck() {
     }
 
     const session = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
-    const peer = new RTCPeerConnection({ iceServers: [] });
+    const peer = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.cloudflare.com:3478" },
+        { urls: "stun:stun.l.google.com:19302" },
+      ],
+    });
     const candidates: string[] = [];
     const ips = new Set<string>();
     setWebRtc({ candidates: [], ips: [], session, status: "checking" });
@@ -29,7 +34,8 @@ export function useWebRtcCheck() {
       if (!event.candidate) return;
       const candidate = event.candidate.candidate;
       candidates.push(candidate);
-      const address = candidate.split(" ")[4];
+      const address = (event.candidate as RTCIceCandidate & { address?: string }).address ||
+        candidate.split(" ")[4];
       if (address) ips.add(address);
     };
     void peer.createOffer()
@@ -38,7 +44,7 @@ export function useWebRtcCheck() {
     window.setTimeout(() => {
       peer.close();
       setWebRtc({ candidates, ips: [...ips], session, status: "complete" });
-    }, 1600);
+    }, 3000);
   }, []);
 
   useEffect(() => {
