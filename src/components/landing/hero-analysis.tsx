@@ -1,29 +1,19 @@
 "use client";
 
 import {
-  BriefcaseBusiness,
   Building2,
   CalendarClock,
   Check,
   CheckCircle2,
-  Cloud,
   Compass,
   Copy,
-  Cpu,
   FileText,
   Globe2,
   Laptop,
-  MapPin,
-  MapPinned,
-  Monitor,
   Network,
   RadioTower,
-  Router,
   Server,
   ShieldCheck,
-  Tag,
-  UserRound,
-  Wifi,
 } from "lucide-react";
 import { ArrowRightMini, DottedField } from "@/components/icons";
 import type {
@@ -49,6 +39,7 @@ interface SummaryRowProps {
   icon: React.ReactNode;
   label: string;
   tone?: "good" | "neutral" | "warning";
+  truncate?: boolean;
   value: string;
   wide?: boolean;
 }
@@ -79,12 +70,23 @@ function isPublicAddress(address: string) {
   return !/^(10\.|127\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(normalized);
 }
 
-function SummaryRow({ icon, label, tone = "neutral", value, wide = false }: SummaryRowProps) {
+function SummaryRow({
+  icon,
+  label,
+  tone = "neutral",
+  truncate = false,
+  value,
+  wide = false,
+}: SummaryRowProps) {
   return (
-    <div className="hh-summaryRow" data-wide={wide || undefined}>
+    <div
+      className="hh-summaryRow"
+      data-truncate={truncate || undefined}
+      data-wide={wide || undefined}
+    >
       <span className="hh-summaryIcon" data-tone={tone}>{icon}</span>
       <span className="hh-summaryLabel">{label}</span>
-      <span className="hh-summaryValue" data-tone={tone}>{value}</span>
+      <span className="hh-summaryValue" data-tone={tone} title={truncate ? value : undefined}>{value}</span>
     </div>
   );
 }
@@ -137,7 +139,6 @@ export function HeroAnalysis({
   const ipv4Address = ipInfo.ipv4 || (ipInfo.ip && !ipInfo.ip.includes(":") ? ipInfo.ip : undefined);
   const ipv6Address = ipInfo.ipv6 || (ipInfo.ip?.includes(":") ? ipInfo.ip : undefined);
   const publicWebRtcIpv4 = publicWebRtcIps.filter((address) => !address.includes(":"));
-  const publicWebRtcIpv6 = publicWebRtcIps.filter((address) => address.includes(":"));
   const webRtcAddress = (addresses: string[]) => {
     if (webRtc.status === "checking") return "Detecting…";
     if (addresses.length) return addresses.join(", ");
@@ -155,12 +156,31 @@ export function HeroAnalysis({
       : "TTL unknown";
   const tcpFingerprint = `${readable(browser.os)} · ${tcpTtl} heuristic · MSS requires server SYN`;
   const organization = ipInfo.connection?.org || ipInfo.connection?.isp || "Detecting…";
-  const host = ipInfo.connection?.domain || "No reverse DNS data";
   const asNumber = ipInfo.connection?.asn ? `AS${ipInfo.connection.asn}` : "Detecting…";
-  const coordinates = typeof ipInfo.latitude === "number" && typeof ipInfo.longitude === "number"
-    ? `${ipInfo.latitude.toFixed(5)}, ${ipInfo.longitude.toFixed(5)}`
-    : "Detecting…";
   const timeZone = readable(ipInfo.timezone?.id || browser.timezone);
+  const riskChecks = securityEvaluated
+    ? `Fake ISP: ${providerMismatch ? "Review" : "No"} · Anonymizer: ${isProxy ? "Detected" : "No"} · Cloud: ${isCloud ? "Yes" : "No"}`
+    : "Not evaluated";
+  const locationSummary = [
+    ipInfo.city,
+    ipInfo.region,
+    ipInfo.country_code || ipInfo.country,
+    ipInfo.postal,
+  ].filter(Boolean).join(", ") || "Detecting…";
+  const deviceIdentity = [readable(browser.device), readable(browser.architecture)]
+    .filter(Boolean)
+    .join(" · ");
+  const browserIdentity = [browserLabel, readable(browser.engine), releaseChannel]
+    .filter(Boolean)
+    .join(" · ");
+  const systemIdentity = [
+    `${readable(browser.os)} ${readable(browser.osVersion)}`,
+    deviceIdentity,
+    readable(browser.platform),
+  ].filter(Boolean).join(" · ");
+  const webRtcSummary = `${webRtcAddress(publicWebRtcIpv4)} · ${webRtcStatus}`;
+  const networkOwner = `${organization} · ${asNumber}`;
+  const localTimeSummary = `${localTime} · ${timeZone}`;
 
   return (
     <section className="hh-heroSection" id="top">
@@ -274,85 +294,17 @@ export function HeroAnalysis({
             </div>
           </div>
 
-          <div className="hh-summaryGroups">
-            <section className="hh-summaryGroup" aria-labelledby="general-ip-title">
-              <header className="hh-summaryGroupHeader">
-                <span><Globe2 aria-hidden="true" /></span>
-                <div>
-                  <h2 id="general-ip-title">General IP info</h2>
-                  <p>Network identity and server-observed address signals.</p>
-                </div>
-              </header>
-              <div className="hh-summaryGrid">
-                <SummaryRow icon={<Server size={14} />} label="ISP / Provider" value={provider} />
-                <SummaryRow icon={<RadioTower size={14} />} label="WebRTC IPv4" tone={unexpectedWebRtcIp ? "warning" : webRtc.status === "complete" ? "good" : "neutral"} value={webRtcAddress(publicWebRtcIpv4)} />
-                <SummaryRow icon={<RadioTower size={14} />} label="WebRTC IPv6" tone={unexpectedWebRtcIp ? "warning" : webRtc.status === "complete" ? "good" : "neutral"} value={webRtcAddress(publicWebRtcIpv6)} />
-                <SummaryRow icon={<BriefcaseBusiness size={14} />} label="Fake ISP" tone={providerMismatch ? "warning" : securityEvaluated ? "good" : "neutral"} value={providerMismatch ? "Possible mismatch" : securityEvaluated ? "No" : "Not evaluated"} />
-                <SummaryRow icon={<ShieldCheck size={14} />} label="Anonymizer" tone={isProxy ? "warning" : securityEvaluated ? "good" : "neutral"} value={isProxy ? "Detected" : securityEvaluated ? "No" : "Not evaluated"} />
-                <SummaryRow icon={<Cloud size={14} />} label="Cloud Provider" tone={isCloud ? "warning" : securityEvaluated ? "good" : "neutral"} value={isCloud ? "Yes" : securityEvaluated ? "No" : "Not evaluated"} />
-                <SummaryRow icon={<Network size={14} />} label="TCP/IP Fingerprint" value={tcpFingerprint} />
-                <SummaryRow icon={<Monitor size={14} />} label="Browser OS" value={readable(browser.os)} />
-                <SummaryRow icon={<Wifi size={14} />} label="WebRTC status" tone={webRtcStatus === "No leak" ? "good" : "warning"} value={webRtcStatus} />
-                <SummaryRow icon={<Router size={14} />} label="Public IP type" value={ipInfo.type || (ipv6Address ? "IPv6" : ipv4Address ? "IPv4" : "Detecting…")} />
-              </div>
-            </section>
-
-            <section className="hh-summaryGroup" aria-labelledby="user-agent-title">
-              <header className="hh-summaryGroupHeader">
-                <span><UserRound aria-hidden="true" /></span>
-                <div>
-                  <h2 id="user-agent-title">User-Agent &amp; OS</h2>
-                  <p>Browser identity, release family and operating system.</p>
-                </div>
-              </header>
-              <div className="hh-summaryGrid">
-                <SummaryRow icon={<FileText size={14} />} label="User-Agent" value={browser.userAgent} wide />
-                <SummaryRow icon={<Compass size={14} />} label="Browser" value={browserLabel || "Detecting…"} />
-                <SummaryRow icon={<Cpu size={14} />} label="Engine" value={readable(browser.engine)} />
-                <SummaryRow icon={<Tag size={14} />} label="Release Channel" tone={browser.browserVersion ? "good" : "neutral"} value={releaseChannel} />
-                <SummaryRow icon={<Monitor size={14} />} label="Operating System" value={readable(browser.os)} />
-                <SummaryRow icon={<Monitor size={14} />} label="OS Version" value={readable(browser.osVersion)} />
-                <SummaryRow icon={<Laptop size={14} />} label="Device Type" value={readable(browser.device)} />
-                <SummaryRow icon={<Cpu size={14} />} label="Architecture" value={readable(browser.architecture)} />
-                <SummaryRow icon={<Network size={14} />} label="Platform" value={readable(browser.platform)} />
-              </div>
-            </section>
-
-            <section className="hh-summaryGroup" aria-labelledby="location-title">
-              <header className="hh-summaryGroupHeader">
-                <span><MapPin aria-hidden="true" /></span>
-                <div>
-                  <h2 id="location-title">Location</h2>
-                  <p>Location and network ownership exposed by the public IP.</p>
-                </div>
-              </header>
-              <div className="hh-summaryGrid">
-                <SummaryRow icon={<Globe2 size={14} />} label="Country" value={ipInfo.country_code || ipInfo.country || "Detecting…"} />
-                <SummaryRow icon={<MapPinned size={14} />} label="Region" value={ipInfo.region || "Detecting…"} />
-                <SummaryRow icon={<MapPin size={14} />} label="City" value={ipInfo.city || "Detecting…"} />
-                <SummaryRow icon={<Tag size={14} />} label="ZIP" value={ipInfo.postal || "Detecting…"} />
-                <SummaryRow icon={<Server size={14} />} label="Host" value={host} />
-                <SummaryRow icon={<MapPinned size={14} />} label="Lat / Lon" value={coordinates} />
-                <SummaryRow icon={<Building2 size={14} />} label="Organization" value={organization} />
-                <SummaryRow icon={<Building2 size={14} />} label="AS Organization" value={organization} />
-                <SummaryRow icon={<Server size={14} />} label="ISP" value={ipInfo.connection?.isp || provider} />
-                <SummaryRow icon={<Tag size={14} />} label="AS Number" value={asNumber} />
-              </div>
-            </section>
-
-            <section className="hh-summaryGroup" aria-labelledby="time-title">
-              <header className="hh-summaryGroupHeader">
-                <span><CalendarClock aria-hidden="true" /></span>
-                <div>
-                  <h2 id="time-title">Time</h2>
-                  <p>Local clock and timezone resolved for this environment.</p>
-                </div>
-              </header>
-              <div className="hh-summaryGrid">
-                <SummaryRow icon={<CalendarClock size={14} />} label="Local time" value={localTime} />
-                <SummaryRow icon={<Globe2 size={14} />} label="Time zone" value={timeZone} />
-              </div>
-            </section>
+          <div className="hh-summaryGrid hh-summaryGridCompact" aria-label="Browser and network summary">
+            <SummaryRow icon={<Server size={14} />} label="ISP / Provider" value={provider} />
+            <SummaryRow icon={<RadioTower size={14} />} label="WebRTC" tone={unexpectedWebRtcIp ? "warning" : webRtc.status === "complete" ? "good" : "neutral"} value={webRtcSummary} />
+            <SummaryRow icon={<ShieldCheck size={14} />} label="Risk checks" tone={providerMismatch || isProxy || isCloud ? "warning" : securityEvaluated ? "good" : "neutral"} value={riskChecks} />
+            <SummaryRow icon={<Network size={14} />} label="TCP/IP" value={tcpFingerprint} />
+            <SummaryRow icon={<Compass size={14} />} label="Browser / Engine" value={browserIdentity} />
+            <SummaryRow icon={<Laptop size={14} />} label="OS / Device" value={systemIdentity} />
+            <SummaryRow icon={<FileText size={14} />} label="User-Agent" truncate value={browser.userAgent} wide />
+            <SummaryRow icon={<Globe2 size={14} />} label="Location" value={locationSummary} />
+            <SummaryRow icon={<Building2 size={14} />} label="Network owner" value={networkOwner} />
+            <SummaryRow icon={<CalendarClock size={14} />} label="Local time" value={localTimeSummary} wide />
           </div>
         </div>
       </div>
