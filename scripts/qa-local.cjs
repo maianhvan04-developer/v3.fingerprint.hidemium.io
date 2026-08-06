@@ -37,6 +37,9 @@ async function main() {
 
       const hero = page.locator(".hero-console");
       await hero.screenshot({ path: path.join(outputDir, `hero-${viewport.name}.png`) });
+      await page.locator(".detail-dashboard").screenshot({
+        path: path.join(outputDir, `details-${viewport.name}.png`),
+      });
       await page.screenshot({
         fullPage: true,
         path: path.join(outputDir, `page-${viewport.name}.png`),
@@ -59,6 +62,23 @@ async function main() {
         await hero.screenshot({ path: path.join(outputDir, "hero-desktop-trusted.png") });
 
         await hero.getByRole("tab", { name: "Your current device" }).click();
+        const detailDashboard = page.locator(".detail-dashboard");
+        await detailDashboard.getByRole("tab", { exact: true, name: "Browser" }).click();
+        await hero.getByRole("link", { name: "See how this is calculated" }).click();
+        await page.waitForFunction(() => {
+          const overview = Array.from(document.querySelectorAll(".detail-tabs button"))
+            .find((button) => button.textContent?.trim() === "Overview");
+          return overview?.getAttribute("aria-selected") === "true";
+        });
+        interactions.calculationHash = new URL(page.url()).hash;
+        interactions.calculationRows = await detailDashboard.locator(".suspect-signal-table__row").count();
+        interactions.calculationTab = await detailDashboard
+          .getByRole("tab", { exact: true, name: "Overview" })
+          .getAttribute("aria-selected");
+        await detailDashboard.screenshot({
+          path: path.join(outputDir, "details-desktop-calculation.png"),
+        });
+
         await hero.getByRole("tab", { name: /Identification signals/ }).click();
         interactions.identificationCards = await hero.locator(".console-signal-card__title").allInnerTexts();
         await hero.screenshot({ path: path.join(outputDir, "hero-desktop-identification.png") });

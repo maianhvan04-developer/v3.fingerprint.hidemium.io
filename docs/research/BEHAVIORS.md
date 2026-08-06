@@ -65,3 +65,9 @@ Scope: the visitor/suspect-score demo visible in the homepage hero at `https://f
 - `Identification signals` shows recognition/network identity data from the active scan.
 - `Browser smart signals` shows browser, privacy and device integrity data from the active scan.
 - Active state is represented by `aria-selected`, brighter text and the cyan/purple underline.
+
+# Suspect score calculation link
+
+- Interaction model: click the `See how this is calculated` anchor in the live identity score panel.
+- The click selects the `Overview` detail tab and follows `#details`, using the page's smooth scroll behavior.
+- Overview includes a Fingerprint-style `Signal / Response / Weight` table driven by the current local snapshot.

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 export interface SuspectScoreProps {
   compact?: boolean;
+  onCalculationClick: () => void;
   onTrustedExampleChange: (value: boolean) => void;
   riskScore: number;
   showTrustedExample: boolean;
@@ -78,6 +79,7 @@ function Gauge({ score }: { score: number }) {
 
 export function SuspectScore({
   compact = false,
+  onCalculationClick,
   onTrustedExampleChange,
   riskScore,
   showTrustedExample,
@@ -135,7 +137,7 @@ export function SuspectScore({
               ? "No strong fraud-risk signals were detected."
               : "We detected signals of fraud risk."}
         </p>
-        <a className="suspect-score__calculation-link" href="#details">
+        <a className="suspect-score__calculation-link" href="#details" onClick={onCalculationClick}>
           See how this is calculated
         </a>
       </div>

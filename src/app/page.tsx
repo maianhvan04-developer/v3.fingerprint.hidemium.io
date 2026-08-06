@@ -26,6 +26,7 @@ import {
   BrowserSmartSignals,
   IdentificationSignals,
 } from "@/components/fingerprint-demo/signal-panels";
+import { SuspectSignalTable } from "@/components/fingerprint-demo/suspect-signal-table";
 import { SiteHeader } from "@/components/layout/site-header";
 import { formatNetworkFlag } from "@/lib/fingerprint/collector";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
@@ -77,9 +78,11 @@ function formatDate(isoDate?: string) {
 }
 
 function HeroConsole({
+  onCalculationClick,
   scanning,
   snapshot,
 }: {
+  onCalculationClick: () => void;
   scanning: boolean;
   snapshot: FingerprintSnapshot | null;
 }) {
@@ -126,7 +129,11 @@ function HeroConsole({
           ) : activeMode === "browser" ? (
             <BrowserSmartSignals scanning={scanning} snapshot={snapshot} />
           ) : (
-            <FingerprintLiveDemo scanning={scanning} snapshot={snapshot} />
+            <FingerprintLiveDemo
+              onCalculationClick={onCalculationClick}
+              scanning={scanning}
+              snapshot={snapshot}
+            />
           )}
         </div>
       </div>
@@ -327,7 +334,7 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
 function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
   const score = snapshot.scores.riskScore;
   return (
-    <article className="analysis-card risk-overview">
+    <div className="overview-panel__section risk-overview" data-risk={score >= 50 ? "high" : "safe"}>
       <h3>Trust & Entropy</h3>
       <div className="risk-overview__body">
         <div className="risk-donut">
@@ -345,7 +352,7 @@ function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
         </dl>
       </div>
       <small className="analysis-note">Evaluation based on browser-visible signals; uniqueness is a local estimate.</small>
-    </article>
+    </div>
   );
 }
 
@@ -357,11 +364,11 @@ function RiskFactors({ snapshot }: { snapshot: FingerprintSnapshot }) {
     { label: "High-entropy fingerprint available", ok: snapshot.signals.canvasHash !== "Unavailable" },
   ];
   return (
-    <article className="analysis-card risk-factors">
+    <div className="overview-panel__section risk-factors">
       <h3>Risk Factors</h3>
       <ul>{factors.map((factor) => <li key={factor.label} data-ok={factor.ok}>{factor.label}<CircleCheck aria-hidden="true" /></li>)}</ul>
       <div className="overall-risk"><span>Overall Risk</span><strong>{snapshot.scores.riskLabel}</strong></div>
-    </article>
+    </div>
   );
 }
 
@@ -375,7 +382,7 @@ function SignalCoverage({ snapshot }: { snapshot: FingerprintSnapshot }) {
     { label: "Screen", value: 100 },
   ];
   return (
-    <article className="analysis-card signal-coverage">
+    <div className="overview-panel__section signal-coverage">
       <div className="analysis-card__title"><h3>Signal Coverage</h3><span>{snapshot.scores.coverage}%</span></div>
       <div className="coverage-list">
         {coverage.map((item) => (
@@ -387,7 +394,39 @@ function SignalCoverage({ snapshot }: { snapshot: FingerprintSnapshot }) {
         ))}
       </div>
       <div className="coverage-total"><span>Coverage</span><strong>{snapshot.scores.coverage}%</strong></div>
-    </article>
+    </div>
+  );
+}
+
+function OverviewPanel({ snapshot }: { snapshot: FingerprintSnapshot }) {
+  const facts = [
+    { label: "IP address", value: snapshot.network.ipAddress },
+    { label: "Location", value: snapshot.network.city },
+    { label: "Browser", value: `${snapshot.browser.name} ${snapshot.browser.version}`.trim() },
+    { label: "Operating system", value: `${snapshot.system.os} ${snapshot.system.osVersion}`.trim() },
+  ];
+
+  return (
+    <section
+      aria-label="Fingerprint overview"
+      className="overview-panel"
+      data-risk={snapshot.scores.riskScore >= 50 ? "high" : "safe"}
+    >
+      <div className="overview-panel__facts">
+        {facts.map((fact) => (
+          <div key={fact.label}>
+            <span>{fact.label}</span>
+            <strong title={fact.value}>{fact.value}</strong>
+          </div>
+        ))}
+      </div>
+      <div className="overview-panel__analysis">
+        <RiskDonut snapshot={snapshot} />
+        <RiskFactors snapshot={snapshot} />
+        <SignalCoverage snapshot={snapshot} />
+      </div>
+      <SuspectSignalTable snapshot={snapshot} />
+    </section>
   );
 }
 
@@ -406,11 +445,18 @@ function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownl
   );
 }
 
-function DetailDashboard({ snapshot }: { snapshot: FingerprintSnapshot | null }) {
-  const [activeTab, setActiveTab] = useState<DetailTab>("Overview");
+function DetailDashboard({
+  activeTab,
+  onActiveTabChange,
+  snapshot,
+}: {
+  activeTab: DetailTab;
+  onActiveTabChange: (tab: DetailTab) => void;
+  snapshot: FingerprintSnapshot | null;
+}) {
   const [copied, setCopied] = useState(false);
   const cards = useMemo(() => snapshot ? buildCards(snapshot) : [], [snapshot]);
-  const visibleCards = activeTab === "Overview" ? cards : cards.filter((card) => card.key === activeTab);
+  const visibleCards = cards.filter((card) => card.key === activeTab);
   const selectedJson = useMemo(() => {
     if (!snapshot || activeTab === "Overview") return null;
     if (activeTab === "Browser") return { browser: snapshot.browser };
@@ -460,7 +506,7 @@ function DetailDashboard({ snapshot }: { snapshot: FingerprintSnapshot | null })
             aria-selected={activeTab === tab}
             className={activeTab === tab ? "is-active" : undefined}
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => onActiveTabChange(tab)}
             role="tab"
             type="button"
           >
@@ -477,30 +523,23 @@ function DetailDashboard({ snapshot }: { snapshot: FingerprintSnapshot | null })
         </div>
       ) : activeTab === "Raw Data" ? (
         <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
+      ) : activeTab === "Overview" ? (
+        <OverviewPanel snapshot={snapshot} />
       ) : (
-        <>
-          <div className={activeTab === "Overview" ? "data-grid" : "data-grid data-grid--single"}>
-            {visibleCards.map((card) => (
-              <DataCard
-                actions={activeTab === "Overview" ? undefined : (
-                  <>
-                    <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
-                    <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> Download JSON</button>
-                  </>
-                )}
-                data={card}
-                key={card.key}
-              />
-            ))}
-          </div>
-          {activeTab === "Overview" ? (
-            <div className="analysis-grid">
-              <RiskDonut snapshot={snapshot} />
-              <RiskFactors snapshot={snapshot} />
-              <SignalCoverage snapshot={snapshot} />
-            </div>
-          ) : null}
-        </>
+        <div className="data-grid data-grid--single">
+          {visibleCards.map((card) => (
+            <DataCard
+              actions={(
+                <>
+                  <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
+                  <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> Download JSON</button>
+                </>
+              )}
+              data={card}
+              key={card.key}
+            />
+          ))}
+        </div>
       )}
 
       {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {activeTab} JSON copied</span> : null}
@@ -555,6 +594,7 @@ function Footer() {
 
 export default function HomePage() {
   const { error, scan, snapshot, status } = useFingerprintScan();
+  const [detailTab, setDetailTab] = useState<DetailTab>("Overview");
   const scanning = status === "collecting";
 
   const startScan = () => {
@@ -579,11 +619,19 @@ export default function HomePage() {
             <div className="hero-trust"><span><ShieldCheck /> Runs locally</span><span><LockKeyhole /> No fingerprint storage</span><span><Code2 /> Exportable JSON</span></div>
             {error ? <p className="scan-error">Some signals were blocked: {error}</p> : null}
           </div>
-          <HeroConsole scanning={scanning} snapshot={snapshot} />
+          <HeroConsole
+            onCalculationClick={() => setDetailTab("Overview")}
+            scanning={scanning}
+            snapshot={snapshot}
+          />
         </section>
         <div className="page-container">
           <TrustBar />
-          <DetailDashboard snapshot={snapshot} />
+          <DetailDashboard
+            activeTab={detailTab}
+            onActiveTabChange={setDetailTab}
+            snapshot={snapshot}
+          />
           <FinalCta onAnalyze={startScan} scanning={scanning} />
         </div>
       </main>

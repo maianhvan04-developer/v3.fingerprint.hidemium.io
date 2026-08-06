@@ -7,11 +7,12 @@ import { useVisitorHistory } from "@/hooks/use-visitor-history";
 import type { FingerprintSnapshot } from "@/types/fingerprint";
 
 export interface FingerprintLiveDemoProps {
+  onCalculationClick: () => void;
   scanning: boolean;
   snapshot: FingerprintSnapshot | null;
 }
 
-export function FingerprintLiveDemo({ scanning, snapshot }: FingerprintLiveDemoProps) {
+export function FingerprintLiveDemo({ onCalculationClick, scanning, snapshot }: FingerprintLiveDemoProps) {
   const { summary, visitorId, visits } = useVisitorHistory(snapshot);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showTrustedExample, setShowTrustedExample] = useState(false);
@@ -21,6 +22,7 @@ export function FingerprintLiveDemo({ scanning, snapshot }: FingerprintLiveDemoP
   const compactScore = (
     <SuspectScore
       compact
+      onCalculationClick={onCalculationClick}
       onTrustedExampleChange={setShowTrustedExample}
       riskScore={snapshot?.scores.riskScore ?? 0}
       showTrustedExample={showTrustedExample}
@@ -41,6 +43,7 @@ export function FingerprintLiveDemo({ scanning, snapshot }: FingerprintLiveDemoP
       />
       <div className="fingerprint-live-demo__score-panel">
         <SuspectScore
+          onCalculationClick={onCalculationClick}
           onTrustedExampleChange={setShowTrustedExample}
           riskScore={snapshot?.scores.riskScore ?? 0}
           showTrustedExample={showTrustedExample}

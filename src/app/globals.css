@@ -1930,7 +1930,8 @@ input:focus-visible {
 }
 
 .data-card h3,
-.analysis-card h3 {
+.analysis-card h3,
+.overview-panel__section h3 {
   display: flex;
   align-items: center;
   margin: 0 0 9px;
@@ -2006,6 +2007,178 @@ input:focus-visible {
   text-align: right;
 }
 
+.overview-panel {
+  margin-top: 13px;
+  overflow: hidden;
+  border: 1px solid #163654;
+  border-radius: 7px;
+  background: linear-gradient(145deg, rgb(8 26 46 / 96%), rgb(5 19 35 / 98%));
+  box-shadow: inset 0 1px rgb(78 157 221 / 4%);
+}
+
+.overview-panel__facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: rgb(5 20 36 / 72%);
+}
+
+.overview-panel__facts > div {
+  min-width: 0;
+  padding: 12px 14px;
+  border-right: 1px solid #163654;
+}
+
+.overview-panel__facts > div:last-child {
+  border-right: 0;
+}
+
+.overview-panel__facts span,
+.overview-panel__facts strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overview-panel__facts span {
+  margin-bottom: 3px;
+  color: #6f91b2;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.overview-panel__facts strong {
+  color: #c9d9e9;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.overview-panel__analysis {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid #163654;
+}
+
+.overview-panel__section {
+  min-width: 0;
+  min-height: 218px;
+  padding: 14px 16px;
+  border-right: 1px solid #163654;
+}
+
+.overview-panel__section:last-child {
+  border-right: 0;
+}
+
+.suspect-signal-table {
+  border-top: 1px solid #163654;
+  background: rgb(5 19 35 / 45%);
+}
+
+.suspect-signal-table__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  gap: 14px;
+}
+
+.suspect-signal-table__header h3 {
+  margin: 0;
+  color: #eef5ff;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.suspect-signal-table__header a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid #244767;
+  border-radius: 5px;
+  background: #07182b;
+  color: #9bc7e8;
+  font-size: 11px;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.suspect-signal-table__header a:hover,
+.suspect-signal-table__header a:focus-visible {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.suspect-signal-table__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, 1fr) 52px;
+  align-items: center;
+  min-width: 0;
+  margin: 0 16px;
+  gap: 10px;
+}
+
+.suspect-signal-table__columns {
+  min-height: 34px;
+  border-bottom: 1px solid rgb(25 55 83 / 82%);
+  color: #66839e;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.suspect-signal-table__columns span:last-child {
+  text-align: center;
+}
+
+.suspect-signal-table__row {
+  min-height: 46px;
+  border-bottom: 1px solid rgb(25 55 83 / 65%);
+}
+
+.suspect-signal-table__row:last-child {
+  border-bottom: 0;
+}
+
+.suspect-signal-table__row > span {
+  min-width: 0;
+  color: #c4d2e2;
+  font-size: 11px;
+}
+
+.suspect-signal-table__row > strong {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 550;
+}
+
+.suspect-signal-table__row > em {
+  display: grid;
+  width: 48px;
+  min-height: 31px;
+  place-items: center;
+  border: 1px dashed rgb(0 232 162 / 35%);
+  border-radius: 4px;
+  background: rgb(0 96 70 / 13%);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.suspect-signal-table__row[data-detected="true"] > strong {
+  color: #ff8195;
+}
+
+.suspect-signal-table__row[data-detected="true"] > em {
+  border-color: rgb(255 102 127 / 38%);
+  background: rgb(111 12 34 / 20%);
+  color: #ff8195;
+}
+
 .analysis-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -2053,6 +2226,14 @@ input:focus-visible {
   stroke-linecap: round;
 }
 
+.overview-panel[data-risk="safe"] .risk-donut__progress {
+  stroke: var(--green);
+}
+
+.overview-panel[data-risk="high"] .risk-donut__progress {
+  stroke: #ff667f;
+}
+
 .risk-donut > div {
   position: relative;
   display: grid;
@@ -2074,6 +2255,16 @@ input:focus-visible {
   margin-top: 3px;
   color: var(--green);
   font-size: 11.5px;
+}
+
+.overview-panel[data-risk="safe"] .risk-donut strong,
+.overview-panel[data-risk="safe"] .risk-donut span {
+  color: var(--green);
+}
+
+.overview-panel[data-risk="high"] .risk-donut strong,
+.overview-panel[data-risk="high"] .risk-donut span {
+  color: #ff6c83;
 }
 
 .risk-overview dl {
@@ -2155,6 +2346,11 @@ input:focus-visible {
   border-radius: 4px;
   color: var(--green);
   text-align: center;
+}
+
+.overview-panel[data-risk="high"] .overall-risk strong {
+  border-color: rgb(255 102 127 / 60%);
+  color: #ff6c83;
 }
 
 .analysis-card__title {
@@ -2812,6 +3008,32 @@ progress::-moz-progress-bar {
     grid-template-columns: 1fr;
   }
 
+  .overview-panel__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .overview-panel__facts > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .overview-panel__facts > div:nth-child(-n + 2) {
+    border-bottom: 1px solid #163654;
+  }
+
+  .overview-panel__analysis {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-panel__section {
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid #163654;
+  }
+
+  .overview-panel__section:last-child {
+    border-bottom: 0;
+  }
+
   .signal-coverage {
     grid-column: auto;
   }
@@ -2854,6 +3076,43 @@ progress::-moz-progress-bar {
 }
 
 @media (max-width: 540px) {
+  .suspect-signal-table__header {
+    align-items: flex-start;
+    padding: 12px 10px;
+  }
+
+  .suspect-signal-table__header h3 {
+    font-size: 13px;
+  }
+
+  .suspect-signal-table__header a {
+    min-height: 29px;
+    padding-inline: 8px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .suspect-signal-table__grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(92px, 0.85fr) 42px;
+    margin-inline: 10px;
+    gap: 7px;
+  }
+
+  .suspect-signal-table__row > span,
+  .suspect-signal-table__row > strong,
+  .suspect-signal-table__row > em {
+    font-size: 10px;
+  }
+
+  .suspect-signal-table__row > span {
+    line-height: 14px;
+    white-space: normal;
+  }
+
+  .suspect-signal-table__row > em {
+    width: 40px;
+  }
+
   .hero-console__panel {
     height: 377px;
     min-height: 377px;

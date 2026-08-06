@@ -19,6 +19,9 @@
     "interactions": {
       "trustedScore": "4",
       "trustedCopy": "This is how a trusted user looks",
+      "calculationHash": "#details",
+      "calculationRows": 12,
+      "calculationTab": "true",
       "identificationCards": [
         "Identity overview",
         "Recognition profile"
