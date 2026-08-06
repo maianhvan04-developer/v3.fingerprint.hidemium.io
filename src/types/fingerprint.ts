@@ -124,3 +124,28 @@ export interface FingerprintSnapshot {
   status: ScanStatus;
   system: SystemFingerprint;
 }
+
+export interface VisitorVisitRecord {
+  browserName: string;
+  browserVersion: string;
+  city: string;
+  collectedAt: string;
+  countryCode: string;
+  incognito: boolean;
+  ipAddress: string;
+  latitude: number | null;
+  longitude: number | null;
+  vpn: boolean | null;
+}
+
+export interface VisitorHistoryData {
+  visitorId: string;
+  visits: VisitorVisitRecord[];
+}
+
+export interface VisitorHistorySummary {
+  incognitoSessions: number;
+  uniqueIps: number;
+  uniqueLocations: number;
+  visitCount: number;
+}

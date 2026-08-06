@@ -1,0 +1,62 @@
+[
+  {
+    "viewport": {
+      "name": "desktop",
+      "width": 1440,
+      "height": 1000
+    },
+    "metrics": {
+      "hero": {
+        "width": 800,
+        "height": 434
+      },
+      "liveDemo": {
+        "width": 772,
+        "height": 302
+      },
+      "scrollWidth": 799
+    },
+    "interactions": {
+      "trustedScore": "4",
+      "trustedCopy": "This is how a trusted user looks",
+      "identificationCards": [
+        "Identity overview",
+        "Recognition profile"
+      ],
+      "browserCards": [
+        "Browser",
+        "Privacy",
+        "Device"
+      ],
+      "visitSummary": "You visited 1 time",
+      "nextVisitEnabled": false
+    },
+    "consoleErrors": []
+  },
+  {
+    "viewport": {
+      "name": "mobile",
+      "width": 390,
+      "height": 844
+    },
+    "metrics": {
+      "hero": {
+        "width": 362,
+        "height": 538
+      },
+      "liveDemo": {
+        "width": 342,
+        "height": 377
+      },
+      "scrollWidth": 361
+    },
+    "interactions": {
+      "mobileIdentificationCards": [
+        "Identity overview",
+        "Recognition profile"
+      ],
+      "compactTrustedScore": "4"
+    },
+    "consoleErrors": []
+  }
+]

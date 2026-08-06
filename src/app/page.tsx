@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import World from "@react-map/world";
+import { useMemo, useState, type ReactNode } from "react";
 import {
-  Activity,
   ArrowRight,
   Check,
   CircleCheck,
@@ -16,22 +14,25 @@ import {
   Fingerprint,
   Globe2,
   LockKeyhole,
-  MapPin,
   Monitor,
   Network,
   Play,
-  Shield,
   ShieldCheck,
   Sparkles,
-  Wifi,
   Zap,
 } from "lucide-react";
+import { FingerprintLiveDemo } from "@/components/fingerprint-demo/fingerprint-live-demo";
+import {
+  BrowserSmartSignals,
+  IdentificationSignals,
+} from "@/components/fingerprint-demo/signal-panels";
 import { SiteHeader } from "@/components/layout/site-header";
 import { formatNetworkFlag } from "@/lib/fingerprint/collector";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
 import type { FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
 
 type DetailTab = "Overview" | "Browser" | "Network" | "Fingerprint" | "Privacy" | "System" | "Screen" | "Raw Data";
+type ConsoleMode = "identification" | "browser" | "live";
 
 interface DetailCardData {
   icon: ReactNode;
@@ -41,6 +42,11 @@ interface DetailCardData {
 }
 
 const tabs: DetailTab[] = ["Overview", "Browser", "Network", "Fingerprint", "Privacy", "System", "Screen", "Raw Data"];
+const consoleModes: Array<{ id: ConsoleMode; index: string; label: string; workspaceLabel: string }> = [
+  { id: "identification", index: "01", label: "Identification signals", workspaceLabel: "Identification signals" },
+  { id: "browser", index: "02", label: "Browser smart signals", workspaceLabel: "Browser smart signals" },
+  { id: "live", index: "03", label: "Live identity", workspaceLabel: "Visitor intelligence" },
+];
 const trustedBrands = [
   { key: "checkout", label: "checkout.com" },
   { key: "sumsub", label: "sumsub" },
@@ -51,11 +57,6 @@ const trustedBrands = [
   { key: "veriff", label: "veriff" },
   { key: "datadome", label: "DataDome" },
 ] as const;
-
-function shortValue(value: string, length = 24) {
-  if (value.length <= length) return value;
-  return `${value.slice(0, length - 1)}…`;
-}
 
 function toneForDetection(value: string, inverse = false): ValueTone {
   const detected = /detected|possible|exposure/i.test(value) && !/not detected|no leak/i.test(value);
@@ -75,301 +76,64 @@ function formatDate(isoDate?: string) {
   }).format(new Date(isoDate));
 }
 
-function ScoreSparkline({ tone }: { tone: "cyan" | "blue" | "purple" | "green" }) {
-  return (
-    <svg className={`score-sparkline score-sparkline--${tone}`} viewBox="0 0 112 20" aria-hidden="true">
-      <path d="M1 16 15 13 27 15 41 8 55 11 68 5 81 9 95 4 111 7" />
-    </svg>
-  );
-}
-
-function ChromeLogo() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <defs>
-        <linearGradient id="chrome-red" x1="3.2173" y1="15" x2="44.7812" y2="15" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#d93025" />
-          <stop offset="1" stopColor="#ea4335" />
-        </linearGradient>
-        <linearGradient id="chrome-yellow" x1="20.7219" y1="47.6791" x2="41.5039" y2="11.6837" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#fcc934" />
-          <stop offset="1" stopColor="#fbbc04" />
-        </linearGradient>
-        <linearGradient id="chrome-green" x1="26.5981" y1="46.5015" x2="5.8161" y2="10.506" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#1e8e3e" />
-          <stop offset="1" stopColor="#34a853" />
-        </linearGradient>
-      </defs>
-      <circle cx="24" cy="23.9947" r="12" fill="#fff" />
-      <path d="M24 12h20.781A23.994 23.994 0 0 0 3.217 12.003L13.608 30l.009-.002A11.985 11.985 0 0 1 24 12Z" fill="url(#chrome-red)" />
-      <circle cx="24" cy="24" r="9.5" fill="#1a73e8" />
-      <path d="M34.391 30.003 24.001 48A23.994 23.994 0 0 0 44.78 12.003H23.999l-.003.009a11.985 11.985 0 0 1 10.395 17.991Z" fill="url(#chrome-yellow)" />
-      <path d="M13.609 30.003 3.218 12.006A23.994 23.994 0 0 0 24.003 48l10.39-17.997-.007-.007a11.985 11.985 0 0 1-20.777.007Z" fill="url(#chrome-green)" />
-    </svg>
-  );
-}
-
-function WindowsLogo() {
-  return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <path fill="#00a4ef" d="m3 5.8 11.4-1.6v10.9H3V5.8Z" />
-      <path fill="#35c7ff" d="m16.1 4 12.9-1.8v12.9H16.1V4Z" />
-      <path fill="#0089dc" d="M3 16.9h11.4v10.9L3 26.2v-9.3Z" />
-      <path fill="#00a4ef" d="M16.1 16.9H29v12.9L16.1 28V16.9Z" />
-    </svg>
-  );
-}
-
-function BrowserMark({ name }: { name?: string }) {
-  return /chrome|chromium/i.test(name ?? "") ? <ChromeLogo /> : <Globe2 aria-hidden="true" />;
-}
-
-function SystemMark({ name }: { name?: string }) {
-  return /windows/i.test(name ?? "") ? <WindowsLogo /> : <Monitor aria-hidden="true" />;
-}
-
-function ScoreTile({
-  icon,
-  label,
-  note,
-  tone,
-  value,
+function HeroConsole({
+  scanning,
+  snapshot,
 }: {
-  icon: ReactNode;
-  label: string;
-  note: string;
-  tone: "cyan" | "blue" | "purple" | "green";
-  value: string;
+  scanning: boolean;
+  snapshot: FingerprintSnapshot | null;
 }) {
-  return (
-    <article className={`score-tile score-tile--${tone}`}>
-      <div className="score-tile__label">{icon}<span>{label}</span></div>
-      <strong>{value}</strong>
-      <small>{note}</small>
-      <ScoreSparkline tone={tone} />
-    </article>
-  );
-}
+  const [activeMode, setActiveMode] = useState<ConsoleMode>("live");
+  const activeModeDetails = consoleModes.find((mode) => mode.id === activeMode) ?? consoleModes[2];
 
-function FingerprintGauge({ score, size = "large" }: { score: number; size?: "large" | "small" }) {
-  const circumference = 289;
-  const dash = Math.max(0, Math.min(circumference, (score / 100) * circumference));
-  return (
-    <div className={`fingerprint-gauge fingerprint-gauge--${size}`}>
-      <svg viewBox="0 0 112 112" aria-hidden="true">
-        <defs>
-          <linearGradient id={`gauge-gradient-${size}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#00e7ff" />
-            <stop offset=".55" stopColor="#1687ff" />
-            <stop offset="1" stopColor="#9a4dff" />
-          </linearGradient>
-        </defs>
-        <circle className="fingerprint-gauge__track" cx="56" cy="56" r="46" />
-        <circle
-          className="fingerprint-gauge__progress"
-          cx="56"
-          cy="56"
-          r="46"
-          stroke={`url(#gauge-gradient-${size})`}
-          strokeDasharray={`${dash} ${circumference - dash}`}
-        />
-      </svg>
-      <span className="fingerprint-gauge__icon"><Fingerprint aria-hidden="true" /></span>
-    </div>
-  );
-}
-
-function WorldMap({
-  country,
-  countryCode,
-  latitude,
-  location,
-  longitude,
-}: {
-  country?: string;
-  countryCode?: string;
-  latitude?: number | null;
-  location?: string;
-  longitude?: number | null;
-}) {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const hasCoordinates = typeof latitude === "number" && typeof longitude === "number";
-  const countryName = useMemo(() => {
-    if (countryCode) {
-      try {
-        return new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode.toUpperCase()) ?? country ?? "";
-      } catch {
-        return country ?? "";
-      }
-    }
-    return country ?? "";
-  }, [country, countryCode]);
-  const countryColors = useMemo(
-    () => countryName ? { [countryName]: "#0d5485" } : {},
-    [countryName],
-  );
-
-  useEffect(() => {
-    const mapRoot = mapRef.current;
-    if (!mapRoot || !countryName) {
-      return;
-    }
-
-    let frame = 0;
-    let observer: MutationObserver | null = null;
-    let markerNode: SVGGElement | null = null;
-
-    const syncMarker = () => {
-      const countryPath = Array.from(mapRoot.querySelectorAll<SVGPathElement>("path"))
-        .find((path) => path.id.startsWith(`${countryName}-`));
-      const svg = countryPath?.ownerSVGElement;
-      if (!countryPath || !svg) return;
-
-      const bounds = countryPath.getBBox();
-      const svgNamespace = "http://www.w3.org/2000/svg";
-      const marker = document.createElementNS(svgNamespace, "g");
-      const circles = [
-        { className: "world-map__marker-glow", radius: 27 },
-        { className: "world-map__marker-ring world-map__marker-ring--outer", radius: 18 },
-        { className: "world-map__marker-ring world-map__marker-ring--outer world-map__marker-ring--delayed", radius: 18 },
-        { className: "world-map__marker-ring", radius: 10 },
-        { className: "world-map__marker-core", radius: 4 },
-      ];
-
-      markerNode?.remove();
-      marker.setAttribute("class", "world-map__marker");
-      marker.setAttribute("aria-hidden", "true");
-      marker.setAttribute("transform", `translate(${bounds.x + bounds.width / 2} ${bounds.y + bounds.height / 2})`);
-      circles.forEach(({ className, radius }) => {
-        const circle = document.createElementNS(svgNamespace, "circle");
-        circle.setAttribute("class", className);
-        circle.setAttribute("r", String(radius));
-        marker.appendChild(circle);
-      });
-      svg.appendChild(marker);
-      markerNode = marker;
-    };
-
-    frame = window.requestAnimationFrame(() => {
-      syncMarker();
-      const svg = mapRoot.querySelector("svg");
-      if (svg) {
-        observer = new MutationObserver(syncMarker);
-        observer.observe(svg, { attributeFilter: ["viewBox"], attributes: true });
-      }
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      observer?.disconnect();
-      markerNode?.remove();
-    };
-  }, [countryName]);
-
-  const coordinateLabel = hasCoordinates
-    ? `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`
-    : "Location pending";
-
-  return (
-    <div
-      className="world-map"
-      aria-label={`World map showing ${location || countryCode || "the detected IP location"} near ${coordinateLabel}`}
-    >
-      <div className="world-map__grid" aria-hidden="true" />
-      <div className="world-map__stage" ref={mapRef}>
-        <World
-          cityColors={countryColors}
-          disableClick
-          disableHover
-          mapColor="#092c4d"
-          size={1000}
-          strokeColor="#0d4774"
-          strokeWidth={0.55}
-          type="select-single"
-        />
-      </div>
-      <span className="world-map__label">
-        <MapPin aria-hidden="true" />
-        <span>{countryCode || "GLOBAL"}</span>
-        <small>{coordinateLabel}</small>
-      </span>
-    </div>
-  );
-}
-
-function HeroConsole({ snapshot }: { snapshot: FingerprintSnapshot | null }) {
-  const scores = snapshot?.scores;
   return (
     <div className="hero-console" aria-label="Live browser identity overview">
-      <div className="hero-console__scores">
-        <div className="identity-orb">
-          <FingerprintGauge score={scores?.coverage ?? 28} />
-          <span>Live identity</span>
+      <div className="hero-console__titlebar">
+        <span className="hero-console__controls" aria-hidden="true"><i /><i /><i /></span>
+        <div className="hero-console__modes" aria-label="Browser intelligence views" role="tablist">
+          {consoleModes.map((mode) => (
+            <button
+              aria-controls={`console-panel-${mode.id}`}
+              aria-selected={activeMode === mode.id}
+              className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
+              id={`console-tab-${mode.id}`}
+              key={mode.id}
+              onClick={() => setActiveMode(mode.id)}
+              role="tab"
+              tabIndex={activeMode === mode.id ? 0 : -1}
+              type="button"
+            >
+              <small>{mode.index}</small>{mode.label}
+            </button>
+          ))}
         </div>
-        <ScoreTile
-          icon={<ShieldCheck aria-hidden="true" />}
-          label="Risk Score"
-          note={`${scores?.riskLabel ?? "Scanning"} risk`}
-          tone="green"
-          value={scores ? `${scores.riskScore}/100` : "--"}
-        />
-        <ScoreTile
-          icon={<Fingerprint aria-hidden="true" />}
-          label="Uniqueness"
-          note="Local estimate"
-          tone="blue"
-          value={scores ? `${scores.uniqueness}%` : "--"}
-        />
-        <ScoreTile
-          icon={<Shield aria-hidden="true" />}
-          label="Anonymity"
-          note={`${scores?.anonymityScore ?? 0}/100`}
-          tone="purple"
-          value={scores?.anonymityLabel ?? "--"}
-        />
-        <ScoreTile
-          icon={<CircleCheck aria-hidden="true" />}
-          label="Consistency"
-          note="Cross-signal"
-          tone="cyan"
-          value={scores ? `${scores.consistency}%` : "--"}
-        />
       </div>
 
-      <div className="hero-console__identity">
-        <div className="identity-list">
-          <span className="mini-heading">Identity Overview</span>
-          <dl>
-            <div><dt><Globe2 /> IP Address</dt><dd>{snapshot?.network.ipAddress ?? "Scanning…"}</dd></div>
-            <div><dt><MapPin /> Location</dt><dd>{snapshot?.network.city ?? "Scanning…"}</dd></div>
-            <div><dt><Wifi /> ISP</dt><dd>{shortValue(snapshot?.network.isp ?? "Scanning…", 20)}</dd></div>
-            <div><dt><Activity /> Timezone</dt><dd>{snapshot?.network.timezone ?? "Scanning…"}</dd></div>
-            <div><dt><Shield /> VPN</dt><dd className={snapshot?.network.vpn ? "value-warn" : "value-good"}>{snapshot ? formatNetworkFlag(snapshot.network.vpn) : "Checking…"}</dd></div>
-            <div><dt><Network /> WebRTC</dt><dd className={snapshot?.network.webRtcAddresses.length ? "value-warn" : "value-good"}>{snapshot?.privacy.webRtc ?? "Checking…"}</dd></div>
-          </dl>
+      <div className="hero-console__workspace">
+        <div className="hero-console__workspace-header">
+          <span><i aria-hidden="true" />{scanning ? "SCANNING" : "LIVE"}</span>
+          <strong>{activeModeDetails.workspaceLabel}_</strong>
         </div>
-        <WorldMap
-          country={snapshot?.network.country}
-          countryCode={snapshot?.network.countryCode}
-          latitude={snapshot?.network.latitude}
-          location={snapshot?.network.city}
-          longitude={snapshot?.network.longitude}
-        />
-        <div className="browser-summary">
-          <span className="mini-heading">Browser Summary</span>
-          <div className="browser-chip">
-            <span className="browser-chip__logo"><BrowserMark name={snapshot?.browser.name} /></span>
-            <div><strong>{snapshot?.browser.name ?? "Detecting…"}</strong><small>Version {snapshot?.browser.version ?? "--"}</small></div>
-          </div>
-          <div className="browser-chip">
-            <span className="browser-chip__logo browser-chip__logo--system"><SystemMark name={snapshot?.system.os} /></span>
-            <div><strong>{snapshot?.system.os ?? "Detecting…"}</strong><small>{snapshot?.system.architecture ?? "--"}</small></div>
-          </div>
-          <div className="browser-user-agent">
-            <span>User Agent</span>
-            <code>{shortValue(snapshot?.browser.userAgent ?? "Collecting browser signature…", 78)}</code>
-          </div>
+        <div
+          aria-labelledby={`console-tab-${activeMode}`}
+          className="hero-console__panel"
+          id={`console-panel-${activeMode}`}
+          key={activeMode}
+          role="tabpanel"
+        >
+          {activeMode === "identification" ? (
+            <IdentificationSignals scanning={scanning} snapshot={snapshot} />
+          ) : activeMode === "browser" ? (
+            <BrowserSmartSignals scanning={scanning} snapshot={snapshot} />
+          ) : (
+            <FingerprintLiveDemo scanning={scanning} snapshot={snapshot} />
+          )}
         </div>
+      </div>
+
+      <div className="hero-console__statusbar">
+        <span><i aria-hidden="true" />Local diagnostic · 7-day visit history</span>
+        <span>{snapshot?.browser.name ?? "Browser"} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? "System"}</span>
       </div>
     </div>
   );
@@ -815,7 +579,7 @@ export default function HomePage() {
             <div className="hero-trust"><span><ShieldCheck /> Runs locally</span><span><LockKeyhole /> No fingerprint storage</span><span><Code2 /> Exportable JSON</span></div>
             {error ? <p className="scan-error">Some signals were blocked: {error}</p> : null}
           </div>
-          <HeroConsole snapshot={snapshot} />
+          <HeroConsole scanning={scanning} snapshot={snapshot} />
         </section>
         <div className="page-container">
           <TrustBar />

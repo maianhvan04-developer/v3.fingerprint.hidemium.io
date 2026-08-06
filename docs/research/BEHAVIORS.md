@@ -31,3 +31,37 @@ Source behavior was inspected with Playwright MCP at 1440px, 768px, and 390px. T
 - Mobile < 768px: navigation collapses; all cards stack; dense overview rows expose Attribute, Value, and Result while Category is secondary text; CTA and newsletter controls become full width.
 - Full JSON keeps the current page container width. Its action bar wraps on narrow screens and the code viewer keeps horizontal scrolling rather than wrapping JSON values.
 
+## Fingerprint live demo refresh (2026-08-06)
+
+Scope: the visitor/suspect-score demo visible in the homepage hero at `https://fingerprint.com/`.
+
+## Interaction model
+
+- The visitor panel is data-driven and records multiple visits for the same visitor ID.
+- Desktop history uses vertical previous/next controls; mobile presents the active visit as a horizontal slide.
+- `Try trusted device` is a click-driven example state. It does not replace the real visit data; it changes only the score panel to fake score `4`, `THIS IS FAKE DATA`, and trusted-user copy.
+- `Your current device` restores the live score and live risk copy.
+- Below roughly 900px, the full score panel disappears and a compact suspect-score button moves into the visitor-ID header.
+- Below roughly 540px, the four summary metrics become a 2×2 grid.
+
+## Extracted live states
+
+- Current headless-browser session: suspect score varied between `21` and `25` as network signals changed.
+- Live risk copy: `You look like a suspicious user` and `We detected signals of fraud risk.`
+- Trusted example copy: `This is how a trusted user looks` and `No signs of fraud, bots, or spoofing.`
+- Live desktop demo body: about `795.5 × 302px`; visit panel `489.5px`; score panel `306px`.
+- No relevant hover-only content or scroll-triggered behavior was found inside the demo.
+
+## Local implementation mapping
+
+- Real values come from the project's browser fingerprint scan.
+- Weekly visits, incognito sessions, unique IPs, and unique locations are derived from a transparent seven-day local history.
+- Visitor ID is a stable 20-character rendering of the collected composite fingerprint hash.
+- The trusted-device state remains explicitly labeled fake data, matching the original behavior.
+# Hero console tabs
+
+- Interaction model: click-to-switch within the console; no navigation or scroll trigger.
+- Default state: `Live identity`.
+- `Identification signals` shows recognition/network identity data from the active scan.
+- `Browser smart signals` shows browser, privacy and device integrity data from the active scan.
+- Active state is represented by `aria-selected`, brighter text and the cyan/purple underline.

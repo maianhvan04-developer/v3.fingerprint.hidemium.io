@@ -30,3 +30,32 @@ Primary UI reference: user-supplied 1680×940 screenshot. Live data/content sour
    - Bottom legal bar
 
 The reference is a single compact desktop landing page. No sticky regions, modal flows, carousel, or video are visible. On mobile all two-column regions stack; the overview category rail becomes a horizontal scroller and the table becomes card-like rows.
+
+## Fingerprint live demo replacement (2026-08-06)
+
+The current request targets only the live identity console inside the existing hero. The rest of the product page remains unchanged.
+
+1. `HeroConsole` terminal frame
+   - Static titlebar with three modes
+   - Analyze-again action
+   - Live workspace label
+2. `FingerprintLiveDemo`
+   - `VisitSummary`
+     - Visitor ID header
+     - Weekly 4-metric summary
+     - Recent-visit navigator
+     - Location/map and two-row signal grid
+   - `SuspectScore`
+     - Live/fake-data eyebrow
+     - Semicircle gauge
+     - Risk assessment copy
+     - Current/trusted-device tabs
+3. Terminal statusbar
+   - Local-history disclosure
+   - Current browser/system summary
+
+Responsive ownership:
+
+- Desktop: demo wrapper owns the 61.5/38.5 two-column split.
+- Tablet: `VisitSummary` owns the full row and receives the compact score badge.
+- Mobile: `VisitSummary` owns the 2×2 metric grid and horizontal-style visit navigation.

@@ -1,4 +1,12 @@
 [mcp_servers.playwright]
-command = "npx"
-args = ["-y", "@playwright/mcp@latest"]
+command = "/mnt/c/Program Files/nodejs/node.exe"
+args = ["C:\\Users\\Admin\\Documents\\Hachitech Solution\\v3.fingerprint.hidemium.io\\.mcp-tools\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js", "--headless", "--browser", "chrome", "--no-sandbox"]
 startup_timeout_sec = 30
+
+[mcp_servers.next-devtools]
+command = "/mnt/c/Users/Admin/Documents/Hachitech Solution/v3.fingerprint.hidemium.io/.mcp-tools/node-v24.14.1-linux-x64/bin/node"
+args = ["/mnt/c/Users/Admin/Documents/Hachitech Solution/v3.fingerprint.hidemium.io/.mcp-tools/next-devtools-server/node_modules/next-devtools-mcp/dist/index.js"]
+startup_timeout_sec = 30
+
+[mcp_servers.next-devtools.env]
+NEXT_DEVTOOLS_HOST = "host.docker.internal"
