@@ -31,6 +31,7 @@ function isVisitRecord(value: unknown): value is VisitorVisitRecord {
     && typeof visit.browserVersion === "string"
     && typeof visit.countryCode === "string"
     && typeof visit.incognito === "boolean"
+    && (typeof visit.requestId === "string" || visit.requestId === null)
     && (typeof visit.vpn === "boolean" || visit.vpn === null)
     && (typeof visit.latitude === "number" || visit.latitude === null)
     && (typeof visit.longitude === "number" || visit.longitude === null);
@@ -55,12 +56,25 @@ function createVisit(snapshot: FingerprintSnapshot): VisitorVisitRecord {
     city: snapshot.network.city,
     collectedAt: snapshot.collectedAt,
     countryCode: snapshot.network.countryCode,
-    incognito: snapshot.privacy.headless === "Possible" || snapshot.privacy.webDriver === "Detected",
+    incognito: snapshot.smartSignals.incognito
+      ?? (snapshot.privacy.headless === "Possible" || snapshot.privacy.webDriver === "Detected"),
     ipAddress: snapshot.network.ipAddress,
     latitude: snapshot.network.latitude,
     longitude: snapshot.network.longitude,
+    requestId: snapshot.identity.requestId,
     vpn: snapshot.network.vpn,
   };
+}
+
+function storeHistory(visitorId: string, visits: VisitorVisitRecord[]) {
+  try {
+    window.localStorage.setItem(
+      storageKey,
+      JSON.stringify({ visitorId, visits } satisfies VisitorHistoryData),
+    );
+  } catch {
+    // The live UI still works with the in-memory history when storage is blocked.
+  }
 }
 
 function summarizeVisits(visits: VisitorVisitRecord[]): VisitorHistorySummary {
@@ -75,7 +89,9 @@ function summarizeVisits(visits: VisitorVisitRecord[]): VisitorHistorySummary {
 
 export function useVisitorHistory(snapshot: FingerprintSnapshot | null) {
   const visitorId = useMemo(
-    () => snapshot ? createVisitorId(snapshot.compositeHash) : "collecting-visitor-id",
+    () => snapshot
+      ? snapshot.identity.visitorId || createVisitorId(snapshot.compositeHash)
+      : "collecting-visitor-id",
     [snapshot],
   );
   const [visits, setVisits] = useState<VisitorVisitRecord[]>([]);
@@ -83,6 +99,7 @@ export function useVisitorHistory(snapshot: FingerprintSnapshot | null) {
   useEffect(() => {
     if (!snapshot) return;
 
+    let cancelled = false;
     const now = Date.now();
     const currentVisit = createVisit(snapshot);
     const storedVisits = readStoredHistory(visitorId)
@@ -92,15 +109,40 @@ export function useVisitorHistory(snapshot: FingerprintSnapshot | null) {
       .sort((left, right) => Date.parse(right.collectedAt) - Date.parse(left.collectedAt))
       .slice(0, 24);
 
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify({ visitorId, visits: nextVisits } satisfies VisitorHistoryData));
-    } catch {
-      // The live UI still works with the in-memory history when storage is blocked.
-    }
-    let cancelled = false;
+    storeHistory(visitorId, nextVisits);
     window.queueMicrotask(() => {
       if (!cancelled) setVisits(nextVisits);
     });
+
+    if (snapshot.identity.provider === "fingerprint-pro") {
+      void fetch(`/api/fingerprint/visits?visitorId=${encodeURIComponent(visitorId)}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+      }).then(async (response) => {
+        if (!response.ok) return;
+        const payload = await response.json() as unknown;
+        if (!payload || typeof payload !== "object") return;
+        const serverVisits = (payload as { visits?: unknown }).visits;
+        if (!Array.isArray(serverVisits)) return;
+
+        const normalizedVisits = serverVisits
+          .filter(isVisitRecord)
+          .filter((visit) => now - Date.parse(visit.collectedAt) <= weekInMilliseconds);
+        const includesCurrent = normalizedVisits.some((visit) => (
+          currentVisit.requestId !== null && visit.requestId === currentVisit.requestId
+        ));
+        const realVisits = (includesCurrent ? normalizedVisits : [currentVisit, ...normalizedVisits])
+          .sort((left, right) => Date.parse(right.collectedAt) - Date.parse(left.collectedAt))
+          .slice(0, 24);
+        if (!realVisits.length || cancelled) return;
+
+        storeHistory(visitorId, realVisits);
+        setVisits(realVisits);
+      }).catch(() => {
+        // Keep the current real scan and cached history when Server API is unavailable.
+      });
+    }
+
     return () => {
       cancelled = true;
     };

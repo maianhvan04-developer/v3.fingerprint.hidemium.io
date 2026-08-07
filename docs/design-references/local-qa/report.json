@@ -7,14 +7,14 @@
     },
     "metrics": {
       "hero": {
-        "width": 800,
+        "width": 1220,
         "height": 434
       },
       "liveDemo": {
-        "width": 772,
+        "width": 1192,
         "height": 302
       },
-      "scrollWidth": 799
+      "scrollWidth": 1219
     },
     "interactions": {
       "trustedScore": "4",

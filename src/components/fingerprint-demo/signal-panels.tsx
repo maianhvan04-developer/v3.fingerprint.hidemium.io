@@ -62,8 +62,8 @@ function Card({ icon: Icon, rows, title }: { icon: SignalIcon; rows: SignalRow[]
 
 export function IdentificationSignals({ snapshot, scanning }: SignalPanelsProps) {
   const pending = scanning ? "Scanning…" : "Unavailable";
-  const hash = snapshot?.compositeHash || pending;
-  const hashDisplay = hash.length > 16 ? `${hash.slice(0, 16)}…` : hash;
+  const visitorId = snapshot?.identity.visitorId || pending;
+  const visitorIdDisplay = visitorId.length > 16 ? `${visitorId.slice(0, 16)}…` : visitorId;
   const webRtcLeaked = Boolean(snapshot?.network.webRtcAddresses.length) || detectionTone(snapshot?.privacy.webRtc) === "warn";
   const identityRows: SignalRow[] = [
     { label: "IP address", value: fallback(snapshot?.network.ipAddress, scanning) },
@@ -74,10 +74,10 @@ export function IdentificationSignals({ snapshot, scanning }: SignalPanelsProps)
     { label: "WebRTC", value: fallback(snapshot?.privacy.webRtc, scanning, "Checking…"), tone: webRtcLeaked ? "warn" : snapshot ? "good" : "default" },
   ];
   const recognitionRows: SignalRow[] = [
-    { fullValue: hash, label: "Visitor hash", tone: "accent", value: hashDisplay },
+    { fullValue: visitorId, label: "Visitor ID", tone: "accent", value: visitorIdDisplay },
     { label: "Uniqueness", tone: "accent", value: snapshot ? `${snapshot.scores.uniqueness}%` : pending },
     { label: "Consistency", tone: "accent", value: snapshot ? `${snapshot.scores.consistency}%` : pending },
-    { label: "Risk score", tone: snapshot ? (snapshot.scores.riskScore >= 50 ? "warn" : "good") : "default", value: snapshot ? `${snapshot.scores.riskScore}/100` : pending },
+    { label: "Risk score", tone: snapshot ? (snapshot.scores.riskScore >= 15 ? "warn" : "good") : "default", value: snapshot ? `${snapshot.scores.riskScore}/100` : pending },
     { label: "Browser", value: join([snapshot?.browser.name, snapshot?.browser.version], scanning) },
     { label: "Operating system", value: join([snapshot?.system.os, snapshot?.system.osVersion], scanning) },
   ];

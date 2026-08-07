@@ -8,14 +8,21 @@ import type { FingerprintSnapshot } from "@/types/fingerprint";
 
 export interface FingerprintLiveDemoProps {
   onCalculationClick: () => void;
+  onTrustedExampleChange: (value: boolean) => void;
   scanning: boolean;
+  showTrustedExample: boolean;
   snapshot: FingerprintSnapshot | null;
 }
 
-export function FingerprintLiveDemo({ onCalculationClick, scanning, snapshot }: FingerprintLiveDemoProps) {
+export function FingerprintLiveDemo({
+  onCalculationClick,
+  onTrustedExampleChange,
+  scanning,
+  showTrustedExample,
+  snapshot,
+}: FingerprintLiveDemoProps) {
   const { summary, visitorId, visits } = useVisitorHistory(snapshot);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [showTrustedExample, setShowTrustedExample] = useState(false);
 
   const activeIndex = Math.min(selectedIndex, Math.max(0, visits.length - 1));
   const visit = visits[activeIndex] ?? visits[0] ?? null;
@@ -23,7 +30,7 @@ export function FingerprintLiveDemo({ onCalculationClick, scanning, snapshot }: 
     <SuspectScore
       compact
       onCalculationClick={onCalculationClick}
-      onTrustedExampleChange={setShowTrustedExample}
+      onTrustedExampleChange={onTrustedExampleChange}
       riskScore={snapshot?.scores.riskScore ?? 0}
       showTrustedExample={showTrustedExample}
     />
@@ -44,7 +51,7 @@ export function FingerprintLiveDemo({ onCalculationClick, scanning, snapshot }: 
       <div className="fingerprint-live-demo__score-panel">
         <SuspectScore
           onCalculationClick={onCalculationClick}
-          onTrustedExampleChange={setShowTrustedExample}
+          onTrustedExampleChange={onTrustedExampleChange}
           riskScore={snapshot?.scores.riskScore ?? 0}
           showTrustedExample={showTrustedExample}
         />

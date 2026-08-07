@@ -18,7 +18,6 @@ import {
   Network,
   Play,
   ShieldCheck,
-  Sparkles,
   Zap,
 } from "lucide-react";
 import { FingerprintLiveDemo } from "@/components/fingerprint-demo/fingerprint-live-demo";
@@ -53,9 +52,9 @@ const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
   { icon: <FileJson aria-hidden="true" />, label: "Raw Data" },
 ];
 const consoleModes: Array<{ id: ConsoleMode; index: string; label: string; workspaceLabel: string }> = [
-  { id: "identification", index: "01", label: "Identification signals", workspaceLabel: "Identification signals" },
-  { id: "browser", index: "02", label: "Browser smart signals", workspaceLabel: "Browser smart signals" },
-  { id: "live", index: "03", label: "Live identity", workspaceLabel: "Visitor intelligence" },
+  { id: "live", index: "01", label: "Live identity", workspaceLabel: "Visitor intelligence" },
+  { id: "identification", index: "02", label: "Identification signals", workspaceLabel: "Identification signals" },
+  { id: "browser", index: "03", label: "Browser smart signals", workspaceLabel: "Browser smart signals" },
 ];
 const trustedBrands = [
   { key: "checkout", label: "checkout.com" },
@@ -74,17 +73,25 @@ function toneForDetection(value: string, inverse = false): ValueTone {
   return inverse ? "warn" : "good";
 }
 
+function toneForFlag(value: boolean | null): ValueTone {
+  return value === true ? "warn" : value === false ? "good" : "default";
+}
+
 function HeroConsole({
   onCalculationClick,
+  onTrustedExampleChange,
   scanning,
+  showTrustedExample,
   snapshot,
 }: {
   onCalculationClick: () => void;
+  onTrustedExampleChange: (value: boolean) => void;
   scanning: boolean;
+  showTrustedExample: boolean;
   snapshot: FingerprintSnapshot | null;
 }) {
   const [activeMode, setActiveMode] = useState<ConsoleMode>("live");
-  const activeModeDetails = consoleModes.find((mode) => mode.id === activeMode) ?? consoleModes[2];
+  const activeModeDetails = consoleModes.find((mode) => mode.id === activeMode) ?? consoleModes[0];
 
   return (
     <div className="hero-console" aria-label="Live browser identity overview">
@@ -128,7 +135,9 @@ function HeroConsole({
           ) : (
             <FingerprintLiveDemo
               onCalculationClick={onCalculationClick}
+              onTrustedExampleChange={onTrustedExampleChange}
               scanning={scanning}
+              showTrustedExample={showTrustedExample}
               snapshot={snapshot}
             />
           )}
@@ -136,7 +145,7 @@ function HeroConsole({
       </div>
 
       <div className="hero-console__statusbar">
-        <span><i aria-hidden="true" />Local diagnostic · 7-day visit history</span>
+        <span><i aria-hidden="true" />{snapshot?.identity.provider === "fingerprint-pro" ? "Fingerprint Pro" : "Local diagnostic"} · 7-day visit history</span>
         <span>{snapshot?.browser.name ?? "Browser"} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? "System"}</span>
       </div>
     </div>
@@ -214,6 +223,15 @@ function DataCard({ actions, data }: { actions?: ReactNode; data: DetailCardData
 }
 
 function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
+  const providerLabel = snapshot.identity.provider === "fingerprint-pro"
+    ? "Fingerprint Pro"
+    : snapshot.identity.provider === "fingerprintjs"
+      ? "FingerprintJS"
+      : "Local collector";
+  const confidence = snapshot.identity.confidence === null
+    ? "Unavailable"
+    : `${Math.round(snapshot.identity.confidence * 100)}%`;
+
   return [
     {
       icon: <Network aria-hidden="true" />,
@@ -226,10 +244,10 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
         { label: "ISP", value: snapshot.network.isp },
         { label: "ASN", value: snapshot.network.asn },
         { label: "Connection Type", value: snapshot.network.connectionType },
-        { label: "Proxy", value: formatNetworkFlag(snapshot.network.proxy), tone: snapshot.network.proxy ? "warn" : "good" },
-        { label: "VPN", value: formatNetworkFlag(snapshot.network.vpn), tone: snapshot.network.vpn ? "warn" : "good" },
-        { label: "Tor", value: formatNetworkFlag(snapshot.network.tor), tone: snapshot.network.tor ? "warn" : "good" },
-        { label: "Hosting", value: formatNetworkFlag(snapshot.network.hosting), tone: snapshot.network.hosting ? "warn" : "default" },
+        { label: "Proxy", value: formatNetworkFlag(snapshot.network.proxy), tone: toneForFlag(snapshot.network.proxy) },
+        { label: "VPN", value: formatNetworkFlag(snapshot.network.vpn), tone: toneForFlag(snapshot.network.vpn) },
+        { label: "Tor", value: formatNetworkFlag(snapshot.network.tor), tone: toneForFlag(snapshot.network.tor) },
+        { label: "Hosting", value: formatNetworkFlag(snapshot.network.hosting), tone: toneForFlag(snapshot.network.hosting) },
         { label: "WebRTC Leak", value: snapshot.privacy.webRtc, tone: toneForDetection(snapshot.privacy.webRtc) },
       ],
       title: "Network",
@@ -293,6 +311,10 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
       icon: <Fingerprint aria-hidden="true" />,
       key: "Fingerprint",
       rows: [
+        { label: "Visitor ID", value: snapshot.identity.visitorId, tone: "accent" },
+        { label: "Identity Provider", value: providerLabel },
+        { label: "Confidence", value: confidence },
+        { label: "Request ID", value: snapshot.identity.requestId ?? "Unavailable" },
         { label: "Canvas Fingerprint", value: snapshot.signals.canvasHash, tone: "accent" },
         { label: "WebGL Vendor", value: snapshot.signals.webGlVendor },
         { label: "WebGL Renderer", value: snapshot.signals.webGlRenderer },
@@ -312,6 +334,12 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
       icon: <LockKeyhole aria-hidden="true" />,
       key: "Privacy",
       rows: [
+        { label: "Bot", value: formatNetworkFlag(snapshot.smartSignals.bot), tone: toneForFlag(snapshot.smartSignals.bot) },
+        { label: "Incognito", value: formatNetworkFlag(snapshot.smartSignals.incognito), tone: toneForFlag(snapshot.smartSignals.incognito) },
+        { label: "Tampering", value: formatNetworkFlag(snapshot.smartSignals.tampering), tone: toneForFlag(snapshot.smartSignals.tampering) },
+        { label: "Virtual Machine", value: formatNetworkFlag(snapshot.smartSignals.virtualMachine), tone: toneForFlag(snapshot.smartSignals.virtualMachine) },
+        { label: "Developer Tools", value: formatNetworkFlag(snapshot.smartSignals.developerTools), tone: toneForFlag(snapshot.smartSignals.developerTools) },
+        { label: "Privacy Settings", value: formatNetworkFlag(snapshot.smartSignals.privacySettings), tone: toneForFlag(snapshot.smartSignals.privacySettings) },
         { label: "WebRTC", value: snapshot.privacy.webRtc, tone: toneForDetection(snapshot.privacy.webRtc) },
         { label: "Geolocation", value: snapshot.privacy.geolocationPermission },
         { label: "Camera", value: snapshot.privacy.cameraPermission },
@@ -328,14 +356,27 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
   ];
 }
 
-function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
-  const score = snapshot.scores.riskScore;
+function RiskDonut({
+  showTrustedExample,
+  snapshot,
+}: {
+  showTrustedExample: boolean;
+  snapshot: FingerprintSnapshot;
+}) {
+  const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
+  const riskLabel = showTrustedExample ? "Low" : snapshot.scores.riskLabel;
+  const usesFingerprintSmartSignals = Object.values(snapshot.smartSignals)
+    .some((value) => value !== null);
   return (
-    <div className="overview-panel__section risk-overview" data-risk={score >= 50 ? "high" : "safe"}>
+    <div className="overview-panel__section risk-overview" data-risk={score >= 15 ? "high" : "safe"}>
       <div className="risk-overview__intro">
         <span>Risk profile</span>
         <h3>Trust & Entropy</h3>
-        <p>Browser-visible signals are combined into one local confidence score.</p>
+        <p>{showTrustedExample
+          ? "Trusted device example with no detected fraud-risk signals."
+          : usesFingerprintSmartSignals
+          ? "Fingerprint Smart Signals are combined into this suspect score."
+          : "Browser-visible signals are combined into one local confidence score."}</p>
       </div>
       <div className="risk-overview__body">
         <div className="risk-donut">
@@ -343,7 +384,7 @@ function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
             <circle cx="60" cy="60" r="49" />
             <circle className="risk-donut__progress" cx="60" cy="60" r="49" strokeDasharray={`${score * 3.08} ${308 - score * 3.08}`} />
           </svg>
-          <div><strong>{score}</strong><small>/100</small><span>{snapshot.scores.riskLabel} Risk</span></div>
+          <div><strong>{score}</strong><span>{riskLabel} Risk</span></div>
         </div>
         <dl>
           <div><dt>Uniqueness</dt><dd>{snapshot.scores.uniqueness}% <small>est.</small></dd></div>
@@ -356,17 +397,24 @@ function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
   );
 }
 
-function OverviewPanel({ snapshot }: { snapshot: FingerprintSnapshot }) {
+function OverviewPanel({
+  showTrustedExample,
+  snapshot,
+}: {
+  showTrustedExample: boolean;
+  snapshot: FingerprintSnapshot;
+}) {
+  const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
   return (
     <section
       aria-label="Fingerprint overview"
       className="overview-panel"
-      data-risk={snapshot.scores.riskScore >= 50 ? "high" : "safe"}
+      data-risk={score >= 15 ? "high" : "safe"}
     >
       <div className="overview-panel__analysis">
-        <RiskDonut snapshot={snapshot} />
+        <RiskDonut showTrustedExample={showTrustedExample} snapshot={snapshot} />
       </div>
-      <SuspectSignalTable snapshot={snapshot} />
+      <SuspectSignalTable showTrustedExample={showTrustedExample} snapshot={snapshot} />
     </section>
   );
 }
@@ -375,7 +423,7 @@ function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownl
   return (
     <section className="raw-data" id="raw-data">
       <div className="raw-data__header">
-        <div><FileJson aria-hidden="true" /><span><strong>Raw fingerprint JSON</strong><small>Generated locally in your browser</small></span></div>
+        <div><FileJson aria-hidden="true" /><span><strong>Raw fingerprint JSON</strong><small>{snapshot.identity.provider === "fingerprint-pro" ? "Includes normalized Fingerprint provider data" : "Generated locally in your browser"}</small></span></div>
         <div className="raw-data__actions">
           <button onClick={onCopy} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
           <button onClick={onDownload} type="button"><Download aria-hidden="true" /> Download JSON</button>
@@ -389,10 +437,12 @@ function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownl
 function DetailDashboard({
   activeTab,
   onActiveTabChange,
+  showTrustedExample,
   snapshot,
 }: {
   activeTab: DetailTab;
   onActiveTabChange: (tab: DetailTab) => void;
+  showTrustedExample: boolean;
   snapshot: FingerprintSnapshot | null;
 }) {
   const [copied, setCopied] = useState(false);
@@ -402,8 +452,14 @@ function DetailDashboard({
     if (!snapshot || activeTab === "Overview") return null;
     if (activeTab === "Browser") return { browser: snapshot.browser };
     if (activeTab === "Network") return { network: snapshot.network };
-    if (activeTab === "Fingerprint") return { fingerprint: snapshot.signals };
-    if (activeTab === "Privacy") return { privacy: snapshot.privacy };
+    if (activeTab === "Fingerprint") return {
+      fingerprint: snapshot.signals,
+      identity: snapshot.identity,
+    };
+    if (activeTab === "Privacy") return {
+      privacy: snapshot.privacy,
+      smartSignals: snapshot.smartSignals,
+    };
     if (activeTab === "System") return { system: snapshot.system };
     if (activeTab === "Screen") return { screen: snapshot.screen };
     return snapshot;
@@ -463,7 +519,7 @@ function DetailDashboard({
         ) : activeTab === "Raw Data" ? (
           <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
         ) : activeTab === "Overview" ? (
-          <OverviewPanel snapshot={snapshot} />
+          <OverviewPanel showTrustedExample={showTrustedExample} snapshot={snapshot} />
         ) : (
           <div className="data-grid data-grid--single">
             {visibleCards.map((card) => (
@@ -527,7 +583,7 @@ function Footer() {
         <p>Get browser privacy and fraud prevention insights.</p>
         <form onSubmit={(event) => event.preventDefault()}><input aria-label="Email address" placeholder="Enter your email" type="email" /><button aria-label="Subscribe" type="submit"><ArrowRight /></button></form>
       </div>
-      <div className="footer-bottom"><span>© 2026 Fingerprint Analyzer. Local diagnostic demonstration.</span><div><a href="#footer">Privacy Policy</a><a href="#footer">Terms of Service</a><a href="#footer">Security</a><span><Globe2 /> EN</span></div></div>
+      <div className="footer-bottom"><span>© 2026 Fingerprint Analyzer. Local diagnostic demonstration.</span><div><a href="#footer">Privacy Policy</a><a href="#footer">Terms of Service</a><a href="#footer">Security</a></div></div>
     </footer>
   );
 }
@@ -535,9 +591,11 @@ function Footer() {
 export default function HomePage() {
   const { error, scan, snapshot, status } = useFingerprintScan();
   const [detailTab, setDetailTab] = useState<DetailTab>("Overview");
+  const [showTrustedExample, setShowTrustedExample] = useState(false);
   const scanning = status === "collecting";
 
   const startScan = () => {
+    setShowTrustedExample(false);
     void scan();
     document.getElementById("details")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -549,7 +607,6 @@ export default function HomePage() {
         <section className="hero-section" id="overview">
           <div className="hero-network" aria-hidden="true" />
           <div className="hero-copy">
-            <span className="eyebrow"><Sparkles aria-hidden="true" /> AI-powered fingerprint intelligence</span>
             <h1>Know every browser.<br />Stop <span>fraud</span> with confidence.</h1>
             <p>See the browser signals that make every visitor distinct. Analyze network, device, canvas, WebGL and privacy attributes in real time.</p>
             <div className="hero-actions">
@@ -561,7 +618,9 @@ export default function HomePage() {
           </div>
           <HeroConsole
             onCalculationClick={() => setDetailTab("Overview")}
+            onTrustedExampleChange={setShowTrustedExample}
             scanning={scanning}
+            showTrustedExample={showTrustedExample}
             snapshot={snapshot}
           />
         </section>
@@ -570,6 +629,7 @@ export default function HomePage() {
           <DetailDashboard
             activeTab={detailTab}
             onActiveTabChange={setDetailTab}
+            showTrustedExample={showTrustedExample}
             snapshot={snapshot}
           />
           <FinalCta onAnalyze={startScan} scanning={scanning} />

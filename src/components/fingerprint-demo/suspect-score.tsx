@@ -39,7 +39,6 @@ function CompactGlyph({ safe }: { safe: boolean }) {
 
 function Gauge({ score }: { score: number }) {
   const gauge = getGaugeArc(score);
-  const ticks = Array.from({ length: 13 }, (_, index) => index * 15 - 90);
 
   return (
     <div className="suspect-score__gauge">
@@ -47,26 +46,17 @@ function Gauge({ score }: { score: number }) {
         aria-label={`Suspect score: ${gauge.score} out of 100`}
         className="suspect-score__gauge-svg"
         role="img"
-        viewBox="0 0 180 108"
+        viewBox="0 0 120 120"
       >
-        <g className="suspect-score__ticks">
-          {ticks.map((angle) => (
-            <line
-              key={angle}
-              transform={`rotate(${angle} 90 86)`}
-              x1="90"
-              x2="90"
-              y1="5"
-              y2="10"
-            />
-          ))}
-        </g>
-        <path className="suspect-score__gauge-track" d="M 20 86 A 70 70 0 0 1 160 86" />
-        <path
+        <circle className="suspect-score__gauge-track" cx="60" cy="60" r="49" />
+        <circle
           className="suspect-score__gauge-value"
-          d="M 20 86 A 70 70 0 0 1 160 86"
+          cx="60"
+          cy="60"
           pathLength="100"
+          r="49"
           strokeDasharray={`${gauge.score} 100`}
+          transform="rotate(-90 60 60)"
         />
       </svg>
       <div aria-hidden="true" className="suspect-score__gauge-copy">

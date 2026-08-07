@@ -11,6 +11,7 @@ function matches(value: string, pattern: RegExp) {
 }
 
 function getSignalResults(snapshot: FingerprintSnapshot): SignalResult[] {
+  const smart = snapshot.smartSignals;
   const automationDetected = snapshot.privacy.automationFlags === "Detected";
   const webDriverDetected = snapshot.privacy.webDriver === "Detected";
   const headlessPossible = snapshot.privacy.headless === "Possible";
@@ -25,25 +26,41 @@ function getSignalResults(snapshot: FingerprintSnapshot): SignalResult[] {
 
   return [
     {
-      detected: automationDetected || webDriverDetected || headlessPossible,
+      detected: smart.bot ?? (automationDetected || webDriverDetected || headlessPossible),
       name: "Bot detection",
       weight: 7,
     },
     {
-      detected: headlessPossible || webDriverDetected,
+      detected: smart.incognito ?? (headlessPossible || webDriverDetected),
       name: "Incognito detection",
       weight: 4,
     },
     { detected: snapshot.network.vpn === true, name: "VPN detection", weight: 8 },
-    { detected: snapshot.scores.consistency < 80, name: "Tampering detection", weight: 8 },
-    { detected: virtualMachine, name: "Virtual machine detection", weight: 14 },
-    { detected: false, name: "Developer tools detection", weight: 0 },
-    { detected: privacySettings, name: "Privacy-focused settings", weight: 2 },
     {
-      detected: matches(
-        snapshot.network.ipReputation,
-        /bad|blocked|malicious|suspicious|high risk/i,
-      ),
+      detected: smart.tampering ?? snapshot.scores.consistency < 80,
+      name: "Tampering detection",
+      weight: 8,
+    },
+    {
+      detected: smart.virtualMachine ?? virtualMachine,
+      name: "Virtual machine detection",
+      weight: 14,
+    },
+    {
+      detected: smart.developerTools ?? false,
+      name: "Developer tools detection",
+      weight: 0,
+    },
+    {
+      detected: smart.privacySettings ?? privacySettings,
+      name: "Privacy-focused settings",
+      weight: 2,
+    },
+    {
+      detected: smart.ipBlocklist ?? matches(
+          snapshot.network.ipReputation,
+          /bad|blocked|malicious|suspicious|high risk/i,
+        ),
       name: "IP blocklist",
       weight: 12,
     },
@@ -55,15 +72,28 @@ function getSignalResults(snapshot: FingerprintSnapshot): SignalResult[] {
       weight: 6,
     },
     {
-      detected: snapshot.scores.riskScore >= 60,
+      detected: smart.rareDevice ?? false,
+      name: "Rare device",
+      weight: 6,
+    },
+    {
+      detected: smart.highActivityDevice ?? snapshot.scores.riskScore >= 60,
       name: "High-Activity Device",
       weight: 6,
     },
   ];
 }
 
-export function SuspectSignalTable({ snapshot }: { snapshot: FingerprintSnapshot }) {
-  const signals = getSignalResults(snapshot);
+export function SuspectSignalTable({
+  showTrustedExample = false,
+  snapshot,
+}: {
+  showTrustedExample?: boolean;
+  snapshot: FingerprintSnapshot;
+}) {
+  const signals = getSignalResults(snapshot).map((signal) => (
+    showTrustedExample ? { ...signal, detected: false } : signal
+  ));
 
   return (
     <section className="suspect-signal-table" aria-labelledby="suspect-signal-title">

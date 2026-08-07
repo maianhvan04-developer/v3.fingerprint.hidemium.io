@@ -1,5 +1,9 @@
 import "client-only";
 
+import {
+  collectOfficialFingerprint,
+  type OfficialFingerprintResult,
+} from "@/lib/fingerprint/provider";
 import type {
   BrowserFingerprint,
   FingerprintScores,
@@ -323,21 +327,21 @@ async function collectBattery(extras: NavigatorExtras) {
 }
 
 async function fetchIpData(): Promise<IpLookupPayload> {
-  const sources = ["https://ipwho.is/", "/api/ip"];
-  const results = await Promise.all(sources.map(async (source) => {
+  const sources = ["/api/ip", "https://ipwho.is/"];
+  for (const source of sources) {
     try {
       const response = await fetch(source, {
         cache: "no-store",
         signal: AbortSignal.timeout(3_000),
       });
-      if (!response.ok) return null;
+      if (!response.ok) continue;
       const payload = await response.json() as IpLookupPayload;
-      return payload.ip && payload.success !== false ? payload : null;
+      if (payload.ip && payload.success !== false) return payload;
     } catch {
-      return null;
+      // Try the next live lookup source.
     }
-  }));
-  return results.find((payload): payload is IpLookupPayload => Boolean(payload)) ?? {};
+  }
+  return {};
 }
 
 async function fetchHeaders() {
@@ -447,6 +451,7 @@ export async function collectFingerprint(): Promise<FingerprintSnapshot> {
     geolocationPermission,
     cameraPermission,
     microphonePermission,
+    officialFingerprint,
   ] = await Promise.all([
     withTimeout(collectCanvasHash(), unavailable, 1_500),
     withTimeout(collectAudioHash(), unavailable, 2_500),
@@ -459,6 +464,11 @@ export async function collectFingerprint(): Promise<FingerprintSnapshot> {
     withTimeout(permissionState("geolocation"), "Prompt / protected", 1_000),
     withTimeout(permissionState("camera"), "Prompt / protected", 1_000),
     withTimeout(permissionState("microphone"), "Prompt / protected", 1_000),
+    withTimeout<OfficialFingerprintResult>(
+      collectOfficialFingerprint(),
+      { event: null, extended: null, identity: null },
+      18_000,
+    ),
   ]);
 
   const webGl = collectWebGl();
@@ -569,7 +579,67 @@ export async function collectFingerprint(): Promise<FingerprintSnapshot> {
     webRtc: webRtcAddresses.length ? "Potential local address exposure" : "No leak detected",
   };
 
+  const providerEvent = officialFingerprint.event;
+  const providerExtended = officialFingerprint.extended;
+  const providerBrowserName = providerEvent?.browserName ?? providerExtended?.browserName;
+  const providerBrowserVersion = providerEvent?.browserVersion ?? providerExtended?.browserVersion;
+  const providerIpAddress = providerEvent?.ipAddress ?? providerExtended?.ipAddress;
+  const providerCity = providerEvent?.city ?? providerExtended?.city;
+  const providerCountry = providerEvent?.country ?? providerExtended?.country;
+  const providerCountryCode = providerEvent?.countryCode ?? providerExtended?.countryCode;
+  const providerLatitude = providerEvent?.latitude ?? providerExtended?.latitude;
+  const providerLongitude = providerEvent?.longitude ?? providerExtended?.longitude;
+  const providerTimezone = providerEvent?.timezone ?? providerExtended?.timezone;
+  const providerOs = providerEvent?.os ?? providerExtended?.os;
+  const providerOsVersion = providerEvent?.osVersion ?? providerExtended?.osVersion;
+
+  if (providerBrowserName) browser.name = providerBrowserName;
+  if (providerBrowserVersion) browser.version = providerBrowserVersion;
+  if (providerIpAddress) {
+    network.ipAddress = providerIpAddress;
+    network.ipVersion = providerIpAddress.includes(":") ? "IPv6" : "IPv4";
+  }
+  if (providerCity || providerCountry) {
+    network.city = [providerCity, providerCountry].filter(Boolean).join(", ");
+  }
+  if (providerCountry) network.country = providerCountry;
+  if (providerCountryCode) network.countryCode = providerCountryCode;
+  if (providerLatitude !== null && providerLatitude !== undefined) {
+    network.latitude = providerLatitude;
+  }
+  if (providerLongitude !== null && providerLongitude !== undefined) {
+    network.longitude = providerLongitude;
+  }
+  if (providerTimezone) network.timezone = providerTimezone;
+  if (providerEvent?.asn) network.asn = providerEvent.asn;
+  if (providerEvent?.isp) network.isp = providerEvent.isp;
+  if (providerEvent?.vpn !== null && providerEvent?.vpn !== undefined) {
+    network.vpn = providerEvent.vpn;
+  }
+  if (providerEvent?.proxy !== null && providerEvent?.proxy !== undefined) {
+    network.proxy = providerEvent.proxy;
+  }
+  if (providerEvent?.tor !== null && providerEvent?.tor !== undefined) {
+    network.tor = providerEvent.tor;
+  }
+  if (providerEvent?.hosting !== null && providerEvent?.hosting !== undefined) {
+    network.hosting = providerEvent.hosting;
+  }
+  if (providerEvent?.ipBlocklist === true) network.ipReputation = "Blocklist match detected";
+  if (providerEvent?.ipBlocklist === false) network.ipReputation = "No blocklist match";
+  if (providerOs) system.os = providerOs;
+  if (providerOsVersion) system.osVersion = providerOsVersion;
+  if (providerEvent?.bot === true) privacy.automationFlags = "Detected";
+
   const scores = buildScores(browser, network, privacy, signals);
+  if (providerEvent?.suspectScore !== null && providerEvent?.suspectScore !== undefined) {
+    scores.riskScore = clamp(providerEvent.suspectScore);
+    scores.riskLabel = scores.riskScore <= 25
+      ? "Low"
+      : scores.riskScore <= 55
+        ? "Medium"
+        : "High";
+  }
   const compositeHash = await sha256(JSON.stringify({
     audioHash,
     canvasHash,
@@ -583,18 +653,42 @@ export async function collectFingerprint(): Promise<FingerprintSnapshot> {
   }));
   const sessionId = crypto.randomUUID?.() ?? compositeHash.slice(0, 8);
   const hasCoreSignals = canvasHash !== unavailable && browser.name !== "Unknown browser";
+  const identity = officialFingerprint.identity?.visitorId
+    ? {
+        ...officialFingerprint.identity,
+        visitorId: providerEvent?.visitorId ?? officialFingerprint.identity.visitorId,
+      }
+    : {
+        confidence: null,
+        provider: "local" as const,
+        requestId: null,
+        visitorFound: null,
+        visitorId: compositeHash.slice(0, 20),
+      };
 
   return {
     browser,
     collectedAt: new Date().toISOString(),
     compositeHash,
     headers,
+    identity,
     network,
     privacy,
     scores,
     screen: screenFingerprint,
     sessionId,
     signals,
+    smartSignals: {
+      bot: providerEvent?.bot ?? null,
+      developerTools: providerEvent?.developerTools ?? null,
+      highActivityDevice: providerEvent?.highActivityDevice ?? null,
+      incognito: providerEvent?.incognito ?? providerExtended?.incognito ?? null,
+      ipBlocklist: providerEvent?.ipBlocklist ?? null,
+      privacySettings: providerEvent?.privacySettings ?? null,
+      rareDevice: providerEvent?.rareDevice ?? null,
+      tampering: providerEvent?.tampering ?? null,
+      virtualMachine: providerEvent?.virtualMachine ?? null,
+    },
     status: hasCoreSignals ? "complete" : "partial",
     system,
   };
