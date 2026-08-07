@@ -4,7 +4,6 @@ import { useMemo, useState, type ReactNode } from "react";
 import {
   ArrowRight,
   Check,
-  CircleCheck,
   Code2,
   Copy,
   Cpu,
@@ -13,6 +12,7 @@ import {
   FileJson,
   Fingerprint,
   Globe2,
+  LayoutDashboard,
   LockKeyhole,
   Monitor,
   Network,
@@ -42,7 +42,16 @@ interface DetailCardData {
   title: string;
 }
 
-const tabs: DetailTab[] = ["Overview", "Browser", "Network", "Fingerprint", "Privacy", "System", "Screen", "Raw Data"];
+const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
+  { icon: <LayoutDashboard aria-hidden="true" />, label: "Overview" },
+  { icon: <Globe2 aria-hidden="true" />, label: "Browser" },
+  { icon: <Network aria-hidden="true" />, label: "Network" },
+  { icon: <Fingerprint aria-hidden="true" />, label: "Fingerprint" },
+  { icon: <LockKeyhole aria-hidden="true" />, label: "Privacy" },
+  { icon: <Cpu aria-hidden="true" />, label: "System" },
+  { icon: <Monitor aria-hidden="true" />, label: "Screen" },
+  { icon: <FileJson aria-hidden="true" />, label: "Raw Data" },
+];
 const consoleModes: Array<{ id: ConsoleMode; index: string; label: string; workspaceLabel: string }> = [
   { id: "identification", index: "01", label: "Identification signals", workspaceLabel: "Identification signals" },
   { id: "browser", index: "02", label: "Browser smart signals", workspaceLabel: "Browser smart signals" },
@@ -63,18 +72,6 @@ function toneForDetection(value: string, inverse = false): ValueTone {
   const detected = /detected|possible|exposure/i.test(value) && !/not detected|no leak/i.test(value);
   if (detected) return inverse ? "good" : "warn";
   return inverse ? "warn" : "good";
-}
-
-function formatDate(isoDate?: string) {
-  if (!isoDate) return "Collecting browser signals…";
-  return new Intl.DateTimeFormat("en", {
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    month: "short",
-    second: "2-digit",
-    year: "numeric",
-  }).format(new Date(isoDate));
 }
 
 function HeroConsole({
@@ -335,7 +332,11 @@ function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
   const score = snapshot.scores.riskScore;
   return (
     <div className="overview-panel__section risk-overview" data-risk={score >= 50 ? "high" : "safe"}>
-      <h3>Trust & Entropy</h3>
+      <div className="risk-overview__intro">
+        <span>Risk profile</span>
+        <h3>Trust & Entropy</h3>
+        <p>Browser-visible signals are combined into one local confidence score.</p>
+      </div>
       <div className="risk-overview__body">
         <div className="risk-donut">
           <svg viewBox="0 0 120 120" aria-hidden="true">
@@ -351,79 +352,19 @@ function RiskDonut({ snapshot }: { snapshot: FingerprintSnapshot }) {
           <div><dt>Signal Entropy</dt><dd>{snapshot.signals.canvasHash === "Unavailable" ? "Limited" : "High"}</dd></div>
         </dl>
       </div>
-      <small className="analysis-note">Evaluation based on browser-visible signals; uniqueness is a local estimate.</small>
-    </div>
-  );
-}
-
-function RiskFactors({ snapshot }: { snapshot: FingerprintSnapshot }) {
-  const factors = [
-    { label: snapshot.network.proxy || snapshot.network.vpn || snapshot.network.tor ? "Anonymous network indicator detected" : "No suspicious network indicators", ok: !(snapshot.network.proxy || snapshot.network.vpn || snapshot.network.tor) },
-    { label: snapshot.privacy.webDriver === "Detected" ? "Browser automation flag detected" : "No automation flags detected", ok: snapshot.privacy.webDriver !== "Detected" },
-    { label: snapshot.scores.consistency >= 80 ? "Consistent browser fingerprint" : "Cross-signal mismatch detected", ok: snapshot.scores.consistency >= 80 },
-    { label: "High-entropy fingerprint available", ok: snapshot.signals.canvasHash !== "Unavailable" },
-  ];
-  return (
-    <div className="overview-panel__section risk-factors">
-      <h3>Risk Factors</h3>
-      <ul>{factors.map((factor) => <li key={factor.label} data-ok={factor.ok}>{factor.label}<CircleCheck aria-hidden="true" /></li>)}</ul>
-      <div className="overall-risk"><span>Overall Risk</span><strong>{snapshot.scores.riskLabel}</strong></div>
-    </div>
-  );
-}
-
-function SignalCoverage({ snapshot }: { snapshot: FingerprintSnapshot }) {
-  const coverage = [
-    { label: "Network", value: snapshot.network.ipAddress === "Unavailable" ? 45 : 100 },
-    { label: "Browser", value: 100 },
-    { label: "Fingerprint", value: snapshot.signals.canvasHash === "Unavailable" ? 50 : 94 },
-    { label: "Privacy", value: 88 },
-    { label: "System", value: snapshot.system.deviceMemory.includes("protected") ? 78 : 96 },
-    { label: "Screen", value: 100 },
-  ];
-  return (
-    <div className="overview-panel__section signal-coverage">
-      <div className="analysis-card__title"><h3>Signal Coverage</h3><span>{snapshot.scores.coverage}%</span></div>
-      <div className="coverage-list">
-        {coverage.map((item) => (
-          <div key={item.label}>
-            <span>{item.label}</span>
-            <progress max="100" value={item.value}>{item.value}%</progress>
-            <small>{item.value}/100</small>
-          </div>
-        ))}
-      </div>
-      <div className="coverage-total"><span>Coverage</span><strong>{snapshot.scores.coverage}%</strong></div>
     </div>
   );
 }
 
 function OverviewPanel({ snapshot }: { snapshot: FingerprintSnapshot }) {
-  const facts = [
-    { label: "IP address", value: snapshot.network.ipAddress },
-    { label: "Location", value: snapshot.network.city },
-    { label: "Browser", value: `${snapshot.browser.name} ${snapshot.browser.version}`.trim() },
-    { label: "Operating system", value: `${snapshot.system.os} ${snapshot.system.osVersion}`.trim() },
-  ];
-
   return (
     <section
       aria-label="Fingerprint overview"
       className="overview-panel"
       data-risk={snapshot.scores.riskScore >= 50 ? "high" : "safe"}
     >
-      <div className="overview-panel__facts">
-        {facts.map((fact) => (
-          <div key={fact.label}>
-            <span>{fact.label}</span>
-            <strong title={fact.value}>{fact.value}</strong>
-          </div>
-        ))}
-      </div>
       <div className="overview-panel__analysis">
         <RiskDonut snapshot={snapshot} />
-        <RiskFactors snapshot={snapshot} />
-        <SignalCoverage snapshot={snapshot} />
       </div>
       <SuspectSignalTable snapshot={snapshot} />
     </section>
@@ -489,58 +430,57 @@ function DetailDashboard({
   return (
     <section className="detail-dashboard" id="details">
       <header className="detail-dashboard__header">
-        <div>
-          <span className="section-kicker">Live browser intelligence</span>
-          <h2>Detailed Browser Fingerprint</h2>
-          <p>AmIUnique-inspired analysis across browser, network, canvas, WebGL, media and privacy signals.</p>
-        </div>
-        <div className="session-meta">
-          <span>Collected: {formatDate(snapshot?.collectedAt)}</span>
-          <code>Session ID: {snapshot?.sessionId ?? "creating-session"}</code>
+        <div className="detail-dashboard__heading">
+          <div>
+            <h2>Detailed Browser Fingerprint</h2>
+            <p>Network, browser, device and privacy signals from this session.</p>
+          </div>
         </div>
       </header>
 
       <div className="detail-tabs" role="tablist" aria-label="Fingerprint categories">
-        {tabs.map((tab) => (
+        {detailTabs.map((tab) => (
           <button
-            aria-selected={activeTab === tab}
-            className={activeTab === tab ? "is-active" : undefined}
-            key={tab}
-            onClick={() => onActiveTabChange(tab)}
+            aria-selected={activeTab === tab.label}
+            className={activeTab === tab.label ? "is-active" : undefined}
+            key={tab.label}
+            onClick={() => onActiveTabChange(tab.label)}
             role="tab"
             type="button"
           >
-            {tab}
+            {tab.icon}<span>{tab.label}</span>
           </button>
         ))}
       </div>
 
-      {!snapshot ? (
-        <div className="dashboard-loading">
-          <span className="scan-loader"><Fingerprint aria-hidden="true" /></span>
-          <strong>Collecting browser fingerprint</strong>
-          <p>Reading canvas, WebGL, fonts, media, storage, network and privacy signals…</p>
-        </div>
-      ) : activeTab === "Raw Data" ? (
-        <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
-      ) : activeTab === "Overview" ? (
-        <OverviewPanel snapshot={snapshot} />
-      ) : (
-        <div className="data-grid data-grid--single">
-          {visibleCards.map((card) => (
-            <DataCard
-              actions={(
-                <>
-                  <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
-                  <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> Download JSON</button>
-                </>
-              )}
-              data={card}
-              key={card.key}
-            />
-          ))}
-        </div>
-      )}
+      <div className="detail-dashboard__content">
+        {!snapshot ? (
+          <div className="dashboard-loading">
+            <span className="scan-loader"><Fingerprint aria-hidden="true" /></span>
+            <strong>Collecting browser fingerprint</strong>
+            <p>Reading canvas, WebGL, fonts, media, storage, network and privacy signals…</p>
+          </div>
+        ) : activeTab === "Raw Data" ? (
+          <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
+        ) : activeTab === "Overview" ? (
+          <OverviewPanel snapshot={snapshot} />
+        ) : (
+          <div className="data-grid data-grid--single">
+            {visibleCards.map((card) => (
+              <DataCard
+                actions={(
+                  <>
+                    <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
+                    <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> Download JSON</button>
+                  </>
+                )}
+                data={card}
+                key={card.key}
+              />
+            ))}
+          </div>
+        )}
+      </div>
 
       {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {activeTab} JSON copied</span> : null}
     </section>

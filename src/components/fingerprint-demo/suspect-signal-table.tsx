@@ -91,7 +91,7 @@ export function SuspectSignalTable({ snapshot }: { snapshot: FingerprintSnapshot
           key={signal.name}
         >
           <span>{signal.name}</span>
-          <strong>{signal.detected ? "Detected" : "Not Detected"}</strong>
+          <strong><i aria-hidden="true" />{signal.detected ? "Detected" : "Not Detected"}</strong>
           <em>{signal.detected ? signal.weight : 0}</em>
         </div>
       ))}
