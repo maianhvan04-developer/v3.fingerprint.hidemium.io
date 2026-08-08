@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { BrandMark } from "@/components/icons";
 import { FingerprintLiveDemo } from "@/components/fingerprint-demo/fingerprint-live-demo";
 import {
   BrowserSmartSignals,
@@ -28,6 +29,7 @@ import {
 import { SuspectSignalTable } from "@/components/fingerprint-demo/suspect-signal-table";
 import { SiteHeader } from "@/components/layout/site-header";
 import { formatNetworkFlag } from "@/lib/fingerprint/collector";
+import { localizeStatus, useI18n, type Translate } from "@/lib/i18n";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
 import type { FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
 
@@ -51,10 +53,10 @@ const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
   { icon: <Monitor aria-hidden="true" />, label: "Screen" },
   { icon: <FileJson aria-hidden="true" />, label: "Raw Data" },
 ];
-const consoleModes: Array<{ id: ConsoleMode; index: string; label: string; workspaceLabel: string }> = [
-  { id: "live", index: "01", label: "Live identity", workspaceLabel: "Visitor intelligence" },
-  { id: "identification", index: "02", label: "Identification signals", workspaceLabel: "Identification signals" },
-  { id: "browser", index: "03", label: "Browser smart signals", workspaceLabel: "Browser smart signals" },
+const consoleModes: Array<{ id: ConsoleMode; index: string }> = [
+  { id: "live", index: "01" },
+  { id: "identification", index: "02" },
+  { id: "browser", index: "03" },
 ];
 const trustedBrands = [
   { key: "checkout", label: "checkout.com" },
@@ -91,36 +93,40 @@ function HeroConsole({
   snapshot: FingerprintSnapshot | null;
 }) {
   const [activeMode, setActiveMode] = useState<ConsoleMode>("live");
-  const activeModeDetails = consoleModes.find((mode) => mode.id === activeMode) ?? consoleModes[0];
+  const { t } = useI18n();
 
   return (
-    <div className="hero-console" aria-label="Live browser identity overview">
+    <div className="hero-console" aria-label={t("console.aria")}>
       <div className="hero-console__titlebar">
         <span className="hero-console__controls" aria-hidden="true"><i /><i /><i /></span>
-        <div className="hero-console__modes" aria-label="Browser intelligence views" role="tablist">
-          {consoleModes.map((mode) => (
-            <button
-              aria-controls={`console-panel-${mode.id}`}
-              aria-selected={activeMode === mode.id}
-              className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
-              id={`console-tab-${mode.id}`}
-              key={mode.id}
-              onClick={() => setActiveMode(mode.id)}
-              role="tab"
-              tabIndex={activeMode === mode.id ? 0 : -1}
-              type="button"
-            >
-              <small>{mode.index}</small>{mode.label}
-            </button>
-          ))}
+        <div className="hero-console__titlebar-label">
+          http://fingerprint.hidemium.io/
         </div>
       </div>
 
       <div className="hero-console__workspace">
         <div className="hero-console__workspace-header">
-          <span><i aria-hidden="true" />{scanning ? "SCANNING" : "LIVE"}</span>
-          <strong>{activeModeDetails.workspaceLabel}_</strong>
+          <span><i aria-hidden="true" />{scanning ? t("console.scanning") : t("console.live")}</span>
+          <div className="hero-console__modes" aria-label={t("console.views")} role="tablist">
+            {consoleModes.map((mode) => (
+              <button
+                aria-controls={`console-panel-${mode.id}`}
+                aria-selected={activeMode === mode.id}
+                className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
+                id={`console-tab-${mode.id}`}
+                key={mode.id}
+                onClick={() => setActiveMode(mode.id)}
+                role="tab"
+                tabIndex={activeMode === mode.id ? 0 : -1}
+                type="button"
+              >
+                <small>{mode.index}</small>
+                <span>{t(`console.modes.${mode.id}`)}</span>
+              </button>
+            ))}
+          </div>
         </div>
+
         <div
           aria-labelledby={`console-tab-${activeMode}`}
           className="hero-console__panel"
@@ -145,8 +151,8 @@ function HeroConsole({
       </div>
 
       <div className="hero-console__statusbar">
-        <span><i aria-hidden="true" />{snapshot?.identity.provider === "fingerprint-pro" ? "Fingerprint Pro" : "Local diagnostic"} · 7-day visit history</span>
-        <span>{snapshot?.browser.name ?? "Browser"} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? "System"}</span>
+        <span><i aria-hidden="true" />Fingerprint</span>
+        <span>{snapshot?.browser.name ?? t("common.browser")} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? t("common.system")}</span>
       </div>
     </div>
   );
@@ -187,9 +193,10 @@ function TrustBrand({ brand }: { brand: (typeof trustedBrands)[number] }) {
 }
 
 function TrustBar() {
+  const { t } = useI18n();
   return (
-    <section className="trust-bar" aria-label="Trusted company examples">
-      <span>Trusted by innovative companies worldwide</span>
+    <section className="trust-bar" aria-label={t("trust.aria")}>
+      <span>{t("trust.title")}</span>
       <div className="trust-bar__viewport">
         <div className="trust-bar__track">
           {[0, 1].map((copy) => (
@@ -222,14 +229,14 @@ function DataCard({ actions, data }: { actions?: ReactNode; data: DetailCardData
   );
 }
 
-function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
+function buildCards(snapshot: FingerprintSnapshot, t: Translate): DetailCardData[] {
   const providerLabel = snapshot.identity.provider === "fingerprint-pro"
     ? "Fingerprint Pro"
     : snapshot.identity.provider === "fingerprintjs"
       ? "FingerprintJS"
-      : "Local collector";
+      : t("console.localDiagnostic");
   const confidence = snapshot.identity.confidence === null
-    ? "Unavailable"
+    ? t("common.unavailable")
     : `${Math.round(snapshot.identity.confidence * 100)}%`;
 
   return [
@@ -237,121 +244,121 @@ function buildCards(snapshot: FingerprintSnapshot): DetailCardData[] {
       icon: <Network aria-hidden="true" />,
       key: "Network",
       rows: [
-        { label: "IP Address", value: snapshot.network.ipAddress, tone: "accent" },
-        { label: snapshot.network.ipVersion, value: snapshot.network.ipVersion === "IPv6" ? snapshot.network.ipAddress : "Not detected" },
-        { label: "Location", value: snapshot.network.city },
-        { label: "Timezone", value: snapshot.network.timezone },
-        { label: "ISP", value: snapshot.network.isp },
-        { label: "ASN", value: snapshot.network.asn },
-        { label: "Connection Type", value: snapshot.network.connectionType },
-        { label: "Proxy", value: formatNetworkFlag(snapshot.network.proxy), tone: toneForFlag(snapshot.network.proxy) },
-        { label: "VPN", value: formatNetworkFlag(snapshot.network.vpn), tone: toneForFlag(snapshot.network.vpn) },
-        { label: "Tor", value: formatNetworkFlag(snapshot.network.tor), tone: toneForFlag(snapshot.network.tor) },
-        { label: "Hosting", value: formatNetworkFlag(snapshot.network.hosting), tone: toneForFlag(snapshot.network.hosting) },
-        { label: "WebRTC Leak", value: snapshot.privacy.webRtc, tone: toneForDetection(snapshot.privacy.webRtc) },
+        { label: t("fields.ipAddress"), value: snapshot.network.ipAddress, tone: "accent" },
+        { label: snapshot.network.ipVersion || t("fields.ipVersion"), value: snapshot.network.ipVersion === "IPv6" ? snapshot.network.ipAddress : t("common.notDetected") },
+        { label: t("fields.location"), value: snapshot.network.city },
+        { label: t("fields.timezone"), value: snapshot.network.timezone },
+        { label: t("fields.isp"), value: snapshot.network.isp },
+        { label: t("fields.asn"), value: snapshot.network.asn },
+        { label: t("fields.connectionType"), value: snapshot.network.connectionType },
+        { label: t("fields.proxy"), value: localizeStatus(formatNetworkFlag(snapshot.network.proxy), t), tone: toneForFlag(snapshot.network.proxy) },
+        { label: t("fields.vpn"), value: localizeStatus(formatNetworkFlag(snapshot.network.vpn), t), tone: toneForFlag(snapshot.network.vpn) },
+        { label: t("fields.tor"), value: localizeStatus(formatNetworkFlag(snapshot.network.tor), t), tone: toneForFlag(snapshot.network.tor) },
+        { label: t("fields.hosting"), value: localizeStatus(formatNetworkFlag(snapshot.network.hosting), t), tone: toneForFlag(snapshot.network.hosting) },
+        { label: t("fields.webRtcLeak"), value: localizeStatus(snapshot.privacy.webRtc, t), tone: toneForDetection(snapshot.privacy.webRtc) },
       ],
-      title: "Network",
+      title: t("details.networkTitle"),
     },
     {
       icon: <Globe2 aria-hidden="true" />,
       key: "Browser",
       rows: [
-        { label: "Name", value: snapshot.browser.name },
-        { label: "Version", value: snapshot.browser.version },
-        { label: "Engine", value: snapshot.browser.engine },
-        { label: "User Agent", value: snapshot.browser.userAgent },
-        { label: "Language", value: snapshot.browser.languages.join(", ") || snapshot.browser.language },
-        { label: "Cookies", value: snapshot.browser.cookies ? "Enabled" : "Disabled", tone: snapshot.browser.cookies ? "good" : "warn" },
-        { label: "Local Storage", value: snapshot.browser.localStorage ? "Enabled" : "Blocked", tone: snapshot.browser.localStorage ? "good" : "warn" },
-        { label: "Session Storage", value: snapshot.browser.sessionStorage ? "Enabled" : "Blocked", tone: snapshot.browser.sessionStorage ? "good" : "warn" },
-        { label: "IndexedDB", value: snapshot.browser.indexedDb ? "Enabled" : "Blocked", tone: snapshot.browser.indexedDb ? "good" : "warn" },
-        { label: "Do Not Track", value: snapshot.browser.doNotTrack },
-        { label: "Referrer", value: snapshot.browser.referrer },
-        { label: "Plugins", value: String(snapshot.browser.plugins.length) },
+        { label: t("fields.name"), value: snapshot.browser.name },
+        { label: t("fields.version"), value: snapshot.browser.version },
+        { label: t("fields.engine"), value: snapshot.browser.engine },
+        { label: t("fields.userAgent"), value: snapshot.browser.userAgent },
+        { label: t("fields.language"), value: snapshot.browser.languages.join(", ") || snapshot.browser.language },
+        { label: t("fields.cookies"), value: snapshot.browser.cookies ? t("common.enabled") : t("common.disabled"), tone: snapshot.browser.cookies ? "good" : "warn" },
+        { label: t("fields.localStorage"), value: snapshot.browser.localStorage ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.localStorage ? "good" : "warn" },
+        { label: t("fields.sessionStorage"), value: snapshot.browser.sessionStorage ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.sessionStorage ? "good" : "warn" },
+        { label: t("fields.indexedDb"), value: snapshot.browser.indexedDb ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.indexedDb ? "good" : "warn" },
+        { label: t("fields.doNotTrack"), value: localizeStatus(snapshot.browser.doNotTrack, t) },
+        { label: t("fields.referrer"), value: snapshot.browser.referrer },
+        { label: t("fields.plugins"), value: String(snapshot.browser.plugins.length) },
       ],
-      title: "Browser",
+      title: t("details.browserTitle"),
     },
     {
       icon: <Cpu aria-hidden="true" />,
       key: "System",
       rows: [
-        { label: "OS", value: snapshot.system.os },
-        { label: "OS Version", value: snapshot.system.osVersion },
-        { label: "Platform", value: snapshot.system.platform },
-        { label: "Architecture", value: snapshot.system.architecture },
-        { label: "Device Memory", value: snapshot.system.deviceMemory },
-        { label: "CPU Cores", value: String(snapshot.system.hardwareConcurrency || "Protected") },
-        { label: "CPU", value: snapshot.system.cpu },
-        { label: "GPU", value: snapshot.system.gpu },
-        { label: "Battery Status", value: snapshot.system.battery },
-        { label: "Touch Support", value: snapshot.system.touchSupport },
-        { label: "Hardware Concurrency", value: String(snapshot.system.hardwareConcurrency || "Protected") },
-        { label: "Page Uptime", value: snapshot.system.uptime },
+        { label: t("fields.os"), value: snapshot.system.os },
+        { label: t("fields.osVersion"), value: snapshot.system.osVersion },
+        { label: t("fields.platform"), value: snapshot.system.platform },
+        { label: t("fields.architecture"), value: snapshot.system.architecture },
+        { label: t("fields.deviceMemory"), value: snapshot.system.deviceMemory },
+        { label: t("fields.cpuCores"), value: String(snapshot.system.hardwareConcurrency || t("common.protected")) },
+        { label: t("fields.cpu"), value: snapshot.system.cpu },
+        { label: t("fields.gpu"), value: snapshot.system.gpu },
+        { label: t("fields.battery"), value: localizeStatus(snapshot.system.battery, t) },
+        { label: t("fields.touch"), value: localizeStatus(snapshot.system.touchSupport, t) },
+        { label: t("fields.hardwareConcurrency"), value: String(snapshot.system.hardwareConcurrency || t("common.protected")) },
+        { label: t("fields.uptime"), value: snapshot.system.uptime },
       ],
-      title: "System",
+      title: t("details.systemTitle"),
     },
     {
       icon: <Monitor aria-hidden="true" />,
       key: "Screen",
       rows: [
-        { label: "Resolution", value: snapshot.screen.resolution },
-        { label: "Available Resolution", value: snapshot.screen.availableResolution },
-        { label: "Color Depth", value: snapshot.screen.colorDepth },
-        { label: "Pixel Depth", value: snapshot.screen.pixelDepth },
-        { label: "Device Pixel Ratio", value: snapshot.screen.devicePixelRatio },
-        { label: "Refresh Rate", value: snapshot.screen.refreshRate },
-        { label: "Orientation", value: snapshot.screen.orientation },
-        { label: "HDR Support", value: snapshot.screen.hdr },
-        { label: "Viewport Size", value: snapshot.screen.viewport },
-        { label: "Zoom Level", value: snapshot.screen.zoomLevel },
+        { label: t("fields.resolution"), value: snapshot.screen.resolution },
+        { label: t("fields.availableResolution"), value: snapshot.screen.availableResolution },
+        { label: t("fields.colorDepth"), value: snapshot.screen.colorDepth },
+        { label: t("fields.pixelDepth"), value: snapshot.screen.pixelDepth },
+        { label: t("fields.devicePixelRatio"), value: snapshot.screen.devicePixelRatio },
+        { label: t("fields.refreshRate"), value: snapshot.screen.refreshRate },
+        { label: t("fields.orientation"), value: snapshot.screen.orientation },
+        { label: t("fields.hdr"), value: localizeStatus(snapshot.screen.hdr, t) },
+        { label: t("fields.viewport"), value: snapshot.screen.viewport },
+        { label: t("fields.zoom"), value: snapshot.screen.zoomLevel },
       ],
-      title: "Screen",
+      title: t("details.screenTitle"),
     },
     {
       icon: <Fingerprint aria-hidden="true" />,
       key: "Fingerprint",
       rows: [
-        { label: "Visitor ID", value: snapshot.identity.visitorId, tone: "accent" },
-        { label: "Identity Provider", value: providerLabel },
-        { label: "Confidence", value: confidence },
-        { label: "Request ID", value: snapshot.identity.requestId ?? "Unavailable" },
-        { label: "Canvas Fingerprint", value: snapshot.signals.canvasHash, tone: "accent" },
-        { label: "WebGL Vendor", value: snapshot.signals.webGlVendor },
-        { label: "WebGL Renderer", value: snapshot.signals.webGlRenderer },
-        { label: "WebGL Version", value: snapshot.signals.webGlVersion },
-        { label: "AudioContext Fingerprint", value: snapshot.signals.audioHash, tone: "accent" },
-        { label: "Fonts Detected", value: String(snapshot.signals.fontCount) },
-        { label: "Plugins Count", value: String(snapshot.signals.pluginCount) },
-        { label: "MIME Types", value: String(snapshot.signals.mimeTypeCount) },
-        { label: "Media Devices", value: String(snapshot.signals.mediaDeviceCount) },
-        { label: "Speech Synthesis", value: snapshot.signals.speechSynthesis },
-        { label: "Notification Permission", value: snapshot.signals.notificationPermission },
-        { label: "Composite Hash", value: snapshot.compositeHash.slice(0, 24), tone: "accent" },
+        { label: t("fields.visitorId"), value: snapshot.identity.visitorId, tone: "accent" },
+        { label: t("fields.identityProvider"), value: providerLabel },
+        { label: t("fields.confidence"), value: confidence },
+        { label: t("fields.requestId"), value: snapshot.identity.requestId ?? t("common.unavailable") },
+        { label: t("fields.canvasFingerprint"), value: snapshot.signals.canvasHash, tone: "accent" },
+        { label: t("fields.webGlVendor"), value: snapshot.signals.webGlVendor },
+        { label: t("fields.webGlRenderer"), value: snapshot.signals.webGlRenderer },
+        { label: t("fields.webGlVersion"), value: snapshot.signals.webGlVersion },
+        { label: t("fields.audioFingerprint"), value: snapshot.signals.audioHash, tone: "accent" },
+        { label: t("fields.fontsDetected"), value: String(snapshot.signals.fontCount) },
+        { label: t("fields.pluginsCount"), value: String(snapshot.signals.pluginCount) },
+        { label: t("fields.mimeTypes"), value: String(snapshot.signals.mimeTypeCount) },
+        { label: t("fields.mediaDevices"), value: String(snapshot.signals.mediaDeviceCount) },
+        { label: t("fields.speechSynthesis"), value: localizeStatus(snapshot.signals.speechSynthesis, t) },
+        { label: t("fields.notificationPermission"), value: localizeStatus(snapshot.signals.notificationPermission, t) },
+        { label: t("fields.compositeHash"), value: snapshot.compositeHash.slice(0, 24), tone: "accent" },
       ],
-      title: "Fingerprint Signals",
+      title: t("details.fingerprintTitle"),
     },
     {
       icon: <LockKeyhole aria-hidden="true" />,
       key: "Privacy",
       rows: [
-        { label: "Bot", value: formatNetworkFlag(snapshot.smartSignals.bot), tone: toneForFlag(snapshot.smartSignals.bot) },
-        { label: "Incognito", value: formatNetworkFlag(snapshot.smartSignals.incognito), tone: toneForFlag(snapshot.smartSignals.incognito) },
-        { label: "Tampering", value: formatNetworkFlag(snapshot.smartSignals.tampering), tone: toneForFlag(snapshot.smartSignals.tampering) },
-        { label: "Virtual Machine", value: formatNetworkFlag(snapshot.smartSignals.virtualMachine), tone: toneForFlag(snapshot.smartSignals.virtualMachine) },
-        { label: "Developer Tools", value: formatNetworkFlag(snapshot.smartSignals.developerTools), tone: toneForFlag(snapshot.smartSignals.developerTools) },
-        { label: "Privacy Settings", value: formatNetworkFlag(snapshot.smartSignals.privacySettings), tone: toneForFlag(snapshot.smartSignals.privacySettings) },
-        { label: "WebRTC", value: snapshot.privacy.webRtc, tone: toneForDetection(snapshot.privacy.webRtc) },
-        { label: "Geolocation", value: snapshot.privacy.geolocationPermission },
-        { label: "Camera", value: snapshot.privacy.cameraPermission },
-        { label: "Microphone", value: snapshot.privacy.microphonePermission },
-        { label: "Ad Blocker", value: snapshot.privacy.adBlocker, tone: toneForDetection(snapshot.privacy.adBlocker, true) },
-        { label: "Automation Flags", value: snapshot.privacy.automationFlags, tone: toneForDetection(snapshot.privacy.automationFlags) },
-        { label: "Headless", value: snapshot.privacy.headless, tone: toneForDetection(snapshot.privacy.headless) },
-        { label: "WebDriver", value: snapshot.privacy.webDriver, tone: toneForDetection(snapshot.privacy.webDriver) },
-        { label: "Permissions Policy", value: snapshot.privacy.permissionsPolicy },
-        { label: "Cross-Origin Isolation", value: snapshot.privacy.crossOriginIsolation },
+        { label: t("fields.bot"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.bot), t), tone: toneForFlag(snapshot.smartSignals.bot) },
+        { label: t("fields.incognito"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.incognito), t), tone: toneForFlag(snapshot.smartSignals.incognito) },
+        { label: t("fields.tampering"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.tampering), t), tone: toneForFlag(snapshot.smartSignals.tampering) },
+        { label: t("fields.virtualMachine"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.virtualMachine), t), tone: toneForFlag(snapshot.smartSignals.virtualMachine) },
+        { label: t("fields.developerTools"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.developerTools), t), tone: toneForFlag(snapshot.smartSignals.developerTools) },
+        { label: t("fields.privacySettings"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.privacySettings), t), tone: toneForFlag(snapshot.smartSignals.privacySettings) },
+        { label: t("fields.webRtc"), value: localizeStatus(snapshot.privacy.webRtc, t), tone: toneForDetection(snapshot.privacy.webRtc) },
+        { label: t("fields.geolocation"), value: localizeStatus(snapshot.privacy.geolocationPermission, t) },
+        { label: t("fields.camera"), value: localizeStatus(snapshot.privacy.cameraPermission, t) },
+        { label: t("fields.microphone"), value: localizeStatus(snapshot.privacy.microphonePermission, t) },
+        { label: t("fields.adBlocker"), value: localizeStatus(snapshot.privacy.adBlocker, t), tone: toneForDetection(snapshot.privacy.adBlocker, true) },
+        { label: t("fields.automationFlags"), value: localizeStatus(snapshot.privacy.automationFlags, t), tone: toneForDetection(snapshot.privacy.automationFlags) },
+        { label: t("fields.headless"), value: localizeStatus(snapshot.privacy.headless, t), tone: toneForDetection(snapshot.privacy.headless) },
+        { label: t("fields.webDriver"), value: localizeStatus(snapshot.privacy.webDriver, t), tone: toneForDetection(snapshot.privacy.webDriver) },
+        { label: t("fields.permissionsPolicy"), value: localizeStatus(snapshot.privacy.permissionsPolicy, t) },
+        { label: t("fields.crossOriginIsolation"), value: localizeStatus(snapshot.privacy.crossOriginIsolation, t) },
       ],
-      title: "Privacy & Security",
+      title: t("details.privacyTitle"),
     },
   ];
 }
@@ -363,20 +370,21 @@ function RiskDonut({
   showTrustedExample: boolean;
   snapshot: FingerprintSnapshot;
 }) {
+  const { t } = useI18n();
   const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
-  const riskLabel = showTrustedExample ? "Low" : snapshot.scores.riskLabel;
+  const riskLabel = showTrustedExample ? t("common.low") : localizeStatus(snapshot.scores.riskLabel, t);
   const usesFingerprintSmartSignals = Object.values(snapshot.smartSignals)
     .some((value) => value !== null);
   return (
     <div className="overview-panel__section risk-overview" data-risk={score >= 15 ? "high" : "safe"}>
       <div className="risk-overview__intro">
-        <span>Risk profile</span>
-        <h3>Trust & Entropy</h3>
+        <span>{t("riskProfile.eyebrow")}</span>
+        <h3>{t("riskProfile.title")}</h3>
         <p>{showTrustedExample
-          ? "Trusted device example with no detected fraud-risk signals."
+          ? t("riskProfile.trustedDescription")
           : usesFingerprintSmartSignals
-          ? "Fingerprint Smart Signals are combined into this suspect score."
-          : "Browser-visible signals are combined into one local confidence score."}</p>
+          ? t("riskProfile.smartDescription")
+          : t("riskProfile.localDescription")}</p>
       </div>
       <div className="risk-overview__body">
         <div className="risk-donut">
@@ -384,13 +392,13 @@ function RiskDonut({
             <circle cx="60" cy="60" r="49" />
             <circle className="risk-donut__progress" cx="60" cy="60" r="49" strokeDasharray={`${score * 3.08} ${308 - score * 3.08}`} />
           </svg>
-          <div><strong>{score}</strong><span>{riskLabel} Risk</span></div>
+          <div><strong>{score}</strong><span>{riskLabel} {t("common.risk")}</span></div>
         </div>
         <dl>
-          <div><dt>Uniqueness</dt><dd>{snapshot.scores.uniqueness}% <small>est.</small></dd></div>
-          <div><dt>Consistency</dt><dd>{snapshot.scores.consistency}%</dd></div>
-          <div><dt>Anonymity</dt><dd>{snapshot.scores.anonymityLabel}</dd></div>
-          <div><dt>Signal Entropy</dt><dd>{snapshot.signals.canvasHash === "Unavailable" ? "Limited" : "High"}</dd></div>
+          <div><dt>{t("riskProfile.uniqueness")}</dt><dd>{snapshot.scores.uniqueness}% <small>{t("riskProfile.estimated")}</small></dd></div>
+          <div><dt>{t("riskProfile.consistency")}</dt><dd>{snapshot.scores.consistency}%</dd></div>
+          <div><dt>{t("riskProfile.anonymity")}</dt><dd>{localizeStatus(snapshot.scores.anonymityLabel, t)}</dd></div>
+          <div><dt>{t("riskProfile.entropy")}</dt><dd>{snapshot.signals.canvasHash === "Unavailable" ? t("common.limited") : t("common.high")}</dd></div>
         </dl>
       </div>
     </div>
@@ -404,10 +412,11 @@ function OverviewPanel({
   showTrustedExample: boolean;
   snapshot: FingerprintSnapshot;
 }) {
+  const { t } = useI18n();
   const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
   return (
     <section
-      aria-label="Fingerprint overview"
+      aria-label={t("riskProfile.aria")}
       className="overview-panel"
       data-risk={score >= 15 ? "high" : "safe"}
     >
@@ -420,13 +429,14 @@ function OverviewPanel({
 }
 
 function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownload: () => void; snapshot: FingerprintSnapshot }) {
+  const { t } = useI18n();
   return (
     <section className="raw-data" id="raw-data">
       <div className="raw-data__header">
-        <div><FileJson aria-hidden="true" /><span><strong>Raw fingerprint JSON</strong><small>{snapshot.identity.provider === "fingerprint-pro" ? "Includes normalized Fingerprint provider data" : "Generated locally in your browser"}</small></span></div>
+        <div><FileJson aria-hidden="true" /><span><strong>{t("details.rawTitle")}</strong><small>{snapshot.identity.provider === "fingerprint-pro" ? t("details.rawPro") : t("details.rawLocal")}</small></span></div>
         <div className="raw-data__actions">
-          <button onClick={onCopy} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
-          <button onClick={onDownload} type="button"><Download aria-hidden="true" /> Download JSON</button>
+          <button onClick={onCopy} type="button"><Copy aria-hidden="true" /> {t("common.copyJson")}</button>
+          <button onClick={onDownload} type="button"><Download aria-hidden="true" /> {t("common.downloadJson")}</button>
         </div>
       </div>
       <pre>{JSON.stringify(snapshot, null, 2)}</pre>
@@ -446,7 +456,8 @@ function DetailDashboard({
   snapshot: FingerprintSnapshot | null;
 }) {
   const [copied, setCopied] = useState(false);
-  const cards = useMemo(() => snapshot ? buildCards(snapshot) : [], [snapshot]);
+  const { t } = useI18n();
+  const cards = useMemo(() => snapshot ? buildCards(snapshot, t) : [], [snapshot, t]);
   const visibleCards = cards.filter((card) => card.key === activeTab);
   const selectedJson = useMemo(() => {
     if (!snapshot || activeTab === "Overview") return null;
@@ -488,13 +499,13 @@ function DetailDashboard({
       <header className="detail-dashboard__header">
         <div className="detail-dashboard__heading">
           <div>
-            <h2>Detailed Browser Fingerprint</h2>
-            <p>Network, browser, device and privacy signals from this session.</p>
+            <h2>{t("details.title")}</h2>
+            <p>{t("details.description")}</p>
           </div>
         </div>
       </header>
 
-      <div className="detail-tabs" role="tablist" aria-label="Fingerprint categories">
+      <div className="detail-tabs" role="tablist" aria-label={t("details.categories")}>
         {detailTabs.map((tab) => (
           <button
             aria-selected={activeTab === tab.label}
@@ -504,7 +515,7 @@ function DetailDashboard({
             role="tab"
             type="button"
           >
-            {tab.icon}<span>{tab.label}</span>
+            {tab.icon}<span>{t(`details.tabs.${tab.label}`)}</span>
           </button>
         ))}
       </div>
@@ -513,8 +524,8 @@ function DetailDashboard({
         {!snapshot ? (
           <div className="dashboard-loading">
             <span className="scan-loader"><Fingerprint aria-hidden="true" /></span>
-            <strong>Collecting browser fingerprint</strong>
-            <p>Reading canvas, WebGL, fonts, media, storage, network and privacy signals…</p>
+            <strong>{t("details.loadingTitle")}</strong>
+            <p>{t("details.loadingDescription")}</p>
           </div>
         ) : activeTab === "Raw Data" ? (
           <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
@@ -526,8 +537,8 @@ function DetailDashboard({
               <DataCard
                 actions={(
                   <>
-                    <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> Copy JSON</button>
-                    <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> Download JSON</button>
+                    <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> {t("common.copyJson")}</button>
+                    <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> {t("common.downloadJson")}</button>
                   </>
                 )}
                 data={card}
@@ -538,58 +549,61 @@ function DetailDashboard({
         )}
       </div>
 
-      {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {activeTab} JSON copied</span> : null}
+      {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {t("details.copied", { section: t(`details.tabs.${activeTab}`) })}</span> : null}
     </section>
   );
 }
 
 function FinalCta({ onAnalyze, scanning }: { onAnalyze: () => void; scanning: boolean }) {
+  const { t } = useI18n();
   return (
     <section className="final-cta">
       <div className="final-cta__glow"><Fingerprint aria-hidden="true" /></div>
       <div>
-        <span className="section-kicker">Browser intelligence, made visible</span>
-        <h2>Ready to understand your digital fingerprint?</h2>
-        <p>Run a fresh local scan anytime. Your browser fingerprint stays in this tab unless you export it.</p>
-        <div className="cta-trust"><span><ShieldCheck /> Local processing</span><span><LockKeyhole /> No fingerprint storage</span><span><Zap /> Live signals</span></div>
+        <span className="section-kicker">{t("cta.eyebrow")}</span>
+        <h2>{t("cta.title")}</h2>
+        <p>{t("cta.description")}</p>
+        <div className="cta-trust"><span><ShieldCheck /> {t("cta.localProcessing")}</span><span><LockKeyhole /> {t("cta.noStorage")}</span><span><Zap /> {t("cta.liveSignals")}</span></div>
       </div>
       <div className="final-cta__actions">
-        <button className="primary-button" disabled={scanning} onClick={onAnalyze} type="button">{scanning ? "Analyzing…" : "Analyze Again"}<ArrowRight /></button>
-        <a className="secondary-button" href="https://amiunique.org/fr/fingerprint" rel="noreferrer" target="_blank">View AmIUnique <ExternalLink /></a>
+        <button className="primary-button" disabled={scanning} onClick={onAnalyze} type="button">{scanning ? t("common.analyzing") : t("cta.analyze")}<ArrowRight /></button>
+        <a className="secondary-button" href="https://amiunique.org/fr/fingerprint" rel="noreferrer" target="_blank">{t("cta.view")} <ExternalLink /></a>
       </div>
     </section>
   );
 }
 
 function Footer() {
+  const { t } = useI18n();
   const columns = [
-    { heading: "Product", links: ["Overview", "Features", "Pricing", "Integrations", "Status"] },
-    { heading: "Solutions", links: ["Fraud Prevention", "Account Takeover", "Payment Protection", "Bot Detection", "Risk Management"] },
-    { heading: "Developers", links: ["API Documentation", "SDKs", "Code Samples", "Changelog"] },
-    { heading: "Company", links: ["About Us", "Research", "Privacy", "Contact Us"] },
+    { heading: t("footer.product"), links: ["overview", "features", "pricing", "integrations", "status"] },
+    { heading: t("footer.solutions"), links: ["fraudPrevention", "accountTakeover", "paymentProtection", "botDetection", "riskManagement"] },
+    { heading: t("footer.developers"), links: ["apiDocumentation", "sdks", "codeSamples", "changelog"] },
+    { heading: t("footer.company"), links: ["about", "research", "privacy", "contact"] },
   ];
   return (
     <footer className="site-footer" id="footer">
       <div className="footer-brand">
-        <a className="brand-lockup" href="#top"><span className="brand-mark"><Fingerprint /></span><span>Fingerprint Analyzer</span></a>
-        <p>Browser fingerprint intelligence inspired by the public AmIUnique research project.</p>
-        <a className="source-link" href="https://amiunique.org/faq" rel="noreferrer" target="_blank">Signal methodology <ExternalLink /></a>
+        <a className="brand-lockup" href="#top"><span className="brand-mark"><BrandMark /></span><span>Fingerprint Analyzer</span></a>
+        <p>{t("footer.description")}</p>
+        <a className="source-link" href="https://amiunique.org/faq" rel="noreferrer" target="_blank">{t("footer.methodology")} <ExternalLink /></a>
       </div>
       <div className="footer-links">
-        {columns.map((column) => <div key={column.heading}><strong>{column.heading}</strong>{column.links.map((link) => <a href="#details" key={link}>{link}</a>)}</div>)}
+        {columns.map((column) => <div key={column.heading}><strong>{column.heading}</strong>{column.links.map((link) => <a href="#details" key={link}>{t(`footer.${link}`)}</a>)}</div>)}
       </div>
       <div className="footer-newsletter">
-        <strong>Stay updated</strong>
-        <p>Get browser privacy and fraud prevention insights.</p>
-        <form onSubmit={(event) => event.preventDefault()}><input aria-label="Email address" placeholder="Enter your email" type="email" /><button aria-label="Subscribe" type="submit"><ArrowRight /></button></form>
+        <strong>{t("footer.stayUpdated")}</strong>
+        <p>{t("footer.newsletterDescription")}</p>
+        <form onSubmit={(event) => event.preventDefault()}><input aria-label={t("footer.email")} placeholder={t("footer.emailPlaceholder")} type="email" /><button aria-label={t("footer.subscribe")} type="submit"><ArrowRight /></button></form>
       </div>
-      <div className="footer-bottom"><span>© 2026 Fingerprint Analyzer. Local diagnostic demonstration.</span><div><a href="#footer">Privacy Policy</a><a href="#footer">Terms of Service</a><a href="#footer">Security</a></div></div>
+      <div className="footer-bottom"><span>{t("footer.copyright")}</span><div><a href="#footer">{t("footer.privacyPolicy")}</a><a href="#footer">{t("footer.terms")}</a><a href="#footer">{t("footer.security")}</a></div></div>
     </footer>
   );
 }
 
 export default function HomePage() {
   const { error, scan, snapshot, status } = useFingerprintScan();
+  const { t } = useI18n();
   const [detailTab, setDetailTab] = useState<DetailTab>("Overview");
   const [showTrustedExample, setShowTrustedExample] = useState(false);
   const scanning = status === "collecting";
@@ -607,14 +621,14 @@ export default function HomePage() {
         <section className="hero-section" id="overview">
           <div className="hero-network" aria-hidden="true" />
           <div className="hero-copy">
-            <h1>Know every browser.<br />Stop <span>fraud</span> with confidence.</h1>
-            <p>See the browser signals that make every visitor distinct. Analyze network, device, canvas, WebGL and privacy attributes in real time.</p>
+            <h1>{t("hero.titleLine1")}<br />{t("hero.titleLine2Before")} <span>{t("hero.titleAccent")}</span> {t("hero.titleLine2After")}</h1>
+            <p>{t("hero.description")}</p>
             <div className="hero-actions">
-              <button className="primary-button" disabled={scanning} onClick={startScan} type="button">{scanning ? "Analyzing…" : "Analyze My Browser"}<ArrowRight aria-hidden="true" /></button>
-              <a className="secondary-button" href="#details">Explore Signals <Play aria-hidden="true" /></a>
+              <button className="primary-button" disabled={scanning} onClick={startScan} type="button">{scanning ? t("common.analyzing") : t("hero.analyze")}<ArrowRight aria-hidden="true" /></button>
+              <a className="secondary-button" href="#details">{t("hero.explore")} <Play aria-hidden="true" /></a>
             </div>
-            <div className="hero-trust"><span><ShieldCheck /> Runs locally</span><span><LockKeyhole /> No fingerprint storage</span><span><Code2 /> Exportable JSON</span></div>
-            {error ? <p className="scan-error">Some signals were blocked: {error}</p> : null}
+            <div className="hero-trust"><span><ShieldCheck /> {t("hero.runsLocally")}</span><span><LockKeyhole /> {t("hero.noStorage")}</span><span><Code2 /> {t("hero.exportable")}</span></div>
+            {error ? <p className="scan-error">{t("hero.error", { error })}</p> : null}
           </div>
           <HeroConsole
             onCalculationClick={() => setDetailTab("Overview")}

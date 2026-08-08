@@ -2,7 +2,8 @@
 
 import type { ReactNode } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { useI18n, type Locale, type Translate } from "@/lib/i18n";
 import type {
   VisitorHistorySummary,
   VisitorVisitRecord,
@@ -30,17 +31,13 @@ interface DetailCellProps {
   value: string;
 }
 
-function pluralize(count: number, singular: string, plural = `${singular}s`) {
-  return count === 1 ? singular : plural;
-}
-
-function formatVisitTime(value: string, selectedIndex: number) {
-  if (selectedIndex === 0) return "Now";
+function formatVisitTime(value: string, selectedIndex: number, locale: Locale, t: Translate) {
+  if (selectedIndex === 0) return t("visit.now");
 
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Previous visit";
+  if (Number.isNaN(date.getTime())) return t("visit.previous");
 
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat(locale === "cn" ? "zh-CN" : locale, {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -48,25 +45,72 @@ function formatVisitTime(value: string, selectedIndex: number) {
   }).format(date);
 }
 
-function getCountryName(countryCode: string) {
+function getCountryName(countryCode: string, locale: Locale, t: Translate) {
   if (!countryCode || countryCode === "Unknown" || countryCode === "Unavailable") {
-    return "Location unavailable";
+    return t("visit.locationUnavailable");
   }
 
   try {
-    return new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode.toUpperCase())
+    return new Intl.DisplayNames([locale === "cn" ? "zh-CN" : locale], { type: "region" }).of(countryCode.toUpperCase())
       ?? countryCode;
   } catch {
     return countryCode;
   }
 }
 
-function getLocationLabel(visit: VisitorVisitRecord) {
+function getLocationLabel(visit: VisitorVisitRecord, locale: Locale, t: Translate) {
   const cityIsKnown = visit.city
     && visit.city !== "Unknown"
     && visit.city !== "Unavailable";
 
-  return cityIsKnown ? visit.city : getCountryName(visit.countryCode);
+  return cityIsKnown ? visit.city : getCountryName(visit.countryCode, locale, t);
+}
+
+function getMapCoordinates(visit: VisitorVisitRecord | null): [number, number] | null {
+  const latitude = visit?.latitude;
+  const longitude = visit?.longitude;
+
+  if (
+    latitude === null
+    || latitude === undefined
+    || longitude === null
+    || longitude === undefined
+    || !Number.isFinite(latitude)
+    || !Number.isFinite(longitude)
+    || latitude < -90
+    || latitude > 90
+    || longitude < -180
+    || longitude > 180
+  ) {
+    return null;
+  }
+
+  return [longitude, latitude];
+}
+
+function getMapImageUrl(coordinates: [number, number]) {
+  const [longitude, latitude] = coordinates;
+  const zoom = 12;
+  const tileScale = 256 * 2 ** zoom;
+  const longitudeOffset = (360 * 350 / tileScale) / 2;
+  const latitudeOffset = ((360 * 200 / tileScale) * Math.cos(latitude * Math.PI / 180)) / 2;
+  const boundingBox = [
+    longitude - longitudeOffset,
+    latitude - latitudeOffset,
+    longitude + longitudeOffset,
+    latitude + latitudeOffset,
+  ].map((coordinate) => coordinate.toFixed(6)).join(",");
+  const parameters = new URLSearchParams({
+    bbox: boundingBox,
+    bboxSR: "4326",
+    f: "image",
+    format: "png",
+    imageSR: "4326",
+    size: "350,200",
+    transparent: "false",
+  });
+
+  return `https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/export?${parameters.toString()}`;
 }
 
 function SummaryCell({ label, value }: SummaryCellProps) {
@@ -90,19 +134,30 @@ function DetailCell({ label, tone, value }: DetailCellProps) {
 }
 
 function VisitMap({ visit }: { visit: VisitorVisitRecord | null }) {
-  const location = visit ? getLocationLabel(visit) : "Locating your visit";
+  const { locale, t } = useI18n();
+  const location = visit ? getLocationLabel(visit, locale, t) : t("visit.locating");
+  const coordinates = getMapCoordinates(visit);
 
   return (
-    <div className="visit-map" aria-label={`Map showing ${location}`} role="img">
-      <Image
-        alt=""
-        aria-hidden="true"
-        className="visit-map__source"
-        height={84}
-        priority
-        src="/images/fingerprint-demo/current-visit-map.png"
-        width={229}
-      />
+    <div className="visit-map" aria-label={t("visit.map", { location })} role="img">
+      {coordinates ? (
+        <>
+          <Image
+            alt={t("visit.map", { location })}
+            className="visit-map__image"
+            height={200}
+            loading="eager"
+            src={getMapImageUrl(coordinates)}
+            unoptimized
+            width={350}
+          />
+          <span className="visit-map__marker" aria-hidden="true">
+            <MapPin />
+          </span>
+        </>
+      ) : (
+        <span className="visit-map__fallback">{t("visit.locationUnavailable")}</span>
+      )}
     </div>
   );
 }
@@ -117,6 +172,7 @@ export function VisitSummary({
   visit,
   visits,
 }: VisitSummaryProps): ReactNode {
+  const { locale, t } = useI18n();
   const hasVisits = visits.length > 0;
   const isFirstVisit = !hasVisits || selectedIndex <= 0;
   const isLastVisit = !hasVisits || selectedIndex >= visits.length - 1;
@@ -130,45 +186,45 @@ export function VisitSummary({
     : "unknown";
   const browser = visit
     ? `${visit.browserName} ${visit.browserVersion}`.trim()
-    : "Collecting browser data";
+    : t("visit.collecting");
 
   return (
     <section className="visit-summary" aria-labelledby="visit-summary-title">
       <header className="visit-summary__visitor-header">
         <h2 className="visit-summary__visitor-title" id="visit-summary-title">
-          <span>Hello, visitor ID</span>
-          <strong>{visitorId || "Collecting visitor ID"}</strong>
+          <span>{t("visit.hello")}</span>
+          <strong>{visitorId || t("visit.collectingVisitorId")}</strong>
         </h2>
         {compactScore ? (
           <div className="visit-summary__compact-score">{compactScore}</div>
         ) : null}
       </header>
 
-      <div className="visit-summary__summary-grid" aria-label="Weekly visit summary">
+      <div className="visit-summary__summary-grid" aria-label={t("visit.weeklySummaryAria")}>
         <SummaryCell
-          label="WEEKLY VISIT SUMMARY"
-          value={`You visited ${summary.visitCount} ${pluralize(summary.visitCount, "time")}`}
+          label={t("visit.weeklySummary")}
+          value={t("visit.visitsValue", { count: summary.visitCount })}
         />
         <SummaryCell
-          label="INCOGNITO"
-          value={`${summary.incognitoSessions} ${pluralize(summary.incognitoSessions, "session")}`}
+          label={t("visit.incognito")}
+          value={t("visit.sessionsValue", { count: summary.incognitoSessions })}
         />
         <SummaryCell
-          label="IP ADDRESS"
-          value={`${summary.uniqueIps} ${pluralize(summary.uniqueIps, "IP", "IPs")}`}
+          label={t("visit.ipAddress")}
+          value={t("visit.ipsValue", { count: summary.uniqueIps })}
         />
         <SummaryCell
-          label="GEOLOCATION"
-          value={`${summary.uniqueLocations} ${pluralize(summary.uniqueLocations, "location")}`}
+          label={t("visit.geolocation")}
+          value={t("visit.locationsValue", { count: summary.uniqueLocations })}
         />
       </div>
 
       <div className="visit-summary__history">
-        <div className="visit-summary__history-title">YOUR RECENT VISITS</div>
+        <div className="visit-summary__history-title">{t("visit.recentVisits")}</div>
         <div className="visit-summary__visit-carousel">
-          <nav className="visit-summary__navigation" aria-label="Visit history navigation">
+          <nav className="visit-summary__navigation" aria-label={t("visit.navigation")}>
             <button
-              aria-label="Previous visit"
+              aria-label={t("visit.previous")}
               className="visit-summary__navigation-button"
               disabled={isFirstVisit}
               onClick={onPreviousVisit}
@@ -177,7 +233,7 @@ export function VisitSummary({
               <ChevronUp aria-hidden="true" size={20} strokeWidth={1.7} />
             </button>
             <button
-              aria-label="Next visit"
+              aria-label={t("visit.next")}
               className="visit-summary__navigation-button"
               disabled={isLastVisit}
               onClick={onNextVisit}
@@ -195,33 +251,33 @@ export function VisitSummary({
                   dateTime={visit?.collectedAt}
                   suppressHydrationWarning
                 >
-                  {visit ? formatVisitTime(visit.collectedAt, selectedIndex) : "Collecting..."}
+                  {visit ? formatVisitTime(visit.collectedAt, selectedIndex, locale, t) : t("visit.collecting")}
                 </time>
                 <span className="visit-summary__visit-place">
-                  {visit ? getLocationLabel(visit) : "Locating your visit"}
+                  {visit ? getLocationLabel(visit, locale, t) : t("visit.locating")}
                 </span>
               </div>
               <VisitMap visit={visit} />
             </div>
 
             <div className="visit-summary__details">
-              <DetailCell label="IP Address" value={visit?.ipAddress ?? "Collecting..."} />
+              <DetailCell label={t("fields.ipAddress")} value={visit?.ipAddress ?? t("visit.collecting")} />
               <DetailCell
-                label="Incognito mode"
+                label={t("visit.incognitoMode")}
                 tone={incognitoTone}
-                value={visit ? (visit.incognito ? "Detected" : "Not Detected") : "Checking..."}
+                value={visit ? (visit.incognito ? t("common.detected") : t("common.notDetected")) : t("common.checking")}
               />
-              <DetailCell label="Browser" value={browser} />
+              <DetailCell label={t("fields.browser")} value={browser} />
               <DetailCell
-                label="VPN"
+                label={t("visit.vpn")}
                 tone={vpnTone}
                 value={visit
                   ? visit.vpn === null
-                    ? "Unknown"
+                    ? t("common.unknown")
                     : visit.vpn
-                      ? "Detected"
-                      : "Not Detected"
-                  : "Checking..."}
+                      ? t("common.detected")
+                      : t("common.notDetected")
+                  : t("common.checking")}
               />
             </div>
           </div>

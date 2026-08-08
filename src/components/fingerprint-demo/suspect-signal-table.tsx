@@ -1,8 +1,11 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n";
 import type { FingerprintSnapshot } from "@/types/fingerprint";
 
 interface SignalResult {
   detected: boolean;
-  name: string;
+  nameKey: string;
   weight: number;
 }
 
@@ -27,33 +30,33 @@ function getSignalResults(snapshot: FingerprintSnapshot): SignalResult[] {
   return [
     {
       detected: smart.bot ?? (automationDetected || webDriverDetected || headlessPossible),
-      name: "Bot detection",
+      nameKey: "bot",
       weight: 7,
     },
     {
       detected: smart.incognito ?? (headlessPossible || webDriverDetected),
-      name: "Incognito detection",
+      nameKey: "incognito",
       weight: 4,
     },
-    { detected: snapshot.network.vpn === true, name: "VPN detection", weight: 8 },
+    { detected: snapshot.network.vpn === true, nameKey: "vpn", weight: 8 },
     {
       detected: smart.tampering ?? snapshot.scores.consistency < 80,
-      name: "Tampering detection",
+      nameKey: "tampering",
       weight: 8,
     },
     {
       detected: smart.virtualMachine ?? virtualMachine,
-      name: "Virtual machine detection",
+      nameKey: "virtualMachine",
       weight: 14,
     },
     {
       detected: smart.developerTools ?? false,
-      name: "Developer tools detection",
+      nameKey: "developerTools",
       weight: 0,
     },
     {
       detected: smart.privacySettings ?? privacySettings,
-      name: "Privacy-focused settings",
+      nameKey: "privacySettings",
       weight: 2,
     },
     {
@@ -61,24 +64,24 @@ function getSignalResults(snapshot: FingerprintSnapshot): SignalResult[] {
           snapshot.network.ipReputation,
           /bad|blocked|malicious|suspicious|high risk/i,
         ),
-      name: "IP blocklist",
+      nameKey: "ipBlocklist",
       weight: 12,
     },
-    { detected: snapshot.network.tor === true, name: "Tor exit node", weight: 20 },
-    { detected: snapshot.network.hosting === true, name: "Data center proxy", weight: 8 },
+    { detected: snapshot.network.tor === true, nameKey: "tor", weight: 20 },
+    { detected: snapshot.network.hosting === true, nameKey: "dataCenter", weight: 8 },
     {
       detected: snapshot.network.proxy === true && snapshot.network.hosting !== true,
-      name: "Residential proxy",
+      nameKey: "residentialProxy",
       weight: 6,
     },
     {
       detected: smart.rareDevice ?? false,
-      name: "Rare device",
+      nameKey: "rareDevice",
       weight: 6,
     },
     {
       detected: smart.highActivityDevice ?? snapshot.scores.riskScore >= 60,
-      name: "High-Activity Device",
+      nameKey: "highActivity",
       weight: 6,
     },
   ];
@@ -91,6 +94,7 @@ export function SuspectSignalTable({
   showTrustedExample?: boolean;
   snapshot: FingerprintSnapshot;
 }) {
+  const { t } = useI18n();
   const signals = getSignalResults(snapshot).map((signal) => (
     showTrustedExample ? { ...signal, detected: false } : signal
   ));
@@ -98,30 +102,30 @@ export function SuspectSignalTable({
   return (
     <section className="suspect-signal-table" aria-labelledby="suspect-signal-title">
       <header className="suspect-signal-table__header">
-        <h3 id="suspect-signal-title">How is this calculated?</h3>
+        <h3 id="suspect-signal-title">{t("signalTable.title")}</h3>
         <a
           href="https://dev.fingerprint.com/docs/smart-signals-reference"
           rel="noreferrer"
           target="_blank"
         >
-          See Documentation
+          {t("signalTable.documentation")}
         </a>
       </header>
 
       <div className="suspect-signal-table__grid suspect-signal-table__columns">
-        <span>Signal</span>
-        <span>Response</span>
-        <span>Weight</span>
+        <span>{t("signalTable.signal")}</span>
+        <span>{t("signalTable.response")}</span>
+        <span>{t("signalTable.weight")}</span>
       </div>
 
       {signals.map((signal) => (
         <div
           className="suspect-signal-table__grid suspect-signal-table__row"
           data-detected={signal.detected}
-          key={signal.name}
+          key={signal.nameKey}
         >
-          <span>{signal.name}</span>
-          <strong><i aria-hidden="true" />{signal.detected ? "Detected" : "Not Detected"}</strong>
+          <span>{t(`signalTable.${signal.nameKey}`)}</span>
+          <strong><i aria-hidden="true" />{signal.detected ? t("common.detected") : t("common.notDetected")}</strong>
           <em>{signal.detected ? signal.weight : 0}</em>
         </div>
       ))}

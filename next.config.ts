@@ -49,6 +49,11 @@ const nextConfig: NextConfig = {
         hostname: "0jkvp5gzimglp6ji.public.blob.vercel-storage.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "server.arcgisonline.com",
+        pathname: "/ArcGIS/rest/services/World_Street_Map/MapServer/export",
+      },
     ],
   },
   turbopack: {

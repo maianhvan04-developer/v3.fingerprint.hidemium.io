@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useI18n } from "@/lib/i18n";
 
 export interface SuspectScoreProps {
   compact?: boolean;
@@ -39,11 +40,12 @@ function CompactGlyph({ safe }: { safe: boolean }) {
 
 function Gauge({ score }: { score: number }) {
   const gauge = getGaugeArc(score);
+  const { t } = useI18n();
 
   return (
     <div className="suspect-score__gauge">
       <svg
-        aria-label={`Suspect score: ${gauge.score} out of 100`}
+        aria-label={t("score.gaugeAria", { score: gauge.score })}
         className="suspect-score__gauge-svg"
         role="img"
         viewBox="0 0 120 120"
@@ -61,7 +63,7 @@ function Gauge({ score }: { score: number }) {
       </svg>
       <div aria-hidden="true" className="suspect-score__gauge-copy">
         <strong className="suspect-score__value">{gauge.score}</strong>
-        <span className="suspect-score__label">SUSPECT SCORE</span>
+        <span className="suspect-score__label">{t("score.label")}</span>
       </div>
     </div>
   );
@@ -74,6 +76,7 @@ export function SuspectScore({
   riskScore,
   showTrustedExample,
 }: SuspectScoreProps): ReactNode {
+  const { t } = useI18n();
   const liveScore = getGaugeArc(riskScore).score;
   const score = showTrustedExample ? 4 : liveScore;
   const safe = showTrustedExample || score < 15;
@@ -82,7 +85,11 @@ export function SuspectScore({
   if (compact) {
     return (
       <button
-        aria-label={`${safe ? "Trusted" : "Suspect"} score ${score} out of 100. Switch to ${showTrustedExample ? "current device" : "trusted device example"}.`}
+        aria-label={t("score.compactAria", {
+          score,
+          target: showTrustedExample ? t("score.currentDevice") : t("score.trustedExample"),
+          type: safe ? t("score.trusted") : t("score.suspect"),
+        })}
         aria-pressed={showTrustedExample}
         className={`suspect-score suspect-score--compact ${stateClass}`}
         onClick={() => onTrustedExampleChange(!showTrustedExample)}
@@ -91,7 +98,7 @@ export function SuspectScore({
         <span className="suspect-score__compact-glyph">
           <CompactGlyph safe={safe} />
         </span>
-        <span className="suspect-score__compact-label">{safe ? "Trusted score" : "Suspect score"}</span>
+        <span className="suspect-score__compact-label">{safe ? t("score.trustedScore") : t("score.suspectScore")}</span>
         <strong className="suspect-score__compact-value">{score}</strong>
       </button>
     );
@@ -99,11 +106,11 @@ export function SuspectScore({
 
   return (
     <section
-      aria-label="Visitor risk assessment"
+      aria-label={t("score.assessment")}
       className={`suspect-score ${stateClass}`}
     >
       <p className="suspect-score__eyebrow">
-        {showTrustedExample ? "THIS IS FAKE DATA" : "THIS IS REAL DATA"}
+        {showTrustedExample ? t("score.fakeData") : t("score.realData")}
       </p>
 
       <Gauge score={score} />
@@ -111,28 +118,28 @@ export function SuspectScore({
       <div className="suspect-score__assessment">
         <h3 className="suspect-score__headline">
           {showTrustedExample ? (
-            "This is how a trusted user looks"
+            t("score.trustedExampleTitle")
           ) : safe ? (
-            "You look like a trusted user"
+            t("score.trustedTitle")
           ) : (
             <>
-              You look like a <span className="suspect-score__highlight">suspicious</span> user
+              {t("score.suspiciousBefore")} <span className="suspect-score__highlight">{t("score.suspicious")}</span> {t("score.suspiciousAfter")}
             </>
           )}
         </h3>
         <p className="suspect-score__support">
           {showTrustedExample
-            ? "No signs of fraud, bots, or spoofing."
+            ? t("score.trustedExampleSupport")
             : safe
-              ? "No strong fraud-risk signals were detected."
-              : "We detected signals of fraud risk."}
+              ? t("score.trustedSupport")
+              : t("score.suspiciousSupport")}
         </p>
         <a className="suspect-score__calculation-link" href="#details" onClick={onCalculationClick}>
-          See how this is calculated
+          {t("score.calculation")}
         </a>
       </div>
 
-      <div aria-label="Risk score example" className="suspect-score__tabs" role="tablist">
+      <div aria-label={t("score.tabsAria")} className="suspect-score__tabs" role="tablist">
         <button
           aria-selected={!showTrustedExample}
           className={`suspect-score__tab${showTrustedExample ? "" : " suspect-score__tab--active"}`}
@@ -140,7 +147,7 @@ export function SuspectScore({
           role="tab"
           type="button"
         >
-          Your current device
+          {t("score.yourDevice")}
         </button>
         <button
           aria-selected={showTrustedExample}
@@ -149,7 +156,7 @@ export function SuspectScore({
           role="tab"
           type="button"
         >
-          Try trusted device
+          {t("score.tryTrusted")}
         </button>
       </div>
     </section>
