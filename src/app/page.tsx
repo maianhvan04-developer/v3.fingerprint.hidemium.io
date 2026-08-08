@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   ArrowRight,
   Check,
@@ -35,6 +35,7 @@ import type { FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fin
 
 type DetailTab = "Overview" | "Browser" | "Network" | "Fingerprint" | "Privacy" | "System" | "Screen" | "Raw Data";
 type ConsoleMode = "identification" | "browser" | "live";
+const consoleAddress = "http://fingerprint.hidemium.io/";
 
 interface DetailCardData {
   icon: ReactNode;
@@ -79,6 +80,108 @@ function toneForFlag(value: boolean | null): ValueTone {
   return value === true ? "warn" : value === false ? "good" : "default";
 }
 
+function useScrollEffects() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const targets = new Set<HTMLElement>();
+    let animationFrame = 0;
+
+    const updateScrollVars = () => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+
+      root.style.setProperty("--scroll-progress-value", progress.toFixed(4));
+      root.style.setProperty("--scroll-offset", `${Math.round(progress * 120)}px`);
+      root.style.setProperty("--scroll-glow", `${Math.round(18 + progress * 34)}px`);
+    };
+
+    const requestScrollUpdate = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(updateScrollVars);
+    };
+
+    const cleanupScrollVars = () => {
+      window.cancelAnimationFrame(animationFrame);
+      root.style.removeProperty("--scroll-progress-value");
+      root.style.removeProperty("--scroll-offset");
+      root.style.removeProperty("--scroll-glow");
+    };
+
+    root.classList.add("scroll-effects-ready");
+
+    if (reduceMotion) {
+      document
+        .querySelectorAll<HTMLElement>("[data-scroll]")
+        .forEach((element) => element.classList.add("is-visible"));
+      return () => root.classList.remove("scroll-effects-ready");
+    }
+
+    updateScrollVars();
+    window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+    window.addEventListener("resize", requestScrollUpdate);
+
+    if (!("IntersectionObserver" in window)) {
+      document
+        .querySelectorAll<HTMLElement>("[data-scroll]")
+        .forEach((element) => element.classList.add("is-visible"));
+
+      return () => {
+        window.removeEventListener("scroll", requestScrollUpdate);
+        window.removeEventListener("resize", requestScrollUpdate);
+        cleanupScrollVars();
+        root.classList.remove("scroll-effects-ready");
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        rootMargin: "0px 0px -10% 0px",
+        threshold: 0.12,
+      },
+    );
+
+    const observeTargets = () => {
+      document
+        .querySelectorAll<HTMLElement>("[data-scroll]")
+        .forEach((element, index) => {
+          if (targets.has(element)) return;
+
+          const delay = Number.parseInt(element.dataset.scrollDelay ?? `${index % 5}`, 10);
+          element.style.setProperty("--scroll-delay", `${Number.isNaN(delay) ? 0 : delay * 70}ms`);
+          targets.add(element);
+          observer.observe(element);
+        });
+    };
+
+    observeTargets();
+
+    const mutationObserver = new MutationObserver(observeTargets);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      mutationObserver.disconnect();
+      observer.disconnect();
+      window.removeEventListener("scroll", requestScrollUpdate);
+      window.removeEventListener("resize", requestScrollUpdate);
+      targets.forEach((element) => {
+        element.classList.remove("is-visible");
+        element.style.removeProperty("--scroll-delay");
+      });
+      cleanupScrollVars();
+      root.classList.remove("scroll-effects-ready");
+    };
+  }, []);
+}
+
 function HeroConsole({
   onCalculationClick,
   onTrustedExampleChange,
@@ -96,11 +199,17 @@ function HeroConsole({
   const { t } = useI18n();
 
   return (
-    <div className="hero-console" aria-label={t("console.aria")}>
+    <div
+      className="hero-console"
+      aria-label={t("console.aria")}
+      data-scroll="zoom"
+      data-scroll-delay="1"
+    >
       <div className="hero-console__titlebar">
         <span className="hero-console__controls" aria-hidden="true"><i /><i /><i /></span>
         <div className="hero-console__titlebar-label">
-          http://fingerprint.hidemium.io/
+          <span>{consoleAddress}</span>
+          <i aria-hidden="true" />
         </div>
       </div>
 
@@ -195,7 +304,7 @@ function TrustBrand({ brand }: { brand: (typeof trustedBrands)[number] }) {
 function TrustBar() {
   const { t } = useI18n();
   return (
-    <section className="trust-bar" aria-label={t("trust.aria")}>
+    <section className="trust-bar" aria-label={t("trust.aria")} data-scroll="fade-up">
       <span>{t("trust.title")}</span>
       <div className="trust-bar__viewport">
         <div className="trust-bar__track">
@@ -212,7 +321,7 @@ function TrustBar() {
 
 function DataCard({ actions, data }: { actions?: ReactNode; data: DetailCardData }) {
   return (
-    <article className="data-card">
+    <article className="data-card" data-scroll="fade-up">
       <div className="data-card__header">
         <h3>{data.icon}{data.title}</h3>
         {actions ? <div className="data-card__actions">{actions}</div> : null}
@@ -418,6 +527,7 @@ function OverviewPanel({
     <section
       aria-label={t("riskProfile.aria")}
       className="overview-panel"
+      data-scroll="fade-up"
       data-risk={score >= 15 ? "high" : "safe"}
     >
       <div className="overview-panel__analysis">
@@ -431,7 +541,7 @@ function OverviewPanel({
 function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownload: () => void; snapshot: FingerprintSnapshot }) {
   const { t } = useI18n();
   return (
-    <section className="raw-data" id="raw-data">
+    <section className="raw-data" data-scroll="fade-up" id="raw-data">
       <div className="raw-data__header">
         <div><FileJson aria-hidden="true" /><span><strong>{t("details.rawTitle")}</strong><small>{snapshot.identity.provider === "fingerprint-pro" ? t("details.rawPro") : t("details.rawLocal")}</small></span></div>
         <div className="raw-data__actions">
@@ -495,7 +605,7 @@ function DetailDashboard({
   };
 
   return (
-    <section className="detail-dashboard" id="details">
+    <section className="detail-dashboard" data-scroll="fade-up" id="details">
       <header className="detail-dashboard__header">
         <div className="detail-dashboard__heading">
           <div>
@@ -557,7 +667,7 @@ function DetailDashboard({
 function FinalCta({ onAnalyze, scanning }: { onAnalyze: () => void; scanning: boolean }) {
   const { t } = useI18n();
   return (
-    <section className="final-cta">
+    <section className="final-cta" data-scroll="zoom">
       <div className="final-cta__glow"><Fingerprint aria-hidden="true" /></div>
       <div>
         <span className="section-kicker">{t("cta.eyebrow")}</span>
@@ -582,7 +692,7 @@ function Footer() {
     { heading: t("footer.company"), links: ["about", "research", "privacy", "contact"] },
   ];
   return (
-    <footer className="site-footer" id="footer">
+    <footer className="site-footer" data-scroll="fade-up" id="footer">
       <div className="footer-brand">
         <a className="brand-lockup" href="#top"><span className="brand-mark"><BrandMark /></span><span>Fingerprint Analyzer</span></a>
         <p>{t("footer.description")}</p>
@@ -608,6 +718,8 @@ export default function HomePage() {
   const [showTrustedExample, setShowTrustedExample] = useState(false);
   const scanning = status === "collecting";
 
+  useScrollEffects();
+
   const startScan = () => {
     setShowTrustedExample(false);
     void scan();
@@ -620,14 +732,14 @@ export default function HomePage() {
       <main>
         <section className="hero-section" id="overview">
           <div className="hero-network" aria-hidden="true" />
-          <div className="hero-copy">
-            <h1>{t("hero.titleLine1")}<br />{t("hero.titleLine2Before")} <span>{t("hero.titleAccent")}</span> {t("hero.titleLine2After")}</h1>
-            <p>{t("hero.description")}</p>
-            <div className="hero-actions">
+          <div className="hero-copy" data-scroll="fade-up" data-scroll-delay="0">
+            <h1 data-scroll-child="1">{t("hero.titleLine1")}<br />{t("hero.titleLine2Before")} <span>{t("hero.titleAccent")}</span> {t("hero.titleLine2After")}</h1>
+            <p data-scroll-child="2">{t("hero.description")}</p>
+            <div className="hero-actions" data-scroll-child="3">
               <button className="primary-button" disabled={scanning} onClick={startScan} type="button">{scanning ? t("common.analyzing") : t("hero.analyze")}<ArrowRight aria-hidden="true" /></button>
               <a className="secondary-button" href="#details">{t("hero.explore")} <Play aria-hidden="true" /></a>
             </div>
-            <div className="hero-trust"><span><ShieldCheck /> {t("hero.runsLocally")}</span><span><LockKeyhole /> {t("hero.noStorage")}</span><span><Code2 /> {t("hero.exportable")}</span></div>
+            <div className="hero-trust" data-scroll-child="4"><span><ShieldCheck /> {t("hero.runsLocally")}</span><span><LockKeyhole /> {t("hero.noStorage")}</span><span><Code2 /> {t("hero.exportable")}</span></div>
             {error ? <p className="scan-error">{t("hero.error", { error })}</p> : null}
           </div>
           <HeroConsole

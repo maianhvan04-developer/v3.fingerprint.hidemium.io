@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -8,22 +9,15 @@ interface BrandMarkProps {
 
 export function BrandMark({ className }: BrandMarkProps) {
   return (
-    <svg
+    <Image
       aria-hidden="true"
       className={className}
-      fill="none"
-      viewBox="0 0 120 120"
-    >
-      <path d="M16 59C18 33 34 16 58 12c17-3 34 3 45 16" />
-      <circle cx="17" cy="76" r="4.5" fill="currentColor" stroke="none" />
-      <path d="M31 60c0-18 12-31 29-33 16-2 31 7 37 21 4 8 5 16 4 25" />
-      <path d="M31 61v21c0 7-1 13-4 19" />
-      <path d="M47 58c0-10 7-18 17-19 12-1 22 8 22 20v22c0 8-1 15-4 22" />
-      <path d="M49 61v22c0 11-2 21-6 30" />
-      <path d="M63 60v22c0 15-3 27-7 37" />
-      <path d="M76 60v23c0 14-2 25-6 34" />
-      <path d="M99 51v25" />
-    </svg>
+      alt=""
+      draggable={false}
+      height={100}
+      src="/image.png"
+      width={100}
+    />
   );
 }
 
