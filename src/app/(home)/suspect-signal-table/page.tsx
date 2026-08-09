@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { Toast } from "@/components/ui/Toast";
 import { useI18n } from "@/lib/i18n";
 import type { FingerprintSnapshot } from "@/types/fingerprint";
 
@@ -95,18 +97,41 @@ export function SuspectSignalTable({
   snapshot: FingerprintSnapshot;
 }) {
   const { t } = useI18n();
+  const [documentationToastOpen, setDocumentationToastOpen] = useState(false);
+  const documentationToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const signals = getSignalResults(snapshot).map((signal) => (
     showTrustedExample ? { ...signal, detected: false } : signal
   ));
+
+  useEffect(() => () => {
+    if (documentationToastTimer.current) {
+      clearTimeout(documentationToastTimer.current);
+    }
+  }, []);
+
+  const showDocumentationToast = () => {
+    if (documentationToastTimer.current) {
+      clearTimeout(documentationToastTimer.current);
+    }
+    setDocumentationToastOpen(true);
+    documentationToastTimer.current = setTimeout(() => {
+      setDocumentationToastOpen(false);
+      documentationToastTimer.current = null;
+    }, 2400);
+  };
+
+  const handleDocumentationClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    showDocumentationToast();
+  };
 
   return (
     <section className="suspect-signal-table" aria-labelledby="suspect-signal-title">
       <header className="suspect-signal-table__header">
         <h3 id="suspect-signal-title">{t("signalTable.title")}</h3>
         <a
-          href="https://dev.fingerprint.com/docs/smart-signals-reference"
-          rel="noreferrer"
-          target="_blank"
+          href="#details"
+          onClick={handleDocumentationClick}
         >
           {t("signalTable.documentation")}
         </a>
@@ -129,6 +154,7 @@ export function SuspectSignalTable({
           <em>{signal.detected ? signal.weight : 0}</em>
         </div>
       ))}
+      <Toast open={documentationToastOpen}>{t("header.resources.comingSoonToast")}</Toast>
     </section>
   );
 }

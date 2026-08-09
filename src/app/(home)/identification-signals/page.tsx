@@ -1,8 +1,8 @@
 "use client";
 
 import { Fingerprint, ScanSearch } from "lucide-react";
+import { ConsoleSignalCard } from "@/components/ui/ConsoleSignalCard";
 import {
-  Card,
   detectionTone,
   fallback,
   flag,
@@ -10,7 +10,7 @@ import {
   join,
   type SignalPanelsProps,
   type SignalRow,
-} from "@/app/(home)/signal-panel-core/page";
+} from "@/lib/fingerprint/signal-format";
 import { useI18n } from "@/lib/i18n";
 
 export function IdentificationSignals({ snapshot, scanning }: SignalPanelsProps) {
@@ -38,8 +38,8 @@ export function IdentificationSignals({ snapshot, scanning }: SignalPanelsProps)
 
   return (
     <div className="console-signal-panel console-signal-panel--identification" data-scanning={scanning}>
-      <Card icon={ScanSearch} rows={identityRows} title={t("signalPanels.identityOverview")} />
-      <Card icon={Fingerprint} rows={recognitionRows} title={t("signalPanels.recognitionProfile")} />
+      <ConsoleSignalCard icon={ScanSearch} rows={identityRows} title={t("signalPanels.identityOverview")} />
+      <ConsoleSignalCard icon={Fingerprint} rows={recognitionRows} title={t("signalPanels.recognitionProfile")} />
     </div>
   );
 }

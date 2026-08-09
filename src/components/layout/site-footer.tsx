@@ -3,7 +3,7 @@
 import { useState, type FormEvent, type MouseEvent } from "react";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { BrandMark } from "@/components/icons";
-import { ComingSoonModal } from "@/components/ui/coming-soon-modal";
+import { ComingSoonModal } from "@/components/ui/ComingSoonModal";
 import { useI18n } from "@/lib/i18n";
 
 const footerColumns = [

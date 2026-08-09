@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
 import {
   ArrowRight,
   Box,
@@ -24,7 +23,6 @@ import {
   ShieldCheck,
   Type,
   Wifi,
-  X,
   Zap,
 } from "lucide-react";
 import { BrowserSmartSignals } from "@/app/(home)/browser-smart-signals/page";
@@ -33,6 +31,8 @@ import { IdentificationSignals } from "@/app/(home)/identification-signals/page"
 import { SuspectSignalTable } from "@/app/(home)/suspect-signal-table/page";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { DataCard, type DataCardData as UiDataCardData } from "@/components/ui/DataCard";
+import { JsonPreviewModal } from "@/components/ui/JsonPreviewModal";
 import { localizeStatus, useI18n, type Translate } from "@/lib/i18n";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
 import type { FingerprintJsonValue, FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
@@ -53,11 +53,8 @@ type BrowserLeakTab = Exclude<DetailTab, "Overview">;
 type ConsoleMode = "identification" | "browser" | "live";
 const consoleAddress = "http://fingerprint.hidemium.io/";
 
-interface DetailCardData {
-  icon: ReactNode;
+interface DetailCardData extends UiDataCardData {
   key: BrowserLeakTab;
-  rows: FingerprintRow[];
-  title: string;
 }
 
 const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
@@ -322,32 +319,6 @@ function TrustBar() {
         </div>
       </div>
     </section>
-  );
-}
-
-function DataCard({ actions, data }: { actions?: ReactNode; data: DetailCardData }) {
-  return (
-    <article className="data-card" data-scroll="fade-up">
-      <div className="data-card__header">
-        <h3>{data.icon}{data.title}</h3>
-        {actions ? <div className="data-card__actions">{actions}</div> : null}
-      </div>
-      <dl>
-        {data.rows.map((row) => {
-          const valueClassName = [
-            row.tone ? `value-${row.tone}` : "",
-            row.value.includes("\n") ? "value-multiline" : "",
-          ].filter(Boolean).join(" ") || undefined;
-
-          return (
-            <div key={row.label}>
-              <dt>{row.label}</dt>
-              <dd className={valueClassName}>{row.value}</dd>
-            </div>
-          );
-        })}
-      </dl>
-    </article>
   );
 }
 
@@ -657,49 +628,17 @@ function DetailDashboard({
       </div>
 
       {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {t("details.copied", { section: t(`details.tabs.${activeTab}`) })}</span> : null}
-      {jsonPreviewOpen && selectedJsonString && typeof document !== "undefined" ? createPortal((
-        <div
-          className="json-preview-modal"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setJsonPreviewOpen(false);
-            }
-          }}
-          role="presentation"
-        >
-          <div
-            aria-labelledby="json-preview-title"
-            aria-modal="true"
-            className="json-preview-modal__panel"
-            role="dialog"
-          >
-            <header className="json-preview-modal__header">
-              <div>
-                <span>{t("details.jsonPreviewEyebrow")}</span>
-                <h3 id="json-preview-title">{t("details.jsonPreviewTitle", { section: t(`details.tabs.${activeTab}`) })}</h3>
-                <p>{t("details.jsonPreviewDescription")}</p>
-              </div>
-              <button
-                aria-label={t("common.close")}
-                className="json-preview-modal__close"
-                onClick={() => setJsonPreviewOpen(false)}
-                type="button"
-              >
-                <X aria-hidden="true" />
-              </button>
-            </header>
-            <pre className="json-preview-modal__body">{selectedJsonString}</pre>
-            <footer className="json-preview-modal__footer">
-              <button className="json-preview-modal__ghost" onClick={() => setJsonPreviewOpen(false)} type="button">
-                {t("common.close")}
-              </button>
-              <button className="json-preview-modal__download" onClick={downloadJson} type="button">
-                <Download aria-hidden="true" /> {t("common.downloadJson")}
-              </button>
-            </footer>
-          </div>
-        </div>
-      ), document.body) : null}
+      <JsonPreviewModal
+        closeLabel={t("common.close")}
+        content={selectedJsonString}
+        description={t("details.jsonPreviewDescription")}
+        downloadLabel={t("common.downloadJson")}
+        eyebrow={t("details.jsonPreviewEyebrow")}
+        onClose={() => setJsonPreviewOpen(false)}
+        onDownload={downloadJson}
+        open={jsonPreviewOpen}
+        title={t("details.jsonPreviewTitle", { section: t(`details.tabs.${activeTab}`) })}
+      />
     </section>
   );
 }

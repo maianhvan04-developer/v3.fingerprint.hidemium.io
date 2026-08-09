@@ -1,14 +1,14 @@
 "use client";
 
 import { Globe2, Monitor, ShieldCheck } from "lucide-react";
+import { ConsoleSignalCard } from "@/components/ui/ConsoleSignalCard";
 import {
-  Card,
   detectionTone,
   fallback,
   join,
   type SignalPanelsProps,
   type SignalRow,
-} from "@/app/(home)/signal-panel-core/page";
+} from "@/lib/fingerprint/signal-format";
 import { useI18n } from "@/lib/i18n";
 
 export function BrowserSmartSignals({ snapshot, scanning }: SignalPanelsProps) {
@@ -40,9 +40,9 @@ export function BrowserSmartSignals({ snapshot, scanning }: SignalPanelsProps) {
 
   return (
     <div className="console-signal-panel console-signal-panel--browser" data-scanning={scanning}>
-      <Card icon={Globe2} rows={browserRows} title={t("common.browser")} />
-      <Card icon={ShieldCheck} rows={privacyRows} title={t("signalPanels.privacy")} />
-      <Card icon={Monitor} rows={deviceRows} title={t("signalPanels.device")} />
+      <ConsoleSignalCard icon={Globe2} rows={browserRows} title={t("common.browser")} />
+      <ConsoleSignalCard icon={ShieldCheck} rows={privacyRows} title={t("signalPanels.privacy")} />
+      <ConsoleSignalCard icon={Monitor} rows={deviceRows} title={t("signalPanels.device")} />
     </div>
   );
 }

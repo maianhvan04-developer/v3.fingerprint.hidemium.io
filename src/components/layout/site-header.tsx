@@ -18,8 +18,8 @@ import {
   X,
 } from "lucide-react";
 import { BrandMark } from "@/components/icons";
-import { ComingSoonBadge } from "@/components/ui/coming-soon-badge";
-import { ComingSoonModal } from "@/components/ui/coming-soon-modal";
+import { ComingSoonBadge } from "@/components/ui/ComingSoonBadge";
+import { ComingSoonModal } from "@/components/ui/ComingSoonModal";
 import { locales, useI18n, type Locale } from "@/lib/i18n";
 
 interface SiteHeaderProps {
