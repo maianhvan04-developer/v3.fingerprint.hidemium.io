@@ -132,3 +132,5 @@ export function SuspectSignalTable({
     </section>
   );
 }
+
+export default SuspectSignalTable;

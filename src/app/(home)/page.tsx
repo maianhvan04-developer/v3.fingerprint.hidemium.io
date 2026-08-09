@@ -1,58 +1,77 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
   ArrowRight,
+  Box,
+  Braces,
   Check,
   Code2,
   Copy,
-  Cpu,
   Download,
   ExternalLink,
-  FileJson,
   Fingerprint,
-  Globe2,
+  Filter,
+  FileCode2,
   LayoutDashboard,
+  Lock,
   LockKeyhole,
-  Monitor,
-  Network,
+  MapPin,
+  Palette,
   Play,
+  Radio,
   ShieldCheck,
+  Type,
+  Wifi,
+  X,
   Zap,
 } from "lucide-react";
-import { BrandMark } from "@/components/icons";
-import { FingerprintLiveDemo } from "@/components/fingerprint-demo/fingerprint-live-demo";
-import {
-  BrowserSmartSignals,
-  IdentificationSignals,
-} from "@/components/fingerprint-demo/signal-panels";
-import { SuspectSignalTable } from "@/components/fingerprint-demo/suspect-signal-table";
+import { BrowserSmartSignals } from "@/app/(home)/browser-smart-signals/page";
+import { FingerprintLiveDemo } from "@/app/(home)/fingerprint-live-demo/page";
+import { IdentificationSignals } from "@/app/(home)/identification-signals/page";
+import { SuspectSignalTable } from "@/app/(home)/suspect-signal-table/page";
 import { SiteHeader } from "@/components/layout/site-header";
-import { formatNetworkFlag } from "@/lib/fingerprint/collector";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { localizeStatus, useI18n, type Translate } from "@/lib/i18n";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
-import type { FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
+import type { FingerprintJsonValue, FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
 
-type DetailTab = "Overview" | "Browser" | "Network" | "Fingerprint" | "Privacy" | "System" | "Screen" | "Raw Data";
+type DetailTab =
+  | "Overview"
+  | "IP Address"
+  | "JavaScript"
+  | "WebRTC Leak Test"
+  | "Canvas Fingerprinting"
+  | "WebGL Report"
+  | "Font Fingerprinting"
+  | "Geolocation API"
+  | "Features Detection"
+  | "TLS Client Test"
+  | "Content Filters";
+type BrowserLeakTab = Exclude<DetailTab, "Overview">;
 type ConsoleMode = "identification" | "browser" | "live";
 const consoleAddress = "http://fingerprint.hidemium.io/";
 
 interface DetailCardData {
   icon: ReactNode;
-  key: Exclude<DetailTab, "Overview" | "Raw Data">;
+  key: BrowserLeakTab;
   rows: FingerprintRow[];
   title: string;
 }
 
 const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
   { icon: <LayoutDashboard aria-hidden="true" />, label: "Overview" },
-  { icon: <Globe2 aria-hidden="true" />, label: "Browser" },
-  { icon: <Network aria-hidden="true" />, label: "Network" },
-  { icon: <Fingerprint aria-hidden="true" />, label: "Fingerprint" },
-  { icon: <LockKeyhole aria-hidden="true" />, label: "Privacy" },
-  { icon: <Cpu aria-hidden="true" />, label: "System" },
-  { icon: <Monitor aria-hidden="true" />, label: "Screen" },
-  { icon: <FileJson aria-hidden="true" />, label: "Raw Data" },
+  { icon: <Radio aria-hidden="true" />, label: "IP Address" },
+  { icon: <Braces aria-hidden="true" />, label: "JavaScript" },
+  { icon: <Wifi aria-hidden="true" />, label: "WebRTC Leak Test" },
+  { icon: <Palette aria-hidden="true" />, label: "Canvas Fingerprinting" },
+  { icon: <Box aria-hidden="true" />, label: "WebGL Report" },
+  { icon: <Type aria-hidden="true" />, label: "Font Fingerprinting" },
+  { icon: <MapPin aria-hidden="true" />, label: "Geolocation API" },
+  { icon: <FileCode2 aria-hidden="true" />, label: "Features Detection" },
+  { icon: <Lock aria-hidden="true" />, label: "TLS Client Test" },
+  { icon: <Filter aria-hidden="true" />, label: "Content Filters" },
 ];
 const consoleModes: Array<{ id: ConsoleMode; index: string }> = [
   { id: "live", index: "01" },
@@ -70,16 +89,6 @@ const trustedBrands = [
   { key: "datadome", label: "DataDome" },
 ] as const;
 
-function toneForDetection(value: string, inverse = false): ValueTone {
-  const detected = /detected|possible|exposure/i.test(value) && !/not detected|no leak/i.test(value);
-  if (detected) return inverse ? "good" : "warn";
-  return inverse ? "warn" : "good";
-}
-
-function toneForFlag(value: boolean | null): ValueTone {
-  return value === true ? "warn" : value === false ? "good" : "default";
-}
-
 function useScrollEffects() {
   useEffect(() => {
     const root = document.documentElement;
@@ -91,9 +100,7 @@ function useScrollEffects() {
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
-      root.style.setProperty("--scroll-progress-value", progress.toFixed(4));
       root.style.setProperty("--scroll-offset", `${Math.round(progress * 120)}px`);
-      root.style.setProperty("--scroll-glow", `${Math.round(18 + progress * 34)}px`);
     };
 
     const requestScrollUpdate = () => {
@@ -103,9 +110,7 @@ function useScrollEffects() {
 
     const cleanupScrollVars = () => {
       window.cancelAnimationFrame(animationFrame);
-      root.style.removeProperty("--scroll-progress-value");
       root.style.removeProperty("--scroll-offset");
-      root.style.removeProperty("--scroll-glow");
     };
 
     root.classList.add("scroll-effects-ready");
@@ -201,6 +206,7 @@ function HeroConsole({
   return (
     <div
       className="hero-console"
+      id="browser-preview"
       aria-label={t("console.aria")}
       data-scroll="zoom"
       data-scroll-delay="1"
@@ -327,149 +333,133 @@ function DataCard({ actions, data }: { actions?: ReactNode; data: DetailCardData
         {actions ? <div className="data-card__actions">{actions}</div> : null}
       </div>
       <dl>
-        {data.rows.map((row) => (
-          <div key={row.label}>
-            <dt>{row.label}</dt>
-            <dd className={row.tone ? `value-${row.tone}` : undefined}>{row.value}</dd>
-          </div>
-        ))}
+        {data.rows.map((row) => {
+          const valueClassName = [
+            row.tone ? `value-${row.tone}` : "",
+            row.value.includes("\n") ? "value-multiline" : "",
+          ].filter(Boolean).join(" ") || undefined;
+
+          return (
+            <div key={row.label}>
+              <dt>{row.label}</dt>
+              <dd className={valueClassName}>{row.value}</dd>
+            </div>
+          );
+        })}
       </dl>
     </article>
   );
 }
 
-function buildCards(snapshot: FingerprintSnapshot, t: Translate): DetailCardData[] {
-  const providerLabel = snapshot.identity.provider === "fingerprint-pro"
-    ? "Fingerprint Pro"
-    : snapshot.identity.provider === "fingerprintjs"
-      ? "FingerprintJS"
-      : t("console.localDiagnostic");
-  const confidence = snapshot.identity.confidence === null
-    ? t("common.unavailable")
-    : `${Math.round(snapshot.identity.confidence * 100)}%`;
+const browserLeakTabSections = {
+  "IP Address": "ipAddress",
+  JavaScript: "javaScript",
+  "WebRTC Leak Test": "webRtc",
+  "Canvas Fingerprinting": "canvas",
+  "WebGL Report": "webGl",
+  "Font Fingerprinting": "fonts",
+  "Geolocation API": "geolocation",
+  "Features Detection": "features",
+  "TLS Client Test": "tls",
+  "Content Filters": "contentFilters",
+} satisfies Record<BrowserLeakTab, keyof FingerprintSnapshot["browserLeaks"]>;
 
-  return [
-    {
-      icon: <Network aria-hidden="true" />,
-      key: "Network",
-      rows: [
-        { label: t("fields.ipAddress"), value: snapshot.network.ipAddress, tone: "accent" },
-        { label: snapshot.network.ipVersion || t("fields.ipVersion"), value: snapshot.network.ipVersion === "IPv6" ? snapshot.network.ipAddress : t("common.notDetected") },
-        { label: t("fields.location"), value: snapshot.network.city },
-        { label: t("fields.timezone"), value: snapshot.network.timezone },
-        { label: t("fields.isp"), value: snapshot.network.isp },
-        { label: t("fields.asn"), value: snapshot.network.asn },
-        { label: t("fields.connectionType"), value: snapshot.network.connectionType },
-        { label: t("fields.proxy"), value: localizeStatus(formatNetworkFlag(snapshot.network.proxy), t), tone: toneForFlag(snapshot.network.proxy) },
-        { label: t("fields.vpn"), value: localizeStatus(formatNetworkFlag(snapshot.network.vpn), t), tone: toneForFlag(snapshot.network.vpn) },
-        { label: t("fields.tor"), value: localizeStatus(formatNetworkFlag(snapshot.network.tor), t), tone: toneForFlag(snapshot.network.tor) },
-        { label: t("fields.hosting"), value: localizeStatus(formatNetworkFlag(snapshot.network.hosting), t), tone: toneForFlag(snapshot.network.hosting) },
-        { label: t("fields.webRtcLeak"), value: localizeStatus(snapshot.privacy.webRtc, t), tone: toneForDetection(snapshot.privacy.webRtc) },
-      ],
-      title: t("details.networkTitle"),
-    },
-    {
-      icon: <Globe2 aria-hidden="true" />,
-      key: "Browser",
-      rows: [
-        { label: t("fields.name"), value: snapshot.browser.name },
-        { label: t("fields.version"), value: snapshot.browser.version },
-        { label: t("fields.engine"), value: snapshot.browser.engine },
-        { label: t("fields.userAgent"), value: snapshot.browser.userAgent },
-        { label: t("fields.language"), value: snapshot.browser.languages.join(", ") || snapshot.browser.language },
-        { label: t("fields.cookies"), value: snapshot.browser.cookies ? t("common.enabled") : t("common.disabled"), tone: snapshot.browser.cookies ? "good" : "warn" },
-        { label: t("fields.localStorage"), value: snapshot.browser.localStorage ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.localStorage ? "good" : "warn" },
-        { label: t("fields.sessionStorage"), value: snapshot.browser.sessionStorage ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.sessionStorage ? "good" : "warn" },
-        { label: t("fields.indexedDb"), value: snapshot.browser.indexedDb ? t("common.enabled") : t("common.blocked"), tone: snapshot.browser.indexedDb ? "good" : "warn" },
-        { label: t("fields.doNotTrack"), value: localizeStatus(snapshot.browser.doNotTrack, t) },
-        { label: t("fields.referrer"), value: snapshot.browser.referrer },
-        { label: t("fields.plugins"), value: String(snapshot.browser.plugins.length) },
-      ],
-      title: t("details.browserTitle"),
-    },
-    {
-      icon: <Cpu aria-hidden="true" />,
-      key: "System",
-      rows: [
-        { label: t("fields.os"), value: snapshot.system.os },
-        { label: t("fields.osVersion"), value: snapshot.system.osVersion },
-        { label: t("fields.platform"), value: snapshot.system.platform },
-        { label: t("fields.architecture"), value: snapshot.system.architecture },
-        { label: t("fields.deviceMemory"), value: snapshot.system.deviceMemory },
-        { label: t("fields.cpuCores"), value: String(snapshot.system.hardwareConcurrency || t("common.protected")) },
-        { label: t("fields.cpu"), value: snapshot.system.cpu },
-        { label: t("fields.gpu"), value: snapshot.system.gpu },
-        { label: t("fields.battery"), value: localizeStatus(snapshot.system.battery, t) },
-        { label: t("fields.touch"), value: localizeStatus(snapshot.system.touchSupport, t) },
-        { label: t("fields.hardwareConcurrency"), value: String(snapshot.system.hardwareConcurrency || t("common.protected")) },
-        { label: t("fields.uptime"), value: snapshot.system.uptime },
-      ],
-      title: t("details.systemTitle"),
-    },
-    {
-      icon: <Monitor aria-hidden="true" />,
-      key: "Screen",
-      rows: [
-        { label: t("fields.resolution"), value: snapshot.screen.resolution },
-        { label: t("fields.availableResolution"), value: snapshot.screen.availableResolution },
-        { label: t("fields.colorDepth"), value: snapshot.screen.colorDepth },
-        { label: t("fields.pixelDepth"), value: snapshot.screen.pixelDepth },
-        { label: t("fields.devicePixelRatio"), value: snapshot.screen.devicePixelRatio },
-        { label: t("fields.refreshRate"), value: snapshot.screen.refreshRate },
-        { label: t("fields.orientation"), value: snapshot.screen.orientation },
-        { label: t("fields.hdr"), value: localizeStatus(snapshot.screen.hdr, t) },
-        { label: t("fields.viewport"), value: snapshot.screen.viewport },
-        { label: t("fields.zoom"), value: snapshot.screen.zoomLevel },
-      ],
-      title: t("details.screenTitle"),
-    },
-    {
-      icon: <Fingerprint aria-hidden="true" />,
-      key: "Fingerprint",
-      rows: [
-        { label: t("fields.visitorId"), value: snapshot.identity.visitorId, tone: "accent" },
-        { label: t("fields.identityProvider"), value: providerLabel },
-        { label: t("fields.confidence"), value: confidence },
-        { label: t("fields.requestId"), value: snapshot.identity.requestId ?? t("common.unavailable") },
-        { label: t("fields.canvasFingerprint"), value: snapshot.signals.canvasHash, tone: "accent" },
-        { label: t("fields.webGlVendor"), value: snapshot.signals.webGlVendor },
-        { label: t("fields.webGlRenderer"), value: snapshot.signals.webGlRenderer },
-        { label: t("fields.webGlVersion"), value: snapshot.signals.webGlVersion },
-        { label: t("fields.audioFingerprint"), value: snapshot.signals.audioHash, tone: "accent" },
-        { label: t("fields.fontsDetected"), value: String(snapshot.signals.fontCount) },
-        { label: t("fields.pluginsCount"), value: String(snapshot.signals.pluginCount) },
-        { label: t("fields.mimeTypes"), value: String(snapshot.signals.mimeTypeCount) },
-        { label: t("fields.mediaDevices"), value: String(snapshot.signals.mediaDeviceCount) },
-        { label: t("fields.speechSynthesis"), value: localizeStatus(snapshot.signals.speechSynthesis, t) },
-        { label: t("fields.notificationPermission"), value: localizeStatus(snapshot.signals.notificationPermission, t) },
-        { label: t("fields.compositeHash"), value: snapshot.compositeHash.slice(0, 24), tone: "accent" },
-      ],
-      title: t("details.fingerprintTitle"),
-    },
-    {
-      icon: <LockKeyhole aria-hidden="true" />,
-      key: "Privacy",
-      rows: [
-        { label: t("fields.bot"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.bot), t), tone: toneForFlag(snapshot.smartSignals.bot) },
-        { label: t("fields.incognito"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.incognito), t), tone: toneForFlag(snapshot.smartSignals.incognito) },
-        { label: t("fields.tampering"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.tampering), t), tone: toneForFlag(snapshot.smartSignals.tampering) },
-        { label: t("fields.virtualMachine"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.virtualMachine), t), tone: toneForFlag(snapshot.smartSignals.virtualMachine) },
-        { label: t("fields.developerTools"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.developerTools), t), tone: toneForFlag(snapshot.smartSignals.developerTools) },
-        { label: t("fields.privacySettings"), value: localizeStatus(formatNetworkFlag(snapshot.smartSignals.privacySettings), t), tone: toneForFlag(snapshot.smartSignals.privacySettings) },
-        { label: t("fields.webRtc"), value: localizeStatus(snapshot.privacy.webRtc, t), tone: toneForDetection(snapshot.privacy.webRtc) },
-        { label: t("fields.geolocation"), value: localizeStatus(snapshot.privacy.geolocationPermission, t) },
-        { label: t("fields.camera"), value: localizeStatus(snapshot.privacy.cameraPermission, t) },
-        { label: t("fields.microphone"), value: localizeStatus(snapshot.privacy.microphonePermission, t) },
-        { label: t("fields.adBlocker"), value: localizeStatus(snapshot.privacy.adBlocker, t), tone: toneForDetection(snapshot.privacy.adBlocker, true) },
-        { label: t("fields.automationFlags"), value: localizeStatus(snapshot.privacy.automationFlags, t), tone: toneForDetection(snapshot.privacy.automationFlags) },
-        { label: t("fields.headless"), value: localizeStatus(snapshot.privacy.headless, t), tone: toneForDetection(snapshot.privacy.headless) },
-        { label: t("fields.webDriver"), value: localizeStatus(snapshot.privacy.webDriver, t), tone: toneForDetection(snapshot.privacy.webDriver) },
-        { label: t("fields.permissionsPolicy"), value: localizeStatus(snapshot.privacy.permissionsPolicy, t) },
-        { label: t("fields.crossOriginIsolation"), value: localizeStatus(snapshot.privacy.crossOriginIsolation, t) },
-      ],
-      title: t("details.privacyTitle"),
-    },
-  ];
+function iconForTab(tab: DetailTab) {
+  return detailTabs.find((item) => item.label === tab)?.icon ?? <Fingerprint aria-hidden="true" />;
+}
+
+const hiddenBrowserLeaksUiRows = new Set([
+  "BrowserLeaks Feature Checklist",
+  "BrowserLeaks Fields",
+  "BrowserLeaks Sections",
+]);
+
+function isPlainObject(value: FingerprintJsonValue): value is Record<string, FingerprintJsonValue> {
+  return value !== null && !Array.isArray(value) && typeof value === "object";
+}
+
+function formatJsonValue(label: string, value: FingerprintJsonValue, t: Translate): string {
+  if (value === null) return t("common.unavailable");
+  if (Array.isArray(value)) {
+    if (value.length === 0) return t("common.none");
+    const visibleItems = value.slice(0, 18).map((item) => formatJsonValue(label, item, t));
+    const extraCount = value.length - visibleItems.length;
+    return extraCount > 0
+      ? `${visibleItems.join(", ")} +${extraCount}`
+      : visibleItems.join(", ");
+  }
+  if (isPlainObject(value)) {
+    const keys = Object.keys(value);
+    return keys.length ? `${keys.length} fields` : t("common.none");
+  }
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "string") {
+    if (label === "Canvas Data URL" && value.length > 140) {
+      return `${value.slice(0, 140)}… (${value.length} chars · full in JSON)`;
+    }
+    return localizeStatus(value, t);
+  }
+  return String(value);
+}
+
+function toneForBrowserLeakRow(label: string, value: FingerprintJsonValue): ValueTone {
+  const key = label.toLowerCase();
+  const riskyFlag = /vpn|proxy|tor|hosting|webdriver|headless|ad blocker|bot|tampering|virtual machine|ip blocklist|automation|rare device|developer tools/.test(key);
+  if (typeof value === "boolean") {
+    if (!riskyFlag) return "default";
+    return value ? "warn" : "good";
+  }
+  if (Array.isArray(value)) {
+    if (/address|candidate|extension|font|plugin|mime/.test(key)) {
+      return value.length > 0 && /webrtc|candidate|address/.test(key) ? "warn" : "default";
+    }
+    return "default";
+  }
+  if (typeof value !== "string") return "default";
+  const normalized = value.toLowerCase();
+  if (/ip address|hash|visitor|canvas|webgl|renderer|vendor/.test(key) && value !== "Unavailable") return "accent";
+  if (/not detected|no leak|not enabled|not set|default|unavailable|unsupported|false|^no$/.test(normalized)) {
+    return riskyFlag ? "good" : "default";
+  }
+  if (/detected|possible|exposure|anonymous network|blocklist|active|true/.test(normalized)) return "warn";
+  return "default";
+}
+
+function rowsFromBrowserLeakSection(
+  section: FingerprintSnapshot["browserLeaks"][keyof FingerprintSnapshot["browserLeaks"]],
+  t: Translate,
+): FingerprintRow[] {
+  const rowsFromEntry = (label: string, value: FingerprintJsonValue): FingerprintRow[] => {
+    if (hiddenBrowserLeaksUiRows.has(label)) return [];
+
+    if (isPlainObject(value)) {
+      return Object.entries(value).flatMap(([childLabel, childValue]) => (
+        rowsFromEntry(`${label} · ${childLabel}`, childValue)
+      ));
+    }
+
+    return [{
+      label,
+      tone: toneForBrowserLeakRow(label, value),
+      value: formatJsonValue(label, value, t),
+    }];
+  };
+
+  return Object.entries(section).flatMap(([label, value]) => rowsFromEntry(label, value));
+}
+
+function buildCards(snapshot: FingerprintSnapshot, t: Translate): DetailCardData[] {
+  const browserLeakTabs = detailTabs.filter((tab): tab is { icon: ReactNode; label: BrowserLeakTab } => tab.label !== "Overview");
+
+  return browserLeakTabs.map((tab) => {
+    const sectionKey = browserLeakTabSections[tab.label];
+    return {
+      icon: iconForTab(tab.label),
+      key: tab.label,
+      rows: rowsFromBrowserLeakSection(snapshot.browserLeaks[sectionKey], t),
+      title: t(`details.tabs.${tab.label}`),
+    };
+  });
 }
 
 function RiskDonut({
@@ -484,6 +474,7 @@ function RiskDonut({
   const riskLabel = showTrustedExample ? t("common.low") : localizeStatus(snapshot.scores.riskLabel, t);
   const usesFingerprintSmartSignals = Object.values(snapshot.smartSignals)
     .some((value) => value !== null);
+
   return (
     <div className="overview-panel__section risk-overview" data-risk={score >= 15 ? "high" : "safe"}>
       <div className="risk-overview__intro">
@@ -523,33 +514,18 @@ function OverviewPanel({
 }) {
   const { t } = useI18n();
   const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
+
   return (
     <section
       aria-label={t("riskProfile.aria")}
       className="overview-panel"
-      data-scroll="fade-up"
       data-risk={score >= 15 ? "high" : "safe"}
+      data-scroll="fade-up"
     >
       <div className="overview-panel__analysis">
         <RiskDonut showTrustedExample={showTrustedExample} snapshot={snapshot} />
       </div>
       <SuspectSignalTable showTrustedExample={showTrustedExample} snapshot={snapshot} />
-    </section>
-  );
-}
-
-function RawData({ onCopy, onDownload, snapshot }: { onCopy: () => void; onDownload: () => void; snapshot: FingerprintSnapshot }) {
-  const { t } = useI18n();
-  return (
-    <section className="raw-data" data-scroll="fade-up" id="raw-data">
-      <div className="raw-data__header">
-        <div><FileJson aria-hidden="true" /><span><strong>{t("details.rawTitle")}</strong><small>{snapshot.identity.provider === "fingerprint-pro" ? t("details.rawPro") : t("details.rawLocal")}</small></span></div>
-        <div className="raw-data__actions">
-          <button onClick={onCopy} type="button"><Copy aria-hidden="true" /> {t("common.copyJson")}</button>
-          <button onClick={onDownload} type="button"><Download aria-hidden="true" /> {t("common.downloadJson")}</button>
-        </div>
-      </div>
-      <pre>{JSON.stringify(snapshot, null, 2)}</pre>
     </section>
   );
 }
@@ -566,25 +542,39 @@ function DetailDashboard({
   snapshot: FingerprintSnapshot | null;
 }) {
   const [copied, setCopied] = useState(false);
+  const [jsonPreviewOpen, setJsonPreviewOpen] = useState(false);
   const { t } = useI18n();
   const cards = useMemo(() => snapshot ? buildCards(snapshot, t) : [], [snapshot, t]);
   const visibleCards = cards.filter((card) => card.key === activeTab);
   const selectedJson = useMemo(() => {
-    if (!snapshot || activeTab === "Overview") return null;
-    if (activeTab === "Browser") return { browser: snapshot.browser };
-    if (activeTab === "Network") return { network: snapshot.network };
-    if (activeTab === "Fingerprint") return {
-      fingerprint: snapshot.signals,
-      identity: snapshot.identity,
-    };
-    if (activeTab === "Privacy") return {
-      privacy: snapshot.privacy,
-      smartSignals: snapshot.smartSignals,
-    };
-    if (activeTab === "System") return { system: snapshot.system };
-    if (activeTab === "Screen") return { screen: snapshot.screen };
-    return snapshot;
+    if (!snapshot) return null;
+    if (activeTab === "Overview") {
+      return {
+        identity: snapshot.identity,
+        scores: snapshot.scores,
+        signals: snapshot.smartSignals,
+        summary: {
+          browser: `${snapshot.browser.name} ${snapshot.browser.version}`,
+          ipAddress: snapshot.network.ipAddress,
+          location: snapshot.network.city,
+          sessionId: snapshot.sessionId,
+        },
+      };
+    }
+    return snapshot.browserLeaks[browserLeakTabSections[activeTab]];
   }, [activeTab, snapshot]);
+  const selectedJsonString = useMemo(() => selectedJson ? JSON.stringify(selectedJson, null, 2) : "", [selectedJson]);
+
+  useEffect(() => {
+    if (!jsonPreviewOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setJsonPreviewOpen(false);
+      }
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [jsonPreviewOpen]);
 
   const copyJson = async () => {
     if (!selectedJson) return;
@@ -593,10 +583,15 @@ function DetailDashboard({
     window.setTimeout(() => setCopied(false), 1_500);
   };
 
+  const openJsonPreview = () => {
+    if (!selectedJson) return;
+    setJsonPreviewOpen(true);
+  };
+
   const downloadJson = () => {
-    if (!selectedJson || !snapshot) return;
+    if (!selectedJsonString || !snapshot) return;
     const sectionName = activeTab.toLowerCase().replaceAll(" ", "-");
-    const blob = new Blob([JSON.stringify(selectedJson, null, 2)], { type: "application/json" });
+    const blob = new Blob([selectedJsonString], { type: "application/json" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `fingerprint-${sectionName}-${snapshot.sessionId.slice(0, 8)}.json`;
@@ -621,11 +616,15 @@ function DetailDashboard({
             aria-selected={activeTab === tab.label}
             className={activeTab === tab.label ? "is-active" : undefined}
             key={tab.label}
-            onClick={() => onActiveTabChange(tab.label)}
+            onClick={() => {
+              setJsonPreviewOpen(false);
+              onActiveTabChange(tab.label);
+            }}
             role="tab"
+            title={t(`details.tabs.${tab.label}`)}
             type="button"
           >
-            {tab.icon}<span>{t(`details.tabs.${tab.label}`)}</span>
+            {tab.icon}<span>{t(`details.tabShort.${tab.label}`)}</span>
           </button>
         ))}
       </div>
@@ -637,8 +636,6 @@ function DetailDashboard({
             <strong>{t("details.loadingTitle")}</strong>
             <p>{t("details.loadingDescription")}</p>
           </div>
-        ) : activeTab === "Raw Data" ? (
-          <RawData onCopy={copyJson} onDownload={downloadJson} snapshot={snapshot} />
         ) : activeTab === "Overview" ? (
           <OverviewPanel showTrustedExample={showTrustedExample} snapshot={snapshot} />
         ) : (
@@ -648,7 +645,7 @@ function DetailDashboard({
                 actions={(
                   <>
                     <button onClick={copyJson} type="button"><Copy aria-hidden="true" /> {t("common.copyJson")}</button>
-                    <button onClick={downloadJson} type="button"><Download aria-hidden="true" /> {t("common.downloadJson")}</button>
+                    <button onClick={openJsonPreview} type="button"><Download aria-hidden="true" /> {t("common.downloadJson")}</button>
                   </>
                 )}
                 data={card}
@@ -660,6 +657,49 @@ function DetailDashboard({
       </div>
 
       {copied ? <span className="copy-toast"><Check aria-hidden="true" /> {t("details.copied", { section: t(`details.tabs.${activeTab}`) })}</span> : null}
+      {jsonPreviewOpen && selectedJsonString && typeof document !== "undefined" ? createPortal((
+        <div
+          className="json-preview-modal"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setJsonPreviewOpen(false);
+            }
+          }}
+          role="presentation"
+        >
+          <div
+            aria-labelledby="json-preview-title"
+            aria-modal="true"
+            className="json-preview-modal__panel"
+            role="dialog"
+          >
+            <header className="json-preview-modal__header">
+              <div>
+                <span>{t("details.jsonPreviewEyebrow")}</span>
+                <h3 id="json-preview-title">{t("details.jsonPreviewTitle", { section: t(`details.tabs.${activeTab}`) })}</h3>
+                <p>{t("details.jsonPreviewDescription")}</p>
+              </div>
+              <button
+                aria-label={t("common.close")}
+                className="json-preview-modal__close"
+                onClick={() => setJsonPreviewOpen(false)}
+                type="button"
+              >
+                <X aria-hidden="true" />
+              </button>
+            </header>
+            <pre className="json-preview-modal__body">{selectedJsonString}</pre>
+            <footer className="json-preview-modal__footer">
+              <button className="json-preview-modal__ghost" onClick={() => setJsonPreviewOpen(false)} type="button">
+                {t("common.close")}
+              </button>
+              <button className="json-preview-modal__download" onClick={downloadJson} type="button">
+                <Download aria-hidden="true" /> {t("common.downloadJson")}
+              </button>
+            </footer>
+          </div>
+        </div>
+      ), document.body) : null}
     </section>
   );
 }
@@ -677,37 +717,9 @@ function FinalCta({ onAnalyze, scanning }: { onAnalyze: () => void; scanning: bo
       </div>
       <div className="final-cta__actions">
         <button className="primary-button" disabled={scanning} onClick={onAnalyze} type="button">{scanning ? t("common.analyzing") : t("cta.analyze")}<ArrowRight /></button>
-        <a className="secondary-button" href="https://amiunique.org/fr/fingerprint" rel="noreferrer" target="_blank">{t("cta.view")} <ExternalLink /></a>
+        <a className="secondary-button" href="https://hidemium.io/" rel="noreferrer" target="_blank">{t("cta.view")} <ExternalLink /></a>
       </div>
     </section>
-  );
-}
-
-function Footer() {
-  const { t } = useI18n();
-  const columns = [
-    { heading: t("footer.product"), links: ["overview", "features", "pricing", "integrations", "status"] },
-    { heading: t("footer.solutions"), links: ["fraudPrevention", "accountTakeover", "paymentProtection", "botDetection", "riskManagement"] },
-    { heading: t("footer.developers"), links: ["apiDocumentation", "sdks", "codeSamples", "changelog"] },
-    { heading: t("footer.company"), links: ["about", "research", "privacy", "contact"] },
-  ];
-  return (
-    <footer className="site-footer" data-scroll="fade-up" id="footer">
-      <div className="footer-brand">
-        <a className="brand-lockup" href="#top"><span className="brand-mark"><BrandMark /></span><span>Fingerprint Analyzer</span></a>
-        <p>{t("footer.description")}</p>
-        <a className="source-link" href="https://amiunique.org/faq" rel="noreferrer" target="_blank">{t("footer.methodology")} <ExternalLink /></a>
-      </div>
-      <div className="footer-links">
-        {columns.map((column) => <div key={column.heading}><strong>{column.heading}</strong>{column.links.map((link) => <a href="#details" key={link}>{t(`footer.${link}`)}</a>)}</div>)}
-      </div>
-      <div className="footer-newsletter">
-        <strong>{t("footer.stayUpdated")}</strong>
-        <p>{t("footer.newsletterDescription")}</p>
-        <form onSubmit={(event) => event.preventDefault()}><input aria-label={t("footer.email")} placeholder={t("footer.emailPlaceholder")} type="email" /><button aria-label={t("footer.subscribe")} type="submit"><ArrowRight /></button></form>
-      </div>
-      <div className="footer-bottom"><span>{t("footer.copyright")}</span><div><a href="#footer">{t("footer.privacyPolicy")}</a><a href="#footer">{t("footer.terms")}</a><a href="#footer">{t("footer.security")}</a></div></div>
-    </footer>
   );
 }
 
@@ -720,15 +732,30 @@ export default function HomePage() {
 
   useScrollEffects();
 
-  const startScan = () => {
+  const scrollToDetails = () => {
+    const details = document.getElementById("details");
+    details?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const startScan = (scrollTarget: "details" | "top" = "details") => {
     setShowTrustedExample(false);
     void scan();
-    document.getElementById("details")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (scrollTarget === "top") {
+      document.getElementById("top")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.requestAnimationFrame(() => window.scrollTo({ behavior: "smooth", top: 0 }));
+      return;
+    }
+    scrollToDetails();
+    window.requestAnimationFrame(scrollToDetails);
+    window.setTimeout(scrollToDetails, 120);
   };
+
+  const startScanAndShowDetails = () => startScan("details");
+  const startScanAndReturnTop = () => startScan("top");
 
   return (
     <div className="site-shell" id="top">
-      <SiteHeader onAnalyze={startScan} scanning={scanning} />
+      <SiteHeader onAnalyze={startScanAndShowDetails} scanning={scanning} />
       <main>
         <section className="hero-section" id="overview">
           <div className="hero-network" aria-hidden="true" />
@@ -736,8 +763,8 @@ export default function HomePage() {
             <h1 data-scroll-child="1">{t("hero.titleLine1")}<br />{t("hero.titleLine2Before")} <span>{t("hero.titleAccent")}</span> {t("hero.titleLine2After")}</h1>
             <p data-scroll-child="2">{t("hero.description")}</p>
             <div className="hero-actions" data-scroll-child="3">
-              <button className="primary-button" disabled={scanning} onClick={startScan} type="button">{scanning ? t("common.analyzing") : t("hero.analyze")}<ArrowRight aria-hidden="true" /></button>
-              <a className="secondary-button" href="#details">{t("hero.explore")} <Play aria-hidden="true" /></a>
+              <button className="primary-button" disabled={scanning} onClick={startScanAndShowDetails} type="button">{scanning ? t("common.analyzing") : t("hero.analyze")}<ArrowRight aria-hidden="true" /></button>
+              <a className="secondary-button" href="#browser-preview">{t("hero.explore")} <Play aria-hidden="true" /></a>
             </div>
             <div className="hero-trust" data-scroll-child="4"><span><ShieldCheck /> {t("hero.runsLocally")}</span><span><LockKeyhole /> {t("hero.noStorage")}</span><span><Code2 /> {t("hero.exportable")}</span></div>
             {error ? <p className="scan-error">{t("hero.error", { error })}</p> : null}
@@ -758,10 +785,10 @@ export default function HomePage() {
             showTrustedExample={showTrustedExample}
             snapshot={snapshot}
           />
-          <FinalCta onAnalyze={startScan} scanning={scanning} />
+          <FinalCta onAnalyze={startScanAndReturnTop} scanning={scanning} />
         </div>
       </main>
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }

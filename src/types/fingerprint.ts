@@ -8,6 +8,26 @@ export interface FingerprintRow {
   value: string;
 }
 
+export type FingerprintJsonPrimitive = boolean | number | string | null;
+export type FingerprintJsonValue =
+  | FingerprintJsonPrimitive
+  | FingerprintJsonValue[]
+  | { [key: string]: FingerprintJsonValue };
+export type FingerprintDetailSection = Record<string, FingerprintJsonValue>;
+
+export interface BrowserLeakSections {
+  canvas: FingerprintDetailSection;
+  contentFilters: FingerprintDetailSection;
+  features: FingerprintDetailSection;
+  fonts: FingerprintDetailSection;
+  geolocation: FingerprintDetailSection;
+  ipAddress: FingerprintDetailSection;
+  javaScript: FingerprintDetailSection;
+  tls: FingerprintDetailSection;
+  webGl: FingerprintDetailSection;
+  webRtc: FingerprintDetailSection;
+}
+
 export interface NetworkFingerprint {
   asn: string;
   city: string;
@@ -166,6 +186,7 @@ export interface FingerprintServerEvent {
 
 export interface FingerprintSnapshot {
   browser: BrowserFingerprint;
+  browserLeaks: BrowserLeakSections;
   collectedAt: string;
   compositeHash: string;
   headers: Record<string, string>;

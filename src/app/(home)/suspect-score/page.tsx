@@ -162,3 +162,5 @@ export function SuspectScore({
     </section>
   );
 }
+
+export default SuspectScore;

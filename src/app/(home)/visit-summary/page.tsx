@@ -286,3 +286,5 @@ export function VisitSummary({
     </section>
   );
 }
+
+export default VisitSummary;
