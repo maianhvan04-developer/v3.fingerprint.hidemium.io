@@ -1,12 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Monitor, ShieldCheck } from "lucide-react";
+import { useAnimatedScore } from "@/hooks/useAnimatedScore";
 import { useI18n } from "@/lib/i18n";
 
 export interface SuspectScoreProps {
   compact?: boolean;
   onCalculationClick: () => void;
   onTrustedExampleChange: (value: boolean) => void;
+  ready?: boolean;
   riskScore: number;
   showTrustedExample: boolean;
 }
@@ -18,6 +21,30 @@ interface GaugeArc {
 function getGaugeArc(value: number): GaugeArc {
   const score = Math.min(100, Math.max(0, Math.round(value)));
   return { score };
+}
+
+function polarToCartesian(angleDegrees: number) {
+  const angleRadians = (angleDegrees - 90) * Math.PI / 180;
+
+  return {
+    x: 60 + 49 * Math.cos(angleRadians),
+    y: 60 + 49 * Math.sin(angleRadians),
+  };
+}
+
+function describeGaugeArc(score: number) {
+  if (score <= 0) return "";
+
+  const endAngle = Math.min(359.99, score * 3.6);
+  const start = polarToCartesian(0);
+  const end = polarToCartesian(endAngle);
+  const largeArcFlag = endAngle > 180 ? 1 : 0;
+  const format = (value: number) => Number(value.toFixed(3));
+
+  return [
+    `M ${format(start.x)} ${format(start.y)}`,
+    `A 49 49 0 ${largeArcFlag} 1 ${format(end.x)} ${format(end.y)}`,
+  ].join(" ");
 }
 
 function CompactGlyph({ safe }: { safe: boolean }) {
@@ -38,12 +65,13 @@ function CompactGlyph({ safe }: { safe: boolean }) {
   );
 }
 
-function Gauge({ score }: { score: number }) {
+function Gauge({ ready, score }: { ready: boolean; score: number }) {
   const gauge = getGaugeArc(score);
+  const [scoreRef, animatedScore] = useAnimatedScore<HTMLDivElement>(gauge.score, { enabled: ready });
   const { t } = useI18n();
 
   return (
-    <div className="suspect-score__gauge">
+    <div className="suspect-score__gauge" ref={scoreRef}>
       <svg
         aria-label={t("score.gaugeAria", { score: gauge.score })}
         className="suspect-score__gauge-svg"
@@ -51,18 +79,10 @@ function Gauge({ score }: { score: number }) {
         viewBox="0 0 120 120"
       >
         <circle className="suspect-score__gauge-track" cx="60" cy="60" r="49" />
-        <circle
-          className="suspect-score__gauge-value"
-          cx="60"
-          cy="60"
-          pathLength="100"
-          r="49"
-          strokeDasharray={`${gauge.score} 100`}
-          transform="rotate(-90 60 60)"
-        />
+        {animatedScore > 0 ? <path className="suspect-score__gauge-value" d={describeGaugeArc(animatedScore)} /> : null}
       </svg>
       <div aria-hidden="true" className="suspect-score__gauge-copy">
-        <strong className="suspect-score__value">{gauge.score}</strong>
+        <strong className="suspect-score__value">{animatedScore}</strong>
         <span className="suspect-score__label">{t("score.label")}</span>
       </div>
     </div>
@@ -73,6 +93,7 @@ export function SuspectScore({
   compact = false,
   onCalculationClick,
   onTrustedExampleChange,
+  ready = true,
   riskScore,
   showTrustedExample,
 }: SuspectScoreProps): ReactNode {
@@ -113,7 +134,7 @@ export function SuspectScore({
         {showTrustedExample ? t("score.fakeData") : t("score.realData")}
       </p>
 
-      <Gauge score={score} />
+      <Gauge key={`${ready}-${score}`} ready={ready} score={score} />
 
       <div className="suspect-score__assessment">
         <h3 className="suspect-score__headline">
@@ -147,7 +168,8 @@ export function SuspectScore({
           role="tab"
           type="button"
         >
-          {t("score.yourDevice")}
+          <Monitor aria-hidden="true" />
+          <span>{t("score.yourDevice")}</span>
         </button>
         <button
           aria-selected={showTrustedExample}
@@ -156,7 +178,8 @@ export function SuspectScore({
           role="tab"
           type="button"
         >
-          {t("score.tryTrusted")}
+          <ShieldCheck aria-hidden="true" />
+          <span>{t("score.tryTrusted")}</span>
         </button>
       </div>
     </section>

@@ -1,4 +1,7 @@
+"use client";
+
 import type { HTMLAttributes, ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 interface ToastProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -6,9 +9,9 @@ interface ToastProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function Toast({ children, className, open, ...props }: ToastProps) {
-  if (!open) return null;
+  if (!open || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
       aria-atomic="true"
       aria-live="polite"
@@ -17,6 +20,7 @@ export function Toast({ children, className, open, ...props }: ToastProps) {
       {...props}
     >
       {children}
-    </div>
+    </div>,
+    document.body,
   );
 }

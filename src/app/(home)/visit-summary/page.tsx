@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Image from "next/image";
-import { ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { ChevronDown, ChevronUp, Flag, Gauge, MapPin, Monitor, ShieldCheck, UserRound } from "lucide-react";
 import { useI18n, type Locale, type Translate } from "@/lib/i18n";
 import type {
   VisitorHistorySummary,
@@ -21,11 +21,13 @@ export interface VisitSummaryProps {
 }
 
 interface SummaryCellProps {
+  icon: ReactNode;
   label: string;
   value: string;
 }
 
 interface DetailCellProps {
+  icon: ReactNode;
   label: string;
   tone?: "flagged" | "safe" | "unknown";
   value: string;
@@ -88,7 +90,7 @@ function getMapCoordinates(visit: VisitorVisitRecord | null): [number, number] |
   return [longitude, latitude];
 }
 
-function getMapImageUrl(coordinates: [number, number]) {
+function getMapImageUrl(coordinates: [number, number], layer: "base" | "labels") {
   const [longitude, latitude] = coordinates;
   const zoom = 12;
   const tileScale = 256 * 2 ** zoom;
@@ -107,28 +109,35 @@ function getMapImageUrl(coordinates: [number, number]) {
     format: "png",
     imageSR: "4326",
     size: "350,200",
-    transparent: "false",
+    transparent: layer === "labels" ? "true" : "false",
   });
+  const service = layer === "labels" ? "Canvas/World_Light_Gray_Reference" : "Canvas/World_Light_Gray_Base";
 
-  return `https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/export?${parameters.toString()}`;
+  return `https://server.arcgisonline.com/ArcGIS/rest/services/${service}/MapServer/export?${parameters.toString()}`;
 }
 
-function SummaryCell({ label, value }: SummaryCellProps) {
+function SummaryCell({ icon, label, value }: SummaryCellProps) {
   return (
     <div className="visit-summary__summary-cell">
-      <span className="visit-summary__summary-label">{label}</span>
-      <span className="visit-summary__summary-value">{value}</span>
+      <span className="visit-summary__summary-icon">{icon}</span>
+      <span className="visit-summary__summary-copy">
+        <span className="visit-summary__summary-label">{label}</span>
+        <span className="visit-summary__summary-value">{value}</span>
+      </span>
     </div>
   );
 }
 
-function DetailCell({ label, tone, value }: DetailCellProps) {
+function DetailCell({ icon, label, tone, value }: DetailCellProps) {
   const toneClass = tone ? ` visit-summary__detail--${tone}` : "";
 
   return (
     <div className={`visit-summary__detail${toneClass}`}>
-      <span className="visit-summary__detail-label">{label}</span>
-      <span className="visit-summary__detail-value">{value}</span>
+      <span className="visit-summary__detail-icon">{icon}</span>
+      <span className="visit-summary__detail-copy">
+        <span className="visit-summary__detail-label">{label}</span>
+        <span className="visit-summary__detail-value">{value}</span>
+      </span>
     </div>
   );
 }
@@ -144,10 +153,20 @@ function VisitMap({ visit }: { visit: VisitorVisitRecord | null }) {
         <>
           <Image
             alt={t("visit.map", { location })}
-            className="visit-map__image"
+            className="visit-map__image visit-map__image--base"
             height={200}
             loading="eager"
-            src={getMapImageUrl(coordinates)}
+            src={getMapImageUrl(coordinates, "base")}
+            unoptimized
+            width={350}
+          />
+          <Image
+            alt=""
+            aria-hidden="true"
+            className="visit-map__image visit-map__image--labels"
+            height={200}
+            loading="eager"
+            src={getMapImageUrl(coordinates, "labels")}
             unoptimized
             width={350}
           />
@@ -202,18 +221,22 @@ export function VisitSummary({
 
       <div className="visit-summary__summary-grid" aria-label={t("visit.weeklySummaryAria")}>
         <SummaryCell
+          icon={<ShieldCheck aria-hidden="true" />}
           label={t("visit.weeklySummary")}
           value={t("visit.visitsValue", { count: summary.visitCount })}
         />
         <SummaryCell
+          icon={<UserRound aria-hidden="true" />}
           label={t("visit.incognito")}
           value={t("visit.sessionsValue", { count: summary.incognitoSessions })}
         />
         <SummaryCell
+          icon={<MapPin aria-hidden="true" />}
           label={t("visit.ipAddress")}
           value={t("visit.ipsValue", { count: summary.uniqueIps })}
         />
         <SummaryCell
+          icon={<Flag aria-hidden="true" />}
           label={t("visit.geolocation")}
           value={t("visit.locationsValue", { count: summary.uniqueLocations })}
         />
@@ -246,6 +269,9 @@ export function VisitSummary({
           <div className="visit-summary__visit-content">
             <div className="visit-summary__visit-overview">
               <div className="visit-summary__visit-location">
+                <span className="visit-summary__row-icon">
+                  <MapPin aria-hidden="true" />
+                </span>
                 <time
                   className="visit-summary__visit-time"
                   dateTime={visit?.collectedAt}
@@ -261,14 +287,16 @@ export function VisitSummary({
             </div>
 
             <div className="visit-summary__details">
-              <DetailCell label={t("fields.ipAddress")} value={visit?.ipAddress ?? t("visit.collecting")} />
+              <DetailCell icon={<Gauge aria-hidden="true" />} label={t("fields.ipAddress")} value={visit?.ipAddress ?? t("visit.collecting")} />
               <DetailCell
+                icon={<ShieldCheck aria-hidden="true" />}
                 label={t("visit.incognitoMode")}
                 tone={incognitoTone}
                 value={visit ? (visit.incognito ? t("common.detected") : t("common.notDetected")) : t("common.checking")}
               />
-              <DetailCell label={t("fields.browser")} value={browser} />
+              <DetailCell icon={<Monitor aria-hidden="true" />} label={t("fields.browser")} value={browser} />
               <DetailCell
+                icon={<ShieldCheck aria-hidden="true" />}
                 label={t("visit.vpn")}
                 tone={vpnTone}
                 value={visit

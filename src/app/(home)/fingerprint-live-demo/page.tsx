@@ -23,6 +23,7 @@ export function FingerprintLiveDemo({
 }: FingerprintLiveDemoProps) {
   const { summary, visitorId, visits } = useVisitorHistory(snapshot);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const scoreReady = showTrustedExample || (!scanning && Boolean(snapshot));
 
   const activeIndex = Math.min(selectedIndex, Math.max(0, visits.length - 1));
   const visit = visits[activeIndex] ?? visits[0] ?? null;
@@ -31,6 +32,7 @@ export function FingerprintLiveDemo({
       compact
       onCalculationClick={onCalculationClick}
       onTrustedExampleChange={onTrustedExampleChange}
+      ready={scoreReady}
       riskScore={snapshot?.scores.riskScore ?? 0}
       showTrustedExample={showTrustedExample}
     />
@@ -52,6 +54,7 @@ export function FingerprintLiveDemo({
         <SuspectScore
           onCalculationClick={onCalculationClick}
           onTrustedExampleChange={onTrustedExampleChange}
+          ready={scoreReady}
           riskScore={snapshot?.scores.riskScore ?? 0}
           showTrustedExample={showTrustedExample}
         />

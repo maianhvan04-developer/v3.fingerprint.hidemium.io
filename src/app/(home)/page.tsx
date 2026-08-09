@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   ArrowRight,
+  BrainCircuit,
   Box,
   Braces,
   Check,
@@ -20,6 +21,7 @@ import {
   Palette,
   Play,
   Radio,
+  RefreshCw,
   ShieldCheck,
   Type,
   Wifi,
@@ -33,6 +35,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { DataCard, type DataCardData as UiDataCardData } from "@/components/ui/DataCard";
 import { JsonPreviewModal } from "@/components/ui/JsonPreviewModal";
+import { useAnimatedScore } from "@/hooks/useAnimatedScore";
 import { localizeStatus, useI18n, type Translate } from "@/lib/i18n";
 import { useFingerprintScan } from "@/hooks/use-fingerprint-scan";
 import type { FingerprintJsonValue, FingerprintRow, FingerprintSnapshot, ValueTone } from "@/types/fingerprint";
@@ -51,7 +54,7 @@ type DetailTab =
   | "Content Filters";
 type BrowserLeakTab = Exclude<DetailTab, "Overview">;
 type ConsoleMode = "identification" | "browser" | "live";
-const consoleAddress = "http://fingerprint.hidemium.io/";
+const consoleAddress = "https://fingerprint.hidemium.io/";
 
 interface DetailCardData extends UiDataCardData {
   key: BrowserLeakTab;
@@ -70,10 +73,10 @@ const detailTabs: Array<{ icon: ReactNode; label: DetailTab }> = [
   { icon: <Lock aria-hidden="true" />, label: "TLS Client Test" },
   { icon: <Filter aria-hidden="true" />, label: "Content Filters" },
 ];
-const consoleModes: Array<{ id: ConsoleMode; index: string }> = [
-  { id: "live", index: "01" },
-  { id: "identification", index: "02" },
-  { id: "browser", index: "03" },
+const consoleModes: Array<{ icon: ReactNode; id: ConsoleMode; index: string }> = [
+  { icon: <ShieldCheck aria-hidden="true" />, id: "live", index: "01" },
+  { icon: <Fingerprint aria-hidden="true" />, id: "identification", index: "02" },
+  { icon: <BrainCircuit aria-hidden="true" />, id: "browser", index: "03" },
 ];
 const trustedBrands = [
   { key: "checkout", label: "checkout.com" },
@@ -211,34 +214,33 @@ function HeroConsole({
       <div className="hero-console__titlebar">
         <span className="hero-console__controls" aria-hidden="true"><i /><i /><i /></span>
         <div className="hero-console__titlebar-label">
+          <LockKeyhole aria-hidden="true" />
           <span>{consoleAddress}</span>
-          <i aria-hidden="true" />
+          <RefreshCw aria-hidden="true" />
         </div>
       </div>
 
-      <div className="hero-console__workspace">
-        <div className="hero-console__workspace-header">
-          <span><i aria-hidden="true" />{scanning ? t("console.scanning") : t("console.live")}</span>
-          <div className="hero-console__modes" aria-label={t("console.views")} role="tablist">
-            {consoleModes.map((mode) => (
-              <button
-                aria-controls={`console-panel-${mode.id}`}
-                aria-selected={activeMode === mode.id}
-                className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
-                id={`console-tab-${mode.id}`}
-                key={mode.id}
-                onClick={() => setActiveMode(mode.id)}
-                role="tab"
-                tabIndex={activeMode === mode.id ? 0 : -1}
-                type="button"
-              >
-                <small>{mode.index}</small>
-                <span>{t(`console.modes.${mode.id}`)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className="hero-console__modes" aria-label={t("console.views")} role="tablist">
+        {consoleModes.map((mode) => (
+          <button
+            aria-controls={`console-panel-${mode.id}`}
+            aria-selected={activeMode === mode.id}
+            className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
+            id={`console-tab-${mode.id}`}
+            key={mode.id}
+            onClick={() => setActiveMode(mode.id)}
+            role="tab"
+            tabIndex={activeMode === mode.id ? 0 : -1}
+            type="button"
+          >
+            {mode.icon}
+            <small>{mode.index}</small>
+            <span>{t(`console.modes.${mode.id}`)}</span>
+          </button>
+        ))}
+      </div>
 
+      <div className="hero-console__workspace">
         <div
           aria-labelledby={`console-tab-${activeMode}`}
           className="hero-console__panel"
@@ -433,15 +435,45 @@ function buildCards(snapshot: FingerprintSnapshot, t: Translate): DetailCardData
   });
 }
 
+function circularPoint(angleDegrees: number) {
+  const angleRadians = ((angleDegrees - 90) * Math.PI) / 180;
+
+  return {
+    x: 60 + 49 * Math.cos(angleRadians),
+    y: 60 + 49 * Math.sin(angleRadians),
+  };
+}
+
+function circularProgressPath(value: number) {
+  const score = Math.min(100, Math.max(0, Math.round(value)));
+
+  if (score <= 0) return "";
+
+  const endAngle = Math.min(359.99, score * 3.6);
+  const start = circularPoint(0);
+  const end = circularPoint(endAngle);
+  const largeArcFlag = endAngle > 180 ? 1 : 0;
+  const format = (point: number) => Number(point.toFixed(3));
+
+  return [
+    `M ${format(start.x)} ${format(start.y)}`,
+    `A 49 49 0 ${largeArcFlag} 1 ${format(end.x)} ${format(end.y)}`,
+  ].join(" ");
+}
+
 function RiskDonut({
+  scanning,
   showTrustedExample,
   snapshot,
 }: {
+  scanning: boolean;
   showTrustedExample: boolean;
   snapshot: FingerprintSnapshot;
 }) {
   const { t } = useI18n();
   const score = showTrustedExample ? 4 : snapshot.scores.riskScore;
+  const scoreReady = showTrustedExample || !scanning;
+  const [scoreRef, animatedScore] = useAnimatedScore<HTMLDivElement>(score, { enabled: scoreReady });
   const riskLabel = showTrustedExample ? t("common.low") : localizeStatus(snapshot.scores.riskLabel, t);
   const usesFingerprintSmartSignals = Object.values(snapshot.smartSignals)
     .some((value) => value !== null);
@@ -458,12 +490,12 @@ function RiskDonut({
           : t("riskProfile.localDescription")}</p>
       </div>
       <div className="risk-overview__body">
-        <div className="risk-donut">
+        <div className="risk-donut" ref={scoreRef}>
           <svg viewBox="0 0 120 120" aria-hidden="true">
-            <circle cx="60" cy="60" r="49" />
-            <circle className="risk-donut__progress" cx="60" cy="60" r="49" strokeDasharray={`${score * 3.08} ${308 - score * 3.08}`} />
+            <circle className="risk-donut__track" cx="60" cy="60" r="49" />
+            {animatedScore > 0 ? <path className="risk-donut__progress" d={circularProgressPath(animatedScore)} /> : null}
           </svg>
-          <div><strong>{score}</strong><span>{riskLabel} {t("common.risk")}</span></div>
+          <div><strong>{animatedScore}</strong><span>{riskLabel} {t("common.risk")}</span></div>
         </div>
         <dl>
           <div><dt>{t("riskProfile.uniqueness")}</dt><dd>{snapshot.scores.uniqueness}% <small>{t("riskProfile.estimated")}</small></dd></div>
@@ -477,9 +509,11 @@ function RiskDonut({
 }
 
 function OverviewPanel({
+  scanning,
   showTrustedExample,
   snapshot,
 }: {
+  scanning: boolean;
   showTrustedExample: boolean;
   snapshot: FingerprintSnapshot;
 }) {
@@ -494,7 +528,7 @@ function OverviewPanel({
       data-scroll="fade-up"
     >
       <div className="overview-panel__analysis">
-        <RiskDonut showTrustedExample={showTrustedExample} snapshot={snapshot} />
+        <RiskDonut scanning={scanning} showTrustedExample={showTrustedExample} snapshot={snapshot} />
       </div>
       <SuspectSignalTable showTrustedExample={showTrustedExample} snapshot={snapshot} />
     </section>
@@ -504,11 +538,13 @@ function OverviewPanel({
 function DetailDashboard({
   activeTab,
   onActiveTabChange,
+  scanning,
   showTrustedExample,
   snapshot,
 }: {
   activeTab: DetailTab;
   onActiveTabChange: (tab: DetailTab) => void;
+  scanning: boolean;
   showTrustedExample: boolean;
   snapshot: FingerprintSnapshot | null;
 }) {
@@ -608,7 +644,7 @@ function DetailDashboard({
             <p>{t("details.loadingDescription")}</p>
           </div>
         ) : activeTab === "Overview" ? (
-          <OverviewPanel showTrustedExample={showTrustedExample} snapshot={snapshot} />
+          <OverviewPanel scanning={scanning} showTrustedExample={showTrustedExample} snapshot={snapshot} />
         ) : (
           <div className="data-grid data-grid--single">
             {visibleCards.map((card) => (
@@ -721,6 +757,7 @@ export default function HomePage() {
           <DetailDashboard
             activeTab={detailTab}
             onActiveTabChange={setDetailTab}
+            scanning={scanning}
             showTrustedExample={showTrustedExample}
             snapshot={snapshot}
           />
