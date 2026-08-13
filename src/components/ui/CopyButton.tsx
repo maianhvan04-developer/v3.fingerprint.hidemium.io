@@ -1,4 +1,4 @@
-import { Button, type ButtonProps } from "@/components/ui/Button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 interface CopyButtonProps extends Omit<ButtonProps, "children"> {
   copied: boolean;

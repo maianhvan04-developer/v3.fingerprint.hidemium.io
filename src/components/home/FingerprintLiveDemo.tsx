@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { SuspectScore } from "@/app/(home)/suspect-score/page";
-import { VisitSummary } from "@/app/(home)/visit-summary/page";
+import { SuspectScore } from "@/components/home/SuspectScore";
+import { VisitSummary } from "@/components/home/VisitSummary";
 import { useVisitorHistory } from "@/hooks/use-visitor-history";
 import type { FingerprintSnapshot } from "@/types/fingerprint";
 

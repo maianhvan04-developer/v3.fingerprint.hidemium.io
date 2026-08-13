@@ -27,10 +27,10 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
-import { BrowserSmartSignals } from "@/app/(home)/browser-smart-signals/page";
-import { FingerprintLiveDemo } from "@/app/(home)/fingerprint-live-demo/page";
-import { IdentificationSignals } from "@/app/(home)/identification-signals/page";
-import { SuspectSignalTable } from "@/app/(home)/suspect-signal-table/page";
+import { BrowserSmartSignals } from "@/components/home/BrowserSmartSignals";
+import { FingerprintLiveDemo } from "@/components/home/FingerprintLiveDemo";
+import { IdentificationSignals } from "@/components/home/IdentificationSignals";
+import { SuspectSignalTable } from "@/components/home/SuspectSignalTable";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { DataCard, type DataCardData as UiDataCardData } from "@/components/ui/DataCard";

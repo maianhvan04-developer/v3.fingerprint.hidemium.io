@@ -4897,43 +4897,53 @@ progress::-moz-progress-bar {
 
 /* Live demo redesign */
 .hero-console {
-  width: min(100%, 1588px);
+  --green: var(--cyan);
+
+  width: min(100%, 1360px);
+  padding: 0 10px 10px;
   overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  border: 1px solid rgb(0 217 255 / 24%);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 12% 8%, rgb(0 217 255 / 10%), transparent 28%),
+    linear-gradient(145deg, rgb(7 24 39 / 96%), rgb(4 13 25 / 98%));
+  box-shadow:
+    0 24px 70px rgb(0 0 0 / 32%),
+    0 0 0 4px rgb(0 217 255 / 4%),
+    inset 0 1px rgb(255 255 255 / 6%);
 }
 
 .hero-console::before {
   inset: 8% -4% -10%;
   border-radius: 40px;
   background:
-    radial-gradient(circle at 14% 56%, rgb(0 232 162 / 16%), transparent 27%),
+    radial-gradient(circle at 14% 56%, rgb(0 217 255 / 16%), transparent 27%),
     radial-gradient(circle at 78% 38%, rgb(74 119 255 / 11%), transparent 32%);
   filter: blur(34px);
 }
 
 .hero-console__titlebar {
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) minmax(360px, 686px) minmax(120px, 1fr);
-  min-height: 58px;
-  margin-bottom: 24px;
+  grid-template-columns: minmax(100px, 1fr) minmax(320px, 580px) minmax(100px, 1fr);
+  min-height: 48px;
+  margin: 0 -10px 18px;
   padding: 0;
-  border: 0;
-  background: transparent;
+  overflow: hidden;
+  border: 1px solid rgb(0 217 255 / 12%);
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(180deg, rgb(10 29 46 / 92%), rgb(5 18 32 / 94%));
 }
 
 .hero-console__controls {
   grid-column: 1;
-  min-height: 58px;
-  padding-left: 0;
-  gap: 10px;
+  min-height: 48px;
+  padding-left: 16px;
+  gap: 8px;
 }
 
 .hero-console__controls i {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
   background: #ff4f63;
   box-shadow: 0 0 18px rgb(255 79 99 / 34%);
 }
@@ -4952,9 +4962,9 @@ progress::-moz-progress-bar {
   grid-column: 2;
   justify-content: center;
   width: 100%;
-  height: 44px;
-  padding: 0 22px;
-  gap: 12px;
+  height: 36px;
+  padding: 0 18px;
+  gap: 9px;
   border: 1px solid rgb(125 151 176 / 15%);
   border-radius: 999px;
   background:
@@ -4962,7 +4972,7 @@ progress::-moz-progress-bar {
     linear-gradient(180deg, rgb(20 30 43 / 82%), rgb(9 17 30 / 88%));
   color: #edf5ff;
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 650;
   letter-spacing: -0.015em;
   box-shadow:
@@ -4980,8 +4990,8 @@ progress::-moz-progress-bar {
 }
 
 .hero-console__titlebar-label svg {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   flex: 0 0 auto;
   color: #aeb9c7;
 }
@@ -4994,11 +5004,11 @@ progress::-moz-progress-bar {
 .hero-console__modes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  min-height: 72px;
-  margin-bottom: 26px;
+  min-height: 58px;
+  margin-bottom: 18px;
   overflow: visible;
   border: 1px solid rgb(69 96 124 / 36%);
-  border-radius: 17px;
+  border-radius: 14px;
   background:
     linear-gradient(180deg, rgb(11 24 39 / 82%), rgb(5 13 25 / 82%)),
     rgb(6 16 29 / 86%);
@@ -5008,31 +5018,31 @@ progress::-moz-progress-bar {
 }
 
 .hero-console__modes > button {
-  min-height: 72px;
-  padding: 0 28px;
-  gap: 10px;
+  min-height: 58px;
+  padding: 0 20px;
+  gap: 8px;
   border: 0;
   border-right: 1px solid rgb(67 93 121 / 23%);
   border-radius: 0;
   background: transparent;
   color: #8390a0;
-  font-size: clamp(15px, 1.1vw, 20px);
+  font-size: clamp(13px, 0.95vw, 16px);
   font-weight: 650;
   letter-spacing: -0.025em;
 }
 
 .hero-console__modes > button:first-child {
-  border-radius: 16px 0 0 16px;
+  border-radius: 13px 0 0 13px;
 }
 
 .hero-console__modes > button:last-child {
   border-right: 0;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 13px 13px 0;
 }
 
 .hero-console__modes > button svg {
-  width: 26px;
-  height: 26px;
+  width: 21px;
+  height: 21px;
   flex: 0 0 auto;
   color: #758494;
   stroke-width: 1.8;
@@ -5042,19 +5052,19 @@ progress::-moz-progress-bar {
   margin-right: 0;
   color: inherit;
   font-family: var(--font-mono);
-  font-size: clamp(13px, 0.9vw, 17px);
+  font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 700;
 }
 
 .hero-console__modes .hero-console__mode--active {
   color: #f0f8ff;
   background:
-    radial-gradient(circle at 10% 50%, rgb(0 232 162 / 20%), transparent 44%),
+    radial-gradient(circle at 10% 50%, rgb(0 217 255 / 20%), transparent 44%),
     linear-gradient(180deg, rgb(13 33 40 / 88%), rgb(7 24 30 / 90%));
-  border-color: rgb(0 232 162 / 32%);
+  border-color: rgb(0 217 255 / 32%);
   box-shadow:
-    inset 0 -2px 0 rgb(0 232 162 / 82%),
-    0 12px 34px rgb(0 232 162 / 18%);
+    inset 0 -2px 0 rgb(0 217 255 / 82%),
+    0 12px 34px rgb(0 217 255 / 18%);
 }
 
 .hero-console__modes .hero-console__mode--active::after {
@@ -5084,14 +5094,14 @@ progress::-moz-progress-bar {
 }
 
 .hero-console__panel {
-  min-height: 650px;
+  min-height: 520px;
   overflow: visible;
 }
 
 .fingerprint-live-demo {
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.88fr);
-  min-height: 650px;
-  gap: 24px;
+  min-height: 520px;
+  gap: 18px;
   overflow: visible;
   background: transparent;
 }
@@ -5101,13 +5111,13 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary {
-  grid-template-rows: 96px 142px minmax(0, 1fr);
-  min-height: 650px;
+  grid-template-rows: 72px 108px minmax(0, 1fr);
+  min-height: 520px;
   overflow: hidden;
   border: 1px solid rgb(55 91 108 / 62%);
   border-radius: 14px;
   background:
-    radial-gradient(circle at 9% 27%, rgb(0 232 162 / 11%), transparent 33%),
+    radial-gradient(circle at 9% 27%, rgb(0 217 255 / 11%), transparent 33%),
     linear-gradient(150deg, rgb(7 31 35 / 93%), rgb(5 17 30 / 96%) 55%, rgb(5 12 23 / 98%));
   box-shadow:
     0 26px 70px rgb(0 0 0 / 25%),
@@ -5115,16 +5125,16 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary__visitor-header {
-  padding: 0 44px;
+  padding: 0 30px;
   border-bottom: 1px solid rgb(77 113 132 / 28%);
   background:
-    radial-gradient(circle at 7% 55%, rgb(0 232 162 / 13%), transparent 28%),
+    radial-gradient(circle at 7% 55%, rgb(0 217 255 / 13%), transparent 28%),
     linear-gradient(90deg, rgb(6 27 35 / 84%), rgb(7 17 31 / 54%));
 }
 
 .visit-summary__visitor-title {
-  gap: 12px;
-  font-size: clamp(20px, 1.7vw, 26px);
+  gap: 9px;
+  font-size: clamp(17px, 1.35vw, 21px);
   line-height: 1.2;
 }
 
@@ -5134,30 +5144,30 @@ progress::-moz-progress-bar {
 
 .visit-summary__visitor-title strong {
   color: var(--green);
-  font-size: clamp(18px, 1.55vw, 24px);
+  font-size: clamp(16px, 1.25vw, 20px);
   font-weight: 800;
-  text-shadow: 0 0 22px rgb(0 232 162 / 22%);
+  text-shadow: 0 0 22px rgb(0 217 255 / 22%);
 }
 
 .visit-summary__summary-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 16px 30px 22px;
-  gap: 16px;
+  padding: 12px 22px 16px;
+  gap: 12px;
   border-bottom: 0;
   background: transparent;
 }
 
 .visit-summary__summary-cell {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-columns: 40px minmax(0, 1fr);
   align-items: center;
-  min-height: 104px;
-  padding: 18px 17px;
-  gap: 15px;
+  min-height: 80px;
+  padding: 12px;
+  gap: 11px;
   border: 1px solid rgb(76 112 132 / 32%);
   border-radius: 10px;
   background:
-    radial-gradient(circle at 16% 38%, rgb(0 232 162 / 11%), transparent 42%),
+    radial-gradient(circle at 16% 38%, rgb(0 217 255 / 11%), transparent 42%),
     rgb(5 18 29 / 68%);
   box-shadow: inset 0 1px rgb(255 255 255 / 5%);
 }
@@ -5169,30 +5179,30 @@ progress::-moz-progress-bar {
   place-items: center;
   border-radius: 999px;
   color: var(--green);
-  background: rgb(0 232 162 / 10%);
-  box-shadow: 0 0 26px rgb(0 232 162 / 14%);
+  background: rgb(0 217 255 / 10%);
+  box-shadow: 0 0 26px rgb(0 217 255 / 14%);
 }
 
 .visit-summary__summary-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
 }
 
 .visit-summary__summary-icon svg {
-  width: 25px;
-  height: 25px;
+  width: 21px;
+  height: 21px;
 }
 
 .visit-summary__summary-copy,
 .visit-summary__detail-copy {
   display: grid;
   min-width: 0;
-  gap: 5px;
+  gap: 3px;
 }
 
 .visit-summary__summary-label {
   color: #eef6ff;
-  font-size: clamp(15px, 1.1vw, 18px);
+  font-size: clamp(12px, 0.9vw, 15px);
   font-weight: 750;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -5200,23 +5210,23 @@ progress::-moz-progress-bar {
 
 .visit-summary__summary-value {
   color: #94a8ba;
-  font-size: clamp(17px, 1.25vw, 21px);
+  font-size: clamp(13px, 1vw, 16px);
   font-weight: 500;
   line-height: 1.24;
 }
 
 .visit-summary__history {
-  grid-template-rows: 56px minmax(0, 1fr);
+  grid-template-rows: 44px minmax(0, 1fr);
   background: transparent;
 }
 
 .visit-summary__history-title {
-  padding: 0 46px;
+  padding: 0 32px;
   border-top: 1px solid rgb(77 113 132 / 19%);
   border-bottom: 1px solid rgb(77 113 132 / 28%);
   color: #eef6ff;
   font-family: var(--font-body);
-  font-size: clamp(17px, 1.35vw, 21px);
+  font-size: clamp(14px, 1.05vw, 17px);
   font-weight: 750;
   letter-spacing: -0.02em;
   text-transform: none;
@@ -5231,62 +5241,62 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary__visit-content {
-  grid-template-rows: minmax(152px, 1fr) minmax(224px, 1.45fr);
+  grid-template-rows: minmax(120px, 1fr) minmax(176px, 1.4fr);
   height: 100%;
 }
 
 .visit-summary__visit-overview {
-  grid-template-columns: minmax(0, 1.42fr) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   border-bottom-color: rgb(77 113 132 / 28%);
 }
 
 .visit-summary__visit-location {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: 48px minmax(0, 1fr);
   grid-template-rows: repeat(2, auto);
   justify-content: stretch;
   align-content: center;
-  padding: 0 32px;
-  gap: 6px 18px;
+  padding: 0 22px;
+  gap: 4px 13px;
   border-right-color: rgb(77 113 132 / 28%);
   background:
-    radial-gradient(circle at 11% 48%, rgb(0 232 162 / 12%), transparent 33%),
+    radial-gradient(circle at 11% 48%, rgb(0 217 255 / 12%), transparent 33%),
     rgb(4 18 30 / 58%);
 }
 
 .visit-summary__row-icon {
   grid-row: 1 / span 2;
-  width: 48px;
-  height: 48px;
-  background: rgb(0 232 162 / 8%);
+  width: 40px;
+  height: 40px;
+  background: rgb(0 217 255 / 8%);
 }
 
 .visit-summary__row-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
 }
 
 .visit-summary__visit-time {
   color: #eef6ff;
-  font-size: clamp(17px, 1.35vw, 22px);
+  font-size: clamp(14px, 1.05vw, 17px);
   font-weight: 780;
   line-height: 1.15;
 }
 
 .visit-summary__visit-place {
   color: #9aacbd;
-  font-size: clamp(15px, 1.1vw, 20px);
+  font-size: clamp(12px, 0.9vw, 15px);
   line-height: 1.32;
 }
 
 .visit-map {
-  min-height: 152px;
+  min-height: 120px;
   background: #f5f7fa;
 }
 
 .visit-map__marker {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   filter:
     drop-shadow(0 3px 5px rgb(0 24 42 / 32%))
     drop-shadow(0 0 13px rgb(0 217 255 / 80%));
@@ -5303,18 +5313,18 @@ progress::-moz-progress-bar {
 
 .visit-summary__detail {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
+  grid-template-columns: 48px minmax(0, 1fr);
   align-items: center;
-  min-height: 112px;
-  padding: 0 32px;
-  gap: 18px;
+  min-height: 88px;
+  padding: 0 22px;
+  gap: 13px;
   border-color: rgb(77 113 132 / 28%);
   background: rgb(4 18 30 / 58%);
 }
 
 .visit-summary__detail--safe {
   background:
-    radial-gradient(circle at 5% 52%, rgb(0 232 162 / 12%), transparent 33%),
+    radial-gradient(circle at 5% 52%, rgb(0 217 255 / 12%), transparent 33%),
     rgb(3 47 43 / 48%);
 }
 
@@ -5325,36 +5335,36 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary__detail-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
 }
 
 .visit-summary__detail-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
 }
 
 .visit-summary__detail-label {
   color: #eef6ff;
-  font-size: clamp(15px, 1.1vw, 19px);
+  font-size: clamp(12px, 0.9vw, 15px);
   font-weight: 760;
   line-height: 1.18;
 }
 
 .visit-summary__detail-value {
   color: #9aabba;
-  font-size: clamp(15px, 1.08vw, 20px);
+  font-size: clamp(12px, 0.88vw, 15px);
   line-height: 1.28;
 }
 
 .visit-summary__detail--safe .visit-summary__detail-value {
   color: var(--green);
-  text-shadow: 0 0 16px rgb(0 232 162 / 18%);
+  text-shadow: 0 0 16px rgb(0 217 255 / 18%);
 }
 
 .suspect-score {
-  min-height: 650px;
+  min-height: 520px;
   overflow: hidden;
   border: 1px solid rgb(55 91 108 / 62%);
   border-radius: 14px;
@@ -5369,16 +5379,16 @@ progress::-moz-progress-bar {
 
 .suspect-score--safe {
   background:
-    radial-gradient(circle at 50% 29%, rgb(0 232 162 / 12%), transparent 27%),
+    radial-gradient(circle at 50% 29%, rgb(0 217 255 / 12%), transparent 27%),
     radial-gradient(circle at 50% 52%, rgb(0 217 255 / 8%), transparent 32%),
     linear-gradient(150deg, rgb(8 23 32 / 94%), rgb(5 14 25 / 98%));
 }
 
 .suspect-score__eyebrow {
-  top: 34px;
-  left: 34px;
+  top: 26px;
+  left: 26px;
   color: #d0d7df;
-  font-size: clamp(14px, 1vw, 17px);
+  font-size: clamp(12px, 0.85vw, 14px);
   font-weight: 740;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -5389,9 +5399,9 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__gauge {
-  width: 224px;
-  height: 224px;
-  margin-top: 92px;
+  width: 176px;
+  height: 176px;
+  margin-top: 70px;
 }
 
 .suspect-score__gauge-track,
@@ -5406,7 +5416,7 @@ progress::-moz-progress-bar {
 .suspect-score__value {
   color: #ff627a;
   font-family: var(--font-body);
-  font-size: clamp(48px, 3.5vw, 64px);
+  font-size: clamp(38px, 2.8vw, 50px);
   font-weight: 500;
   line-height: 0.95;
   text-shadow: 0 0 24px rgb(255 96 122 / 22%);
@@ -5420,7 +5430,7 @@ progress::-moz-progress-bar {
   margin-top: 6px;
   color: #ff627a;
   font-family: var(--font-body);
-  font-size: clamp(16px, 1.1vw, 20px);
+  font-size: clamp(13px, 0.95vw, 16px);
   font-weight: 650;
   letter-spacing: -0.03em;
   text-transform: lowercase;
@@ -5431,13 +5441,13 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__assessment {
-  margin-top: 44px;
-  padding: 0 54px 132px;
+  margin-top: 28px;
+  padding: 0 38px 106px;
 }
 
 .suspect-score__headline {
   color: #f1f6ff;
-  font-size: clamp(24px, 1.85vw, 32px);
+  font-size: clamp(19px, 1.45vw, 25px);
   font-weight: 760;
   letter-spacing: -0.045em;
   line-height: 1.16;
@@ -5453,19 +5463,19 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__support {
-  margin-top: 28px;
+  margin-top: 18px;
   color: #9da9b8;
-  font-size: clamp(17px, 1.25vw, 22px);
+  font-size: clamp(14px, 1vw, 17px);
   line-height: 1.45;
 }
 
 .suspect-score__calculation-link {
   display: inline-flex;
   align-items: center;
-  margin-top: 22px;
-  gap: 10px;
+  margin-top: 15px;
+  gap: 7px;
   color: #8ed0dc;
-  font-size: clamp(15px, 1.08vw, 19px);
+  font-size: clamp(12px, 0.9vw, 15px);
   text-underline-offset: 5px;
 }
 
@@ -5476,11 +5486,11 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__tabs {
-  right: 34px;
-  bottom: 40px;
-  left: 34px;
-  min-height: 72px;
-  gap: 26px;
+  right: 26px;
+  bottom: 28px;
+  left: 26px;
+  min-height: 56px;
+  gap: 18px;
   border-top: 0;
   background: transparent;
 }
@@ -5489,13 +5499,13 @@ progress::-moz-progress-bar {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 72px;
-  gap: 14px;
+  min-height: 56px;
+  gap: 10px;
   border: 1px solid rgb(70 100 124 / 28%);
   border-radius: 10px;
   background: rgb(8 24 37 / 62%);
   color: #6e7d8f;
-  font-size: clamp(16px, 1.15vw, 22px);
+  font-size: clamp(13px, 0.95vw, 16px);
   font-weight: 720;
   letter-spacing: -0.035em;
   text-decoration: none;
@@ -5506,32 +5516,32 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__tab svg {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   flex: 0 0 auto;
   stroke-width: 1.8;
 }
 
 .suspect-score__tab--active,
 .suspect-score__tab:hover {
-  border-color: rgb(0 232 162 / 82%);
+  border-color: rgb(0 217 255 / 82%);
   background:
-    radial-gradient(circle at 12% 50%, rgb(0 232 162 / 14%), transparent 42%),
+    radial-gradient(circle at 12% 50%, rgb(0 217 255 / 14%), transparent 42%),
     rgb(4 35 34 / 76%);
   color: var(--green);
   box-shadow:
-    0 0 28px rgb(0 232 162 / 12%),
-    inset 0 1px rgb(0 232 162 / 10%);
+    0 0 28px rgb(0 217 255 / 12%),
+    inset 0 1px rgb(0 217 255 / 10%);
   text-decoration: none;
 }
 
 .hero-console__statusbar {
-  min-height: 58px;
-  padding: 18px 0 0;
+  min-height: 44px;
+  padding: 13px 0 0;
   border-top: 0;
   background: transparent;
   color: #8c9aa8;
-  font-size: clamp(14px, 1vw, 18px);
+  font-size: clamp(12px, 0.85vw, 14px);
   letter-spacing: 0.035em;
 }
 
@@ -5565,7 +5575,7 @@ progress::-moz-progress-bar {
   .visit-summary,
   .suspect-score,
   .hero-console__panel {
-    min-height: 600px;
+    min-height: 520px;
   }
 }
 

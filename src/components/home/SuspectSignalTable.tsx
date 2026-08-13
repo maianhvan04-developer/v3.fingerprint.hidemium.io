@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
-import { Toast } from "@/components/ui/Toast";
+import { Toast } from "@/components/ui/toast";
 import { useI18n } from "@/lib/i18n";
 import type { FingerprintSnapshot } from "@/types/fingerprint";
 
