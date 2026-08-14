@@ -201,7 +201,24 @@ function HeroConsole({
   snapshot: FingerprintSnapshot | null;
 }) {
   const [activeMode, setActiveMode] = useState<ConsoleMode>("live");
+  const [consoleReady, setConsoleReady] = useState(false);
+  const [typedAddress, setTypedAddress] = useState("");
   const { t } = useI18n();
+
+  useEffect(() => {
+    let characterIndex = 0;
+    const typingTimer = window.setInterval(() => {
+      characterIndex += 1;
+      setTypedAddress(consoleAddress.slice(0, characterIndex));
+
+      if (characterIndex < consoleAddress.length) return;
+
+      window.clearInterval(typingTimer);
+      setConsoleReady(true);
+    }, 48);
+
+    return () => window.clearInterval(typingTimer);
+  }, []);
 
   return (
     <div
@@ -213,60 +230,70 @@ function HeroConsole({
     >
       <div className="hero-console__titlebar">
         <span className="hero-console__controls" aria-hidden="true"><i /><i /><i /></span>
-        <div className="hero-console__titlebar-label">
+        <div
+          aria-label={consoleAddress}
+          className="hero-console__titlebar-label"
+        >
           <LockKeyhole aria-hidden="true" />
-          <span>{consoleAddress}</span>
+          <span aria-hidden="true">{typedAddress}</span>
+          {!consoleReady ? <i aria-hidden="true" className="hero-console__typing-caret" /> : null}
           <RefreshCw aria-hidden="true" />
         </div>
       </div>
 
-      <div className="hero-console__modes" aria-label={t("console.views")} role="tablist">
-        {consoleModes.map((mode) => (
-          <button
-            aria-controls={`console-panel-${mode.id}`}
-            aria-selected={activeMode === mode.id}
-            className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
-            id={`console-tab-${mode.id}`}
-            key={mode.id}
-            onClick={() => setActiveMode(mode.id)}
-            role="tab"
-            tabIndex={activeMode === mode.id ? 0 : -1}
-            type="button"
-          >
-            {mode.icon}
-            <small>{mode.index}</small>
-            <span>{t(`console.modes.${mode.id}`)}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="hero-console__workspace">
-        <div
-          aria-labelledby={`console-tab-${activeMode}`}
-          className="hero-console__panel"
-          id={`console-panel-${activeMode}`}
-          key={activeMode}
-          role="tabpanel"
-        >
-          {activeMode === "identification" ? (
-            <IdentificationSignals scanning={scanning} snapshot={snapshot} />
-          ) : activeMode === "browser" ? (
-            <BrowserSmartSignals scanning={scanning} snapshot={snapshot} />
-          ) : (
-            <FingerprintLiveDemo
-              onCalculationClick={onCalculationClick}
-              onTrustedExampleChange={onTrustedExampleChange}
-              scanning={scanning}
-              showTrustedExample={showTrustedExample}
-              snapshot={snapshot}
-            />
-          )}
+      <div
+        aria-hidden={!consoleReady}
+        className="hero-console__content"
+        data-ready={consoleReady || undefined}
+      >
+        <div className="hero-console__modes" aria-label={t("console.views")} role="tablist">
+          {consoleModes.map((mode) => (
+            <button
+              aria-controls={`console-panel-${mode.id}`}
+              aria-selected={activeMode === mode.id}
+              className={activeMode === mode.id ? "hero-console__mode--active" : undefined}
+              id={`console-tab-${mode.id}`}
+              key={mode.id}
+              onClick={() => setActiveMode(mode.id)}
+              role="tab"
+              tabIndex={activeMode === mode.id ? 0 : -1}
+              type="button"
+            >
+              {mode.icon}
+              <small>{mode.index}</small>
+              <span>{t(`console.modes.${mode.id}`)}</span>
+            </button>
+          ))}
         </div>
-      </div>
 
-      <div className="hero-console__statusbar">
-        <span><i aria-hidden="true" />Fingerprint</span>
-        <span>{snapshot?.browser.name ?? t("common.browser")} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? t("common.system")}</span>
+        <div className="hero-console__workspace">
+          <div
+            aria-labelledby={`console-tab-${activeMode}`}
+            className="hero-console__panel"
+            id={`console-panel-${activeMode}`}
+            key={activeMode}
+            role="tabpanel"
+          >
+            {activeMode === "identification" ? (
+              <IdentificationSignals scanning={scanning} snapshot={snapshot} />
+            ) : activeMode === "browser" ? (
+              <BrowserSmartSignals scanning={scanning} snapshot={snapshot} />
+            ) : (
+              <FingerprintLiveDemo
+                onCalculationClick={onCalculationClick}
+                onTrustedExampleChange={onTrustedExampleChange}
+                scanning={scanning}
+                showTrustedExample={showTrustedExample}
+                snapshot={snapshot}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="hero-console__statusbar">
+          <span><i aria-hidden="true" />Fingerprint</span>
+          <span>{snapshot?.browser.name ?? t("common.browser")} {snapshot?.browser.version ?? "--"} · {snapshot?.system.os ?? t("common.system")}</span>
+        </div>
       </div>
     </div>
   );

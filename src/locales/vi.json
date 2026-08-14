@@ -107,10 +107,10 @@
     "device": "Thiết bị"
   },
   "visit": {
-    "hello": "Xin chào, ID khách truy cập",
+    "hello": "ID khách truy cập:",
     "collectingVisitorId": "Đang thu thập ID khách truy cập",
     "weeklySummaryAria": "Tổng số lần truy cập",
-    "weeklySummary": "Tổng số lần truy cập",
+    "weeklySummary": "Lượt truy cập",
     "visitsValue": "{{count}} lần",
     "incognito": "Ẩn danh",
     "sessionsValue": "{{count}} phiên",

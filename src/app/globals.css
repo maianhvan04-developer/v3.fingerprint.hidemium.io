@@ -4905,11 +4905,11 @@ progress::-moz-progress-bar {
   border: 1px solid rgb(0 217 255 / 24%);
   border-radius: 16px;
   background:
-    radial-gradient(circle at 12% 8%, rgb(0 217 255 / 10%), transparent 28%),
+    radial-gradient(circle at 12% 8%, rgb(0 217 255 / 5%), transparent 28%),
     linear-gradient(145deg, rgb(7 24 39 / 96%), rgb(4 13 25 / 98%));
   box-shadow:
     0 24px 70px rgb(0 0 0 / 32%),
-    0 0 0 4px rgb(0 217 255 / 4%),
+    0 0 0 3px rgb(0 217 255 / 2%),
     inset 0 1px rgb(255 255 255 / 6%);
 }
 
@@ -4917,9 +4917,9 @@ progress::-moz-progress-bar {
   inset: 8% -4% -10%;
   border-radius: 40px;
   background:
-    radial-gradient(circle at 14% 56%, rgb(0 217 255 / 16%), transparent 27%),
-    radial-gradient(circle at 78% 38%, rgb(74 119 255 / 11%), transparent 32%);
-  filter: blur(34px);
+    radial-gradient(circle at 14% 56%, rgb(0 217 255 / 7%), transparent 27%),
+    radial-gradient(circle at 78% 38%, rgb(74 119 255 / 6%), transparent 32%);
+  filter: blur(40px);
 }
 
 .hero-console__titlebar {
@@ -4972,7 +4972,7 @@ progress::-moz-progress-bar {
     linear-gradient(180deg, rgb(20 30 43 / 82%), rgb(9 17 30 / 88%));
   color: #edf5ff;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 650;
   letter-spacing: -0.015em;
   box-shadow:
@@ -4996,9 +4996,30 @@ progress::-moz-progress-bar {
   color: #aeb9c7;
 }
 
-.hero-console__titlebar-label svg:last-child {
+.hero-console__titlebar-label > svg:last-child {
   margin-left: auto;
   color: #ecf3ff;
+}
+
+.hero-console__content {
+  visibility: hidden;
+  opacity: 0;
+  filter: blur(9px);
+  pointer-events: none;
+  transform: translate3d(0, 24px, 0) scale(0.985);
+}
+
+.hero-console__content[data-ready] {
+  visibility: visible;
+  pointer-events: auto;
+  animation: console-data-reveal 480ms cubic-bezier(0.2, 0.78, 0.22, 1) both;
+}
+
+.scroll-effects-ready .hero-console.is-visible .hero-console__content .hero-console__workspace {
+  opacity: 1;
+  filter: none;
+  transform: none;
+  animation: none;
 }
 
 .hero-console__modes {
@@ -5026,7 +5047,7 @@ progress::-moz-progress-bar {
   border-radius: 0;
   background: transparent;
   color: #8390a0;
-  font-size: clamp(13px, 0.95vw, 16px);
+  font-size: clamp(12px, 0.82vw, 14px);
   font-weight: 650;
   letter-spacing: -0.025em;
 }
@@ -5052,19 +5073,19 @@ progress::-moz-progress-bar {
   margin-right: 0;
   color: inherit;
   font-family: var(--font-mono);
-  font-size: clamp(11px, 0.8vw, 14px);
+  font-size: clamp(10px, 0.7vw, 12px);
   font-weight: 700;
 }
 
 .hero-console__modes .hero-console__mode--active {
   color: #f0f8ff;
   background:
-    radial-gradient(circle at 10% 50%, rgb(0 217 255 / 20%), transparent 44%),
+    radial-gradient(circle at 10% 50%, rgb(0 217 255 / 8%), transparent 44%),
     linear-gradient(180deg, rgb(13 33 40 / 88%), rgb(7 24 30 / 90%));
-  border-color: rgb(0 217 255 / 32%);
+  border-color: rgb(0 217 255 / 24%);
   box-shadow:
-    inset 0 -2px 0 rgb(0 217 255 / 82%),
-    0 12px 34px rgb(0 217 255 / 18%);
+    inset 0 -2px 0 rgb(0 217 255 / 55%),
+    0 10px 28px rgb(0 217 255 / 7%);
 }
 
 .hero-console__modes .hero-console__mode--active::after {
@@ -5099,7 +5120,7 @@ progress::-moz-progress-bar {
 }
 
 .fingerprint-live-demo {
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.88fr);
+  grid-template-columns: minmax(0, 1.22fr) minmax(450px, 0.76fr);
   min-height: 520px;
   gap: 18px;
   overflow: visible;
@@ -5116,25 +5137,19 @@ progress::-moz-progress-bar {
   overflow: hidden;
   border: 1px solid rgb(55 91 108 / 62%);
   border-radius: 14px;
-  background:
-    radial-gradient(circle at 9% 27%, rgb(0 217 255 / 11%), transparent 33%),
-    linear-gradient(150deg, rgb(7 31 35 / 93%), rgb(5 17 30 / 96%) 55%, rgb(5 12 23 / 98%));
-  box-shadow:
-    0 26px 70px rgb(0 0 0 / 25%),
-    inset 0 1px rgb(255 255 255 / 6%);
+  background: linear-gradient(150deg, rgb(7 31 35 / 93%), rgb(5 17 30 / 96%) 55%, rgb(5 12 23 / 98%));
+  box-shadow: none;
 }
 
 .visit-summary__visitor-header {
   padding: 0 30px;
   border-bottom: 1px solid rgb(77 113 132 / 28%);
-  background:
-    radial-gradient(circle at 7% 55%, rgb(0 217 255 / 13%), transparent 28%),
-    linear-gradient(90deg, rgb(6 27 35 / 84%), rgb(7 17 31 / 54%));
+  background: linear-gradient(90deg, rgb(6 27 35 / 84%), rgb(7 17 31 / 54%));
 }
 
 .visit-summary__visitor-title {
   gap: 9px;
-  font-size: clamp(17px, 1.35vw, 21px);
+  font-size: clamp(15px, 1.15vw, 18px);
   line-height: 1.2;
 }
 
@@ -5144,32 +5159,30 @@ progress::-moz-progress-bar {
 
 .visit-summary__visitor-title strong {
   color: var(--green);
-  font-size: clamp(16px, 1.25vw, 20px);
+  font-size: clamp(14px, 1.05vw, 17px);
   font-weight: 800;
-  text-shadow: 0 0 22px rgb(0 217 255 / 22%);
+  text-shadow: none;
 }
 
 .visit-summary__summary-grid {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding: 12px 22px 16px;
-  gap: 12px;
+  padding: 12px 18px 16px;
+  gap: 10px;
   border-bottom: 0;
   background: transparent;
 }
 
 .visit-summary__summary-cell {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr);
+  grid-template-columns: 38px minmax(0, 1fr);
   align-items: center;
   min-height: 80px;
-  padding: 12px;
-  gap: 11px;
+  padding: 10px;
+  gap: 9px;
   border: 1px solid rgb(76 112 132 / 32%);
   border-radius: 10px;
-  background:
-    radial-gradient(circle at 16% 38%, rgb(0 217 255 / 11%), transparent 42%),
-    rgb(5 18 29 / 68%);
-  box-shadow: inset 0 1px rgb(255 255 255 / 5%);
+  background: rgb(5 18 29 / 68%);
+  box-shadow: none;
 }
 
 .visit-summary__summary-icon,
@@ -5179,18 +5192,18 @@ progress::-moz-progress-bar {
   place-items: center;
   border-radius: 999px;
   color: var(--green);
-  background: rgb(0 217 255 / 10%);
-  box-shadow: 0 0 26px rgb(0 217 255 / 14%);
+  background: rgb(0 217 255 / 7%);
+  box-shadow: none;
 }
 
 .visit-summary__summary-icon {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
 }
 
 .visit-summary__summary-icon svg {
-  width: 21px;
-  height: 21px;
+  width: 20px;
+  height: 20px;
 }
 
 .visit-summary__summary-copy,
@@ -5201,16 +5214,19 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary__summary-label {
+  overflow: visible;
   color: #eef6ff;
-  font-size: clamp(12px, 0.9vw, 15px);
+  font-size: clamp(12.5px, 0.95vw, 14px);
   font-weight: 750;
   letter-spacing: -0.02em;
   line-height: 1.25;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .visit-summary__summary-value {
   color: #94a8ba;
-  font-size: clamp(13px, 1vw, 16px);
+  font-size: clamp(11px, 0.78vw, 13px);
   font-weight: 500;
   line-height: 1.24;
 }
@@ -5226,7 +5242,7 @@ progress::-moz-progress-bar {
   border-bottom: 1px solid rgb(77 113 132 / 28%);
   color: #eef6ff;
   font-family: var(--font-body);
-  font-size: clamp(14px, 1.05vw, 17px);
+  font-size: clamp(12px, 0.88vw, 15px);
   font-weight: 750;
   letter-spacing: -0.02em;
   text-transform: none;
@@ -5259,9 +5275,7 @@ progress::-moz-progress-bar {
   padding: 0 22px;
   gap: 4px 13px;
   border-right-color: rgb(77 113 132 / 28%);
-  background:
-    radial-gradient(circle at 11% 48%, rgb(0 217 255 / 12%), transparent 33%),
-    rgb(4 18 30 / 58%);
+  background: rgb(4 18 30 / 58%);
 }
 
 .visit-summary__row-icon {
@@ -5278,14 +5292,14 @@ progress::-moz-progress-bar {
 
 .visit-summary__visit-time {
   color: #eef6ff;
-  font-size: clamp(14px, 1.05vw, 17px);
+  font-size: clamp(13px, 0.9vw, 15px);
   font-weight: 780;
   line-height: 1.15;
 }
 
 .visit-summary__visit-place {
   color: #9aacbd;
-  font-size: clamp(12px, 0.9vw, 15px);
+  font-size: clamp(11px, 0.78vw, 13px);
   line-height: 1.32;
 }
 
@@ -5297,9 +5311,7 @@ progress::-moz-progress-bar {
 .visit-map__marker {
   width: 28px;
   height: 28px;
-  filter:
-    drop-shadow(0 3px 5px rgb(0 24 42 / 32%))
-    drop-shadow(0 0 13px rgb(0 217 255 / 80%));
+  filter: drop-shadow(0 3px 5px rgb(0 24 42 / 32%));
 }
 
 .visit-map__marker svg {
@@ -5323,15 +5335,11 @@ progress::-moz-progress-bar {
 }
 
 .visit-summary__detail--safe {
-  background:
-    radial-gradient(circle at 5% 52%, rgb(0 217 255 / 12%), transparent 33%),
-    rgb(3 47 43 / 48%);
+  background: rgb(3 47 43 / 48%);
 }
 
 .visit-summary__detail--flagged {
-  background:
-    radial-gradient(circle at 5% 52%, rgb(255 94 121 / 14%), transparent 33%),
-    rgb(57 14 30 / 55%);
+  background: rgb(57 14 30 / 55%);
 }
 
 .visit-summary__detail-icon {
@@ -5347,20 +5355,20 @@ progress::-moz-progress-bar {
 
 .visit-summary__detail-label {
   color: #eef6ff;
-  font-size: clamp(12px, 0.9vw, 15px);
+  font-size: clamp(12.5px, 0.95vw, 14px);
   font-weight: 760;
   line-height: 1.18;
 }
 
 .visit-summary__detail-value {
   color: #9aabba;
-  font-size: clamp(12px, 0.88vw, 15px);
+  font-size: clamp(11px, 0.78vw, 13px);
   line-height: 1.28;
 }
 
 .visit-summary__detail--safe .visit-summary__detail-value {
   color: var(--green);
-  text-shadow: 0 0 16px rgb(0 217 255 / 18%);
+  text-shadow: none;
 }
 
 .suspect-score {
@@ -5388,7 +5396,7 @@ progress::-moz-progress-bar {
   top: 26px;
   left: 26px;
   color: #d0d7df;
-  font-size: clamp(12px, 0.85vw, 14px);
+  font-size: clamp(11px, 0.75vw, 12px);
   font-weight: 740;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -5410,34 +5418,49 @@ progress::-moz-progress-bar {
 }
 
 .suspect-score__gauge-track {
-  stroke: rgb(0 217 255 / 20%);
+  stroke: rgb(255 98 122 / 20%);
+}
+
+.suspect-score__gauge-value {
+  stroke: #ff627a;
+  filter: drop-shadow(0 0 7px rgb(255 98 122 / 48%));
+}
+
+.suspect-score--safe .suspect-score__gauge-track {
+  stroke: rgb(24 231 139 / 20%);
+}
+
+.suspect-score--safe .suspect-score__gauge-value {
+  stroke: #18e78b;
+  filter: drop-shadow(0 0 7px rgb(24 231 139 / 48%));
 }
 
 .suspect-score__value {
   color: #ff627a;
   font-family: var(--font-body);
-  font-size: clamp(38px, 2.8vw, 50px);
+  font-size: clamp(34px, 2.5vw, 44px);
   font-weight: 500;
   line-height: 0.95;
   text-shadow: 0 0 24px rgb(255 96 122 / 22%);
 }
 
 .suspect-score--safe .suspect-score__value {
-  color: var(--green);
+  color: #18e78b;
+  text-shadow: 0 0 24px rgb(24 231 139 / 22%);
 }
 
 .suspect-score__label {
   margin-top: 6px;
   color: #ff627a;
   font-family: var(--font-body);
-  font-size: clamp(13px, 0.95vw, 16px);
+  font-size: clamp(12px, 0.82vw, 14px);
   font-weight: 650;
   letter-spacing: -0.03em;
   text-transform: lowercase;
 }
 
 .suspect-score--safe .suspect-score__label {
-  color: var(--green);
+  color: #18e78b;
 }
 
 .suspect-score__assessment {
@@ -5447,7 +5470,7 @@ progress::-moz-progress-bar {
 
 .suspect-score__headline {
   color: #f1f6ff;
-  font-size: clamp(19px, 1.45vw, 25px);
+  font-size: clamp(17px, 1.25vw, 22px);
   font-weight: 760;
   letter-spacing: -0.045em;
   line-height: 1.16;
@@ -5465,7 +5488,7 @@ progress::-moz-progress-bar {
 .suspect-score__support {
   margin-top: 18px;
   color: #9da9b8;
-  font-size: clamp(14px, 1vw, 17px);
+  font-size: clamp(12px, 0.85vw, 15px);
   line-height: 1.45;
 }
 
@@ -5475,7 +5498,7 @@ progress::-moz-progress-bar {
   margin-top: 15px;
   gap: 7px;
   color: #8ed0dc;
-  font-size: clamp(12px, 0.9vw, 15px);
+  font-size: clamp(11px, 0.78vw, 13px);
   text-underline-offset: 5px;
 }
 
@@ -5505,7 +5528,7 @@ progress::-moz-progress-bar {
   border-radius: 10px;
   background: rgb(8 24 37 / 62%);
   color: #6e7d8f;
-  font-size: clamp(13px, 0.95vw, 16px);
+  font-size: clamp(12px, 0.82vw, 14px);
   font-weight: 720;
   letter-spacing: -0.035em;
   text-decoration: none;
@@ -5541,7 +5564,7 @@ progress::-moz-progress-bar {
   border-top: 0;
   background: transparent;
   color: #8c9aa8;
-  font-size: clamp(12px, 0.85vw, 14px);
+  font-size: clamp(11px, 0.75vw, 12px);
   letter-spacing: 0.035em;
 }
 
@@ -5553,10 +5576,16 @@ progress::-moz-progress-bar {
   color: #aeb9c6;
 }
 
+@media (min-width: 1281px) {
+  .visit-summary__summary-label {
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 1080px) {
   .hero-console__modes > button {
     padding-inline: 16px;
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .fingerprint-live-demo {
